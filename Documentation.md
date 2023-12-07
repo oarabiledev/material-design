@@ -19,10 +19,9 @@ Firstly you must have your own color palletes to obtain this, go to this url and
 - remember use the custom theme toggle.
 - remember under ‘Extend Colors’, this will not theme your app at all,stick to core colors
 
-
 After getting your palletes done, you have to export the theme, you will export the theme as ‘Android Views’.
 
-This will download a zip file
+This will download a zip file :
 
 To setup your apps light theme follow the directory:
 
@@ -57,6 +56,21 @@ function changeTheme(){
     }
 }
 
+```
+
+---
+
+### MUI 3 Icons
+
+To change your icons style simply use:
+
+```jsx
+ui.setIconFill(iconFill)
+//The Following Are Supported:
+//1. Outline - (ui.setIconFill('outline'))
+//2. TwoTone - (ui.setIconFill('two-tone'))
+//3. Sharp - (ui.setIconFill('sharp'))
+//4. Round - (ui.setIconFill('round'))
 ```
 
 ---
@@ -118,6 +132,35 @@ And use the SetOnTouch parameter to call your function.
     btn.SetPosition(0.1,0.5);
     ```
     
+
+---
+
+### MUI 3 BottomAppBar
+
+Allows You To Use A Bottom App Bar:
+
+[https://lh3.googleusercontent.com/cx3W_temkTITWB9TR-sw9ga-8Dr-96ko4dJIdi96YkhLqyiJZPo2eXBNlmrFYa9h1HJNAcco0K0eyt60GOXuRRSdU3DuOnYQeD6dNMXtsyzK=s0](https://lh3.googleusercontent.com/cx3W_temkTITWB9TR-sw9ga-8Dr-96ko4dJIdi96YkhLqyiJZPo2eXBNlmrFYa9h1HJNAcco0K0eyt60GOXuRRSdU3DuOnYQeD6dNMXtsyzK=s0)
+
+To use simply :
+
+```jsx
+cfg.MUI
+app.LoadPlugin('MUI 3')
+
+function OnStart(){
+  ui.setProps('static','dark')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY');
+  
+//Structure:
+// ui.addBottomAppBar(icon1,icon2,icon3,icon4,fabIcon,layout)
+  bottomBar = ui.addBottomAppBar('check_box','brush','mic','collections_bookmark','add',lay)
+  app.AddLayout(lay)
+}
+```
+
+---
 
 ### MUI 3 SnackBars
 

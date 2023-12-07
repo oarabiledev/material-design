@@ -5,7 +5,7 @@ This is MUI version 3, here is the documentation and how to’s, implemented in 
 Firstly We Must Call/Load The plugin:
 
 ```jsx
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 ```
 
 ### MUI 3 Color
@@ -81,7 +81,7 @@ Its returns a layout, use as normal, no changes made.
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -145,7 +145,7 @@ To use simply :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -180,7 +180,7 @@ Implementation:
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -239,7 +239,7 @@ To use it :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')

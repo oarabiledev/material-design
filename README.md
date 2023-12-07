@@ -9,7 +9,7 @@ Which can be downloaded from the official Playstore, or directly:
 [Index of /apk/DroidScript_266 (androidscript.org)](http://androidscript.org/apk/DroidScript_266/)
 
 This project is opensource, and uses the MIT license,
-
+When implementing ui objects refer to components from [Material Design 3](https://m3.material.io/components)
 There are a people to thank whom this project heavily borrows some of its elements:
 
 - Dave (Founder Of DroidScript)

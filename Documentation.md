@@ -5,7 +5,7 @@ This is MUI version 3, here is the documentation and how to’s, implemented in 
 Firstly We Must Call/Load The plugin:
 
 ```jsx
-app.LoadPlugin('Material Design 3')
+app.LoadPlugin('MUI 3')
 ```
 
 ### MUI 3 Color
@@ -81,7 +81,7 @@ Its returns a layout, use as normal, no changes made.
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('Material Design 3')
+app.LoadPlugin('MUI 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -145,7 +145,7 @@ To use simply :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('Material Design 3')
+app.LoadPlugin('MUI 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -158,6 +158,20 @@ function OnStart(){
   bottomBar = ui.addBottomAppBar('check_box','brush','mic','collections_bookmark','add',lay)
   app.AddLayout(lay)
 }
+```
+
+To call functions when specific buttons are pressed refer to this: 
+
+```jsx
+bottomBar.setOnAction()
+//This is for the main FAB, if added
+//You call leave it as null, if not wanted
+bottomBar.setIcon1Func()
+//Function to be called for the first icon
+//Note the method increase till the 4th icon,
+//that means you will use:
+// setIcon2Func/setIcon3Func/setIcon4Func
+//If You dont need an icon alway set it to null.
 ```
 
 ---
@@ -180,7 +194,7 @@ Implementation:
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('Material Design 3')
+app.LoadPlugin('MUI 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -239,7 +253,7 @@ To use it :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('Material Design 3')
+app.LoadPlugin('MUI 3')
 
 function OnStart(){
   ui.setProps('static','dark')

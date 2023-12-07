@@ -1,4 +1,4 @@
-var uiVersion = 0.00;
+var uiVersion = 0.001;
 var defaultFont = 'Fonts/Text/Roboto.ttf'
 var defaultIcons = 'Fonts/Icons/Regular.ttf'
 //ui color constants
@@ -122,28 +122,29 @@ ui.addLayout = function(type,options){
 ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
     return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
 }
+function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
+    this.icon1Func = null;
+    this.icon2Func = null;
+    this.icon3Func = null;
+    this.icon4Func = null;
+    this.callback = null;
 
-function _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout){
-    this.setIcon1Func = function(icon1Func){this.icon1Func = icon1Func;}
-    this.setIcon2Func = function(icon2Func){this.icon2Func = icon2Func;}
-    this.setIcon3Func = function(icon3Func){this.icon3Func = icon3Func;}
-    this.setIcon4Func = function(icon4Func){this.icon4Func = icon4Func;}
-    this.setOnFABTouch = function(onFabTouch){this.onFabTouch = onFabTouch;}
-    
-    drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,this.onFabTouch,this.icon1Func,this.icon2Func,this.icon3Func,this.icon4Func)
+    this.setIcon1Func = function (icon1Func) { this.icon1Func = icon1Func; }
+    this.setIcon2Func = function (icon2Func) { this.icon2Func = icon2Func; }
+    this.setIcon3Func = function (icon3Func) { this.icon3Func = icon3Func; }
+    this.setIcon4Func = function (icon4Func) { this.icon4Func = icon4Func; }
+    this.setOnAction = function (callback) { this.callback = callback; }
+
+    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
 }
 
-
-function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,onFabTouch,icon1Func,icon2Func,icon3Func,icon4Func){
+function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,barInfo){
     mainUi = app.CreateLayout("Card", "Bottom,FillXY,Horizontal" );
     mainUi.SetSize(-1,80,'dp')  
     mainUi.SetMargins(0,0.9)
     //this.mainUi.SetPosition(0,0.9)
     mainUi.SetElevation(3,'dp')
-    
-    layout.AddChild(mainUi)
-    
-    
+
     const box = app.CreateLayout('Linear','Horizontal')
     mainUi.AddChild(box);
     box.SetSize(-1,80,'dp')
@@ -152,26 +153,34 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,onFabTouch,icon1Fu
     _icon1 = app.CreateText(icon1,null,null,'H/VCenter,FillXY')
     _icon1.SetFontFile(defaultIcons)
     _icon1.SetTextSize(24)
-    _icon1.SetOnTouchUp(icon1Func)
+    _icon1.SetOnTouchUp(function(){
+        barInfo.icon1Func()})
+        
     _icon1.SetMargins(8,null,16,null,'dp')
     
     _icon2 = app.CreateText(icon2,null,null,'H/VCenter,FillXY')
     _icon2.SetFontFile(defaultIcons)
     _icon2.SetTextSize(24)
-    _icon2.SetOnTouchUp(icon2Func)
+    _icon2.SetOnTouchUp(function(){
+    barInfo.icon2Func();
+    })
     _icon2.SetMargins(8,null,16,null,'dp')
     
     _icon3 = app.CreateText(icon3,null,null,'H/VCenter,FillXY')
     _icon3.SetFontFile(defaultIcons)
     _icon3.SetTextSize(24)
-    _icon3.SetOnTouchUp(icon3Func)
+    _icon3.SetOnTouchUp(function(){
+    barInfo.icon3Func();
+    })
     _icon3.SetMargins(8,null,16,null,'dp')
     
     
     _icon4 = app.CreateText(icon4,null,null,'H/VCenter,FillXY')
     _icon4.SetFontFile(defaultIcons)
     _icon4.SetTextSize(24)
-    _icon4.SetOnTouchUp(icon4Func)
+    _icon4.SetOnTouchUp(function(){
+    barInfo.icon4Func();
+    })
     _icon4.SetMargins(8,null,16,null,'dp')
     
     fab = app.CreateLayout('Card','Right,FillXY')
@@ -182,6 +191,11 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,onFabTouch,icon1Fu
     
     _fabIcon = app.CreateText(fabIcon,null,null,'H/VCenter,FillXY')
     _fabIcon.SetFontFile(defaultIcons)
+    _fabIcon.SetOnTouchDown(function () {
+        console.log("FabIcon touched");
+        barInfo.callback(); // Check if this function is being called
+    });
+
     _fabIcon.SetTextSize(24)
     fab.AddChild(_fabIcon)
     
@@ -211,8 +225,9 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,onFabTouch,icon1Fu
         _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer)
         
     }
+    
+    layout.AddChild(mainUi)
 }
-
 
 
 //For now all butoons are kept the same

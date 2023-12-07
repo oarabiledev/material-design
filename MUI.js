@@ -9,6 +9,21 @@ ui.getVersion = function() {
     return uiVersion;
 }
 
+
+ui.setIconFill = function(iconFill){
+    if(iconFill==='outline'){
+        defaultIcons = 'Fonts/Icons/Outlined-Regular.otf'
+    }
+    if(iconFill==='sharp'){
+        defaultIcons = 'Fonts/Icons/Sharp-Regular.otf'
+    }
+    if(iconFill==='two-tone'){
+        defaultIcons = 'Fonts/Icons/TwoTone-Regular.otf'
+    }
+    if(iconFill==='round'){
+        defaultIcons = 'Fonts/Icons/Round-Regular.otf'
+    }
+}
 ui.setProps = function(colorSystem, userTheme) {
     theme = userTheme
     //alert(theme)
@@ -103,6 +118,102 @@ ui.addLayout = function(type,options){
     }
     return lay;
 }
+
+ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
+    return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
+}
+
+function _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout){
+    this.setIcon1Func = function(icon1Func){this.icon1Func = icon1Func;}
+    this.setIcon2Func = function(icon2Func){this.icon2Func = icon2Func;}
+    this.setIcon3Func = function(icon3Func){this.icon3Func = icon3Func;}
+    this.setIcon4Func = function(icon4Func){this.icon4Func = icon4Func;}
+    this.setOnFABTouch = function(onFabTouch){this.onFabTouch = onFabTouch;}
+    
+    drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,this.onFabTouch,this.icon1Func,this.icon2Func,this.icon3Func,this.icon4Func)
+}
+
+
+function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,onFabTouch,icon1Func,icon2Func,icon3Func,icon4Func){
+    mainUi = app.CreateLayout("Card", "Bottom,FillXY,Horizontal" );
+    mainUi.SetSize(-1,80,'dp')  
+    mainUi.SetMargins(0,0.9)
+    //this.mainUi.SetPosition(0,0.9)
+    mainUi.SetElevation(3,'dp')
+    
+    layout.AddChild(mainUi)
+    
+    
+    const box = app.CreateLayout('Linear','Horizontal')
+    mainUi.AddChild(box);
+    box.SetSize(-1,80,'dp')
+    
+    //Note I increased left padding to 8, i was using setmargin
+    _icon1 = app.CreateText(icon1,null,null,'H/VCenter,FillXY')
+    _icon1.SetFontFile(defaultIcons)
+    _icon1.SetTextSize(24)
+    _icon1.SetOnTouchUp(icon1Func)
+    _icon1.SetMargins(8,null,16,null,'dp')
+    
+    _icon2 = app.CreateText(icon2,null,null,'H/VCenter,FillXY')
+    _icon2.SetFontFile(defaultIcons)
+    _icon2.SetTextSize(24)
+    _icon2.SetOnTouchUp(icon2Func)
+    _icon2.SetMargins(8,null,16,null,'dp')
+    
+    _icon3 = app.CreateText(icon3,null,null,'H/VCenter,FillXY')
+    _icon3.SetFontFile(defaultIcons)
+    _icon3.SetTextSize(24)
+    _icon3.SetOnTouchUp(icon3Func)
+    _icon3.SetMargins(8,null,16,null,'dp')
+    
+    
+    _icon4 = app.CreateText(icon4,null,null,'H/VCenter,FillXY')
+    _icon4.SetFontFile(defaultIcons)
+    _icon4.SetTextSize(24)
+    _icon4.SetOnTouchUp(icon4Func)
+    _icon4.SetMargins(8,null,16,null,'dp')
+    
+    fab = app.CreateLayout('Card','Right,FillXY')
+    fab.SetSize(56,56,'dp')
+    fab.SetElevation(0)
+    fab.SetCornerRadius(16)
+    fab.SetMargins(100,12,16,12,'dp')
+    
+    _fabIcon = app.CreateText(fabIcon,null,null,'H/VCenter,FillXY')
+    _fabIcon.SetFontFile(defaultIcons)
+    _fabIcon.SetTextSize(24)
+    fab.AddChild(_fabIcon)
+    
+    
+    box.AddChild(_icon1)
+    box.AddChild(_icon2)
+    box.AddChild(_icon3)
+    box.AddChild(_icon4)
+    box.AddChild(fab)
+    
+    if(theme==='light'){
+        mainUi.SetBackColor(md_theme_light_surfaceVariant); 
+        _icon1.SetTextColor(md_theme_light_onPrimaryContainer)
+        _icon2.SetTextColor(md_theme_light_onPrimaryContainer)
+        _icon3.SetTextColor(md_theme_light_onPrimaryContainer)
+        _icon4.SetTextColor(md_theme_light_onPrimaryContainer)
+        fab.SetBackColor(md_theme_light_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer)
+    }
+    else{
+        mainUi.SetBackColor(md_theme_dark_surfaceVariant);
+        _icon1.SetTextColor(md_theme_dark_onPrimaryContainer)
+        _icon2.SetTextColor(md_theme_dark_onPrimaryContainer)
+        _icon3.SetTextColor(md_theme_dark_onPrimaryContainer)
+        _icon4.SetTextColor(md_theme_dark_onPrimaryContainer)
+        fab.SetBackColor(md_theme_dark_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer)
+        
+    }
+}
+
+
 
 //For now all butoons are kept the same
 ui.addFilledButton = function(btnName, width, height, icon, layout) {

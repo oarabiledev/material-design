@@ -5,7 +5,7 @@ This is MUI version 3, here is the documentation and how to’s, implemented in 
 Firstly We Must Call/Load The plugin:
 
 ```jsx
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 ```
 
 ### MUI 3 Color
@@ -43,6 +43,8 @@ In your code, to initialize colors, write the following code:
 //set it as 'light' or 'dark'
 //in the future if droidscript support getting theme info, from 
 //the os, then you will be able to use 'auto' as an option.
+cfg.MUI
+app.LoadPlugin('Material Design 3')
 function OnStart(){
     ui.setProps(colorSystem,defaultTheme)
 }
@@ -81,8 +83,7 @@ Its returns a layout, use as normal, no changes made.
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
-
+app.LoadPlugin('Material Design 3')
 function OnStart(){
   ui.setProps('static','dark')
   
@@ -139,13 +140,11 @@ And use the SetOnTouch parameter to call your function.
 
 Allows You To Use A Bottom App Bar:
 
-[https://lh3.googleusercontent.com/cx3W_temkTITWB9TR-sw9ga-8Dr-96ko4dJIdi96YkhLqyiJZPo2eXBNlmrFYa9h1HJNAcco0K0eyt60GOXuRRSdU3DuOnYQeD6dNMXtsyzK=s0](https://lh3.googleusercontent.com/cx3W_temkTITWB9TR-sw9ga-8Dr-96ko4dJIdi96YkhLqyiJZPo2eXBNlmrFYa9h1HJNAcco0K0eyt60GOXuRRSdU3DuOnYQeD6dNMXtsyzK=s0)
-
 To use simply :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -172,6 +171,7 @@ bottomBar.setIcon1Func()
 //that means you will use:
 // setIcon2Func/setIcon3Func/setIcon4Func
 //If You dont need an icon alway set it to null.
+
 ```
 
 ---
@@ -194,7 +194,7 @@ Implementation:
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')
@@ -239,7 +239,51 @@ ui.showContainer()
 
 ---
 
-### MUI 3 Menu
+### MUI 3 FAB
+
+There are 3 different types of FAB’s;
+
+We have:
+
+-Normal FAB
+
+-Small FAB
+
+-Large FAB
+
+They all have the same methods:
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+function OnStart(){
+  ui.setProps('static','dark')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Absolute','FillXY');
+  
+  fab = ui.addFAB('add',lay)
+  fab.setOnTouch(a)
+  fab.setPosition(0.8,0.9)
+}
+//For Different Sized FAB's the following are available:
+//ui.addSmallFAB
+//ui.addLargeFAB
+function a(){
+    alert('w')
+}
+```
+
+Available Methods:
+
+```jsx
+fab.setPosition()
+//Used With Absolute Layouts
+fab.setMargins()
+//Used With Linear Layouts
+fab.setOnTouch()
+//Calling Your Functions
+```
 
 ---
 
@@ -253,7 +297,7 @@ To use it :
 
 ```jsx
 cfg.MUI
-app.LoadPlugin('MUI 3')
+app.LoadPlugin('Material Design 3')
 
 function OnStart(){
   ui.setProps('static','dark')

@@ -1,6 +1,11 @@
-var uiVersion = 0.001;
+var uiVersion = 0.01;
 var defaultFont = 'Fonts/Text/Roboto.ttf'
 var defaultIcons = 'Fonts/Icons/Regular.ttf'
+
+var screenHeight = app.GetScreenHeight('Real');
+var screenWidth = app.GetScreenWidth('Real');
+var screenDensity = app.GetScreenDensity('Real');
+
 //ui color constants
 
 const ui = {};
@@ -119,6 +124,211 @@ ui.addLayout = function(type,options){
     return lay;
 }
 
+ui.addFAB = function(icon,layout){
+    return new _Fab(icon,layout)
+}
+
+
+function drawFab(icon,layout,_FabInfo){
+    mainUi = app.CreateLayout('Linear','TouchThrough,Spy')
+    mainUi.SetSize(56,56,'dp');
+    
+    
+    fab = app.CreateLayout('Card','Right,Bottom,FillXY');
+    fab.SetSize(56,56,'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(16);
+
+    
+    _fabIcon = app.CreateText(icon,null,null,'H/VCenter,FillXY')
+    _fabIcon.SetFontFile(defaultIcons)
+    _fabIcon.SetOnTouchDown(function () {
+        _FabInfo.onTouch();
+    });
+
+    _fabIcon.SetTextSize(24)
+    fab.AddChild(_fabIcon)
+    mainUi.AddChild(fab)
+    
+    layout.AddChild(mainUi)  
+    
+    if(theme==='light'){
+        fab.SetBackColor(md_theme_light_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer)
+    }
+    else{
+        fab.SetBackColor(md_theme_dark_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer)
+        
+    }
+}
+
+function _Fab(icon,layout){
+    
+    this.setOnTouch = null;
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    
+    this.setMargins = function(left,top,right,bottom,mode){
+       mainUi.SetMargins(left,top,right,bottom,mode);
+    }
+    this.setPosition = function( left, top, width, height, options){
+        mainUi.SetPosition(left,top,width,height,options)
+    }
+    drawFab(icon,layout,this)
+}
+
+ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
+    return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
+}
+function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
+    this.icon1Func = null;
+    this.icon2Func = null;
+    this.icon3Func = null;
+    this.icon4Func = null;
+    this.callback = null;
+
+    this.setIcon1Func = function (icon1Func) { this.icon1Func = icon1Func; }
+    this.setIcon2Func = function (icon2Func) { this.icon2Func = icon2Func; }
+    this.setIcon3Func = function (icon3Func) { this.icon3Func = icon3Func; }
+    this.setIcon4Func = function (icon4Func) { this.icon4Func = icon4Func; }
+    this.setOnAction = function (callback) { this.callback = callback; }
+
+    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
+}
+
+
+ui.addSmallFAB = function(icon,layout){
+    return new _smallFab(icon,layout)
+}
+
+
+function drawSmallFab(icon,layout,_FabInfo){
+    mainUi = app.CreateLayout('Linear','TouchThrough,Spy')
+    mainUi.SetSize(40,40,'dp');
+    
+    
+    fab = app.CreateLayout('Card','Right,Bottom,FillXY');
+    fab.SetSize(40,40,'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(12);
+
+    
+    _fabIcon = app.CreateText(icon,null,null,'H/VCenter,FillXY')
+    _fabIcon.SetFontFile(defaultIcons)
+    _fabIcon.SetOnTouchDown(function () {
+        _FabInfo.onTouch();
+    });
+
+    _fabIcon.SetTextSize(18)
+    fab.AddChild(_fabIcon)
+    mainUi.AddChild(fab)
+    
+    layout.AddChild(mainUi)  
+    
+    if(theme==='light'){
+        fab.SetBackColor(md_theme_light_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer)
+    }
+    else{
+        fab.SetBackColor(md_theme_dark_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer)
+        
+    }
+}
+
+function _smallFab(icon,layout){
+    
+    this.setOnTouch = null;
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    
+    this.setMargins = function(left,top,right,bottom,mode){
+       mainUi.SetMargins(left,top,right,bottom,mode);
+    }
+    this.setPosition = function( left, top, width, height, options){
+        mainUi.SetPosition(left,top,width,height,options)
+    }
+    drawSmallFab(icon,layout,this)
+}
+
+ui.addLargeFAB = function(icon,layout){
+    return new _largeFab(icon,layout)
+}
+
+
+function drawLargeFab(icon,layout,_FabInfo){
+    mainUi = app.CreateLayout('Linear','TouchThrough,Spy')
+    mainUi.SetSize(96,96,'dp');
+    
+    
+    fab = app.CreateLayout('Card','Right,Bottom,FillXY');
+    fab.SetSize(96,96,'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(28);
+
+    
+    _fabIcon = app.CreateText(icon,null,null,'H/VCenter,FillXY')
+    _fabIcon.SetFontFile(defaultIcons)
+    _fabIcon.SetOnTouchDown(function () {
+        _FabInfo.onTouch();
+    });
+
+    _fabIcon.SetTextSize(36)
+    fab.AddChild(_fabIcon)
+    mainUi.AddChild(fab)
+    
+    layout.AddChild(mainUi)  
+    
+    if(theme==='light'){
+        fab.SetBackColor(md_theme_light_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer)
+    }
+    else{
+        fab.SetBackColor(md_theme_dark_primaryContainer)
+        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer)
+        
+    }
+}
+
+function _largeFab(icon,layout){
+    
+    this.setOnTouch = null;
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    
+    this.setMargins = function(left,top,right,bottom,mode){
+       mainUi.SetMargins(left,top,right,bottom,mode);
+    }
+    this.setPosition = function( left, top, width, height, options){
+        mainUi.SetPosition(left,top,width,height,options)
+    }
+    drawLargeFab(icon,layout,this)
+}
+
+ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
+    return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
+}
+function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
+    this.icon1Func = null;
+    this.icon2Func = null;
+    this.icon3Func = null;
+    this.icon4Func = null;
+    this.callback = null;
+
+    this.setIcon1Func = function (icon1Func) { this.icon1Func = icon1Func; }
+    this.setIcon2Func = function (icon2Func) { this.icon2Func = icon2Func; }
+    this.setIcon3Func = function (icon3Func) { this.icon3Func = icon3Func; }
+    this.setIcon4Func = function (icon4Func) { this.icon4Func = icon4Func; }
+    this.setOnAction = function (callback) { this.callback = callback; }
+
+    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
+}
+
+
 ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
     return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
 }
@@ -228,6 +438,7 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,barInfo){
     
     layout.AddChild(mainUi)
 }
+
 
 
 //For now all butoons are kept the same

@@ -1,4 +1,4 @@
-# Material Design 3 Implementation In Droidscript:
+# Md3 Implementation In Droidscript:
 
 Hey there, MUI 3 has been released some time ago.
 

@@ -124,6 +124,7 @@ ui.addLayout = function(type,options){
     return lay;
 }
 
+
 ui.addFAB = function(icon,layout){
     return new _Fab(icon,layout)
 }
@@ -309,25 +310,152 @@ function _largeFab(icon,layout){
     drawLargeFab(icon,layout,this)
 }
 
+var shader1,shader2,shader3;
+ _shader2 = app.CreateLayout('Card');
+ui.addBottomNavBar = function(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5){
+    return new navObject(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5);
+}
+
+function navObject(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5){
+    this.setActiveTab = function(activeIcon){
+        
+    }
+    this.setIconLabel = function(label1,label2,label3,label4,label5){
+        _label1 = app.AddText(_shaderUi1,label1,null,null,'FillXY')
+        _label1.SetOnTouchUp(function(){
+          
+        })
+        
+        _label2 = app.AddText(_shaderUi2,label2,null,null,'H/VCenter,FillXY')
+        _label2.SetOnTouchUp(function(){
+       
+        })
+        _label3 = app.AddText(_shaderUi3,label3,null,null,'H/VCenter,FillXY')
+        this.label2 = label2;
+        this.label3 = label3;
+        this.label4 = label4;
+        this.label5 = label5;
+    }
+    this.setAnimation = function(state,animation){
+        this.state = state;
+        this.animation = animation;
+    }
+    this.goTo = function(goToIcon){
+        this.goToIcon = goToIcon;
+    }
+    this.setOnScrollUp = function(scrollType,objectVisibility,objectAnimation){
+        
+    }
+    this.setOnScrollDown = function(scrollType,objectVisibility,objectAnimation){
+        
+    }
+    drawNav(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5,this.activeIcon)
+}
+function drawNav(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5,activeIcon){
+    _mainUi = app.CreateLayout('linear')
+    _mainUi.SetSize(1,1)
+    
+    
+    _barUi = app.CreateLayout('Card');
+    _barUi.SetSize(1,0.108)
+    _barUi.SetMargins(0,0.892)
+    _mainUi.AddChild(_barUi)
+    
+    _iconUi = app.CreateLayout('linear','Horizontal')
+    _iconUi.SetBackAlpha(256)
+    _barUi.AddChild(_iconUi)
+    
+    if(iconNum === 3){
+        //1st Icon
+        _shaderUi1 = app.CreateLayout('Linear','vertical,VCenter')
+        _shaderUi1.SetSize(0.25,null)
+        
+        _iconUi.AddChild(_shaderUi1)
+        _shader1 = app.CreateLayout('Card');
+        _shader1.SetElevation(0)
+        
+        _shaderUi1.SetMargins(25,12,null,16,'dp')
+        _shader1.SetSize(64,32,'dp')
+        _shader1.SetCornerRadius(16)
+        _shaderUi1.AddChild(_shader1)
+        
+        _icon1 = app.AddText(_shader1,icon1,null,null,'H/VCenter,FillXY')
+        _icon1.SetFontFile(defaultIcons)
+        
+        //2nd Icon
+        _shaderUi2 = app.CreateLayout('Linear','vertical,VCenter')
+        _shaderUi2.SetSize(0.25,null)
+        
+        _iconUi.AddChild(_shaderUi2)
+       
+        _shader2.SetElevation(0)
+       
+        
+        _shaderUi2.SetMargins(35,12,null,16,'dp')
+        _shader2.SetSize(64,32,'dp')
+        _shader2.SetCornerRadius(16)
+        _shaderUi2.AddChild(_shader2)
+        _shader2.SetBackColor(md_theme_dark_surface)
+        
+        _icon2 = app.AddText(_shader2,icon2,null,null,'H/VCenter,FillXY')
+        _icon2.SetFontFile(defaultIcons)
+        
+        
+        //3nd Icon
+        _shaderUi3 = app.CreateLayout('Linear','Vertical,VCenter')
+        _shaderUi3.SetSize(0.25,null)
+        
+        _iconUi.AddChild(_shaderUi3)
+        _shader3 = app.CreateLayout('Card');
+       _shader3.SetElevation(0)
+       
+       
+        _shaderUi3.SetMargins(35,12,null,16,'dp')
+        _shader3.SetSize(64,32,'dp')
+        _shader3.SetCornerRadius(16)
+        _shaderUi3.AddChild(_shader3)
+        _shader3.SetBackColor(md_theme_dark_surface)
+        
+        _icon3 = app.AddText(_shader3,icon3,null,null,'H/VCenter,FillXY')
+        _icon3.SetFontFile(defaultIcons)
+        
+    }
+    
+    if(iconNum === 4){
+        
+
+    }
+    
+    
+    if(iconNum === 5){
+        
+        
+    }
+        
+    if(theme==='light'){
+        _barUi.SetBackColor(md_theme_light_surface)
+        _shader1.SetBackColor(md_theme_light_onSecondaryContainer)
+        _icon1.SetTextColor(md_theme_light_onSurfaceVariant)
+    }
+    else{
+         _barUi.SetBackColor(md_theme_dark_surface)
+         _shader1.SetBackColor(md_theme_dark_secondaryContainer)
+         _icon1.SetTextColor(md_theme_dark_onSurfaceVariant)
+         
+    }
+    
+    app.AddLayout(_mainUi);
+}
+
+
+
+
+function showPage(layouty){
+    
+}
 ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
     return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
 }
-function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
-    this.icon1Func = null;
-    this.icon2Func = null;
-    this.icon3Func = null;
-    this.icon4Func = null;
-    this.callback = null;
-
-    this.setIcon1Func = function (icon1Func) { this.icon1Func = icon1Func; }
-    this.setIcon2Func = function (icon2Func) { this.icon2Func = icon2Func; }
-    this.setIcon3Func = function (icon3Func) { this.icon3Func = icon3Func; }
-    this.setIcon4Func = function (icon4Func) { this.icon4Func = icon4Func; }
-    this.setOnAction = function (callback) { this.callback = callback; }
-
-    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
-}
-
 
 ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
     return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
@@ -376,7 +504,7 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,barInfo){
     })
     _icon2.SetMargins(8,null,16,null,'dp')
     
-    _icon3 = app.CreateText(icon3,null,null,'H/VCenter,FillXY')
+    _icon3 = app.CreateText(icon3,null,null,'H/V,FillXY')
     _icon3.SetFontFile(defaultIcons)
     _icon3.SetTextSize(24)
     _icon3.SetOnTouchUp(function(){
@@ -385,7 +513,7 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,barInfo){
     _icon3.SetMargins(8,null,16,null,'dp')
     
     
-    _icon4 = app.CreateText(icon4,null,null,'H/VCenter,FillXY')
+    _icon4 = app.CreateText(icon4,null,null,'H/V,FillXY')
     _icon4.SetFontFile(defaultIcons)
     _icon4.SetTextSize(24)
     _icon4.SetOnTouchUp(function(){
@@ -399,7 +527,7 @@ function drawBottomBar(icon1,icon2,icon3,icon4,fabIcon,layout,barInfo){
     fab.SetCornerRadius(16)
     fab.SetMargins(100,12,16,12,'dp')
     
-    _fabIcon = app.CreateText(fabIcon,null,null,'H/VCenter,FillXY')
+    _fabIcon = app.CreateText(fabIcon,null,null,'H/V,FillXY')
     _fabIcon.SetFontFile(defaultIcons)
     _fabIcon.SetOnTouchDown(function () {
         console.log("FabIcon touched");
@@ -453,7 +581,7 @@ ui.addFilledButton = function(btnName, width, height, icon, layout) {
     
     
 
-    btnText = app.AddText(btnUi, btnName, null, null, 'H/VCenter,AutoScale,NoWrap,FillXY')
+    btnText = app.AddText(btnUi, btnName, null, null, 'H/V,AutoScale,NoWrap,FillXY')
     btnText.SetTextColor('black');
 
     if (height === null) btnUi.SetSize(null, 40, 'dp');
@@ -588,59 +716,57 @@ ui.addCenterTopAppBar = function(title,rightIcon,leftIcon,layout){
 }
 
 function i_centerTopBar(title,rightIcon,leftIcon,layout){
+    this.onNav = null;
+    this.onIcon = null;
     this.setOnNav = function(onNav){this.onNav = onNav};
     this.setOnIcon = function(onIcon){this.onIcon = onIcon};
-    _drawCenterTopAppBar(title,rightIcon,leftIcon,layout,this.onNav,this.onIcon)
+    _drawCenterTopAppBar(title,rightIcon,leftIcon,layout,this)
 }
 
-function _drawCenterTopAppBar(title,rightIcon,leftIcon,layout,onNav,onIcon){
-    barUi = MUI.CreateLayout('Card','Top');
+function _drawCenterTopAppBar(title,rightIcon,leftIcon,layout,topBarNav){
+    barUi = MUI.CreateLayout('Card','Top,Center');
+    barUi.SetSize(1,0.085)
     barUi.SetCornerRadius(0)
-    barUi.SetElevation(0)
-
+    barUi.SetElevation(5)
     
-
-    const box = app.CreateLayout("Linear", "Horizontal,FillXY");
-    box.SetSize(1, 0.065);
-    box.SetBackColor('green')
-    barUi.AddChild( box );
-
-
-    _title = app.CreateText(title,null,null,'H/VCenter,FillXY')
-    _title.SetFontFile(defaultFont)
-    _title.SetTextSize(24)
-    box.AddChild(_title)
-   
-    _leftUi = app.CreateLayout('Linear','Left');
-    _leftUi.SetSize(24,24,'dp')
-    _leftUi.SetBackColor('blue')
-    _leftUi.SetMargins(16,null,24,null,'dp')
-    box.AddChild(_leftUi)
     
-    _leftIcon = app.CreateText(leftIcon,null,null,'')
+    
+    _leftIcon = app.CreateText(leftIcon,null,null,'Left,VCenter,FillXY,Wrap')
     _leftIcon.SetFontFile(defaultIcons)
     _leftIcon.SetTextSize(24)
-    _leftUi.AddChild(_leftIcon);
+    _leftIcon.SetOnTouchUp(function(){
+        alert('Wl')})
+    _leftIcon.SetMargins(16,null,24,null,'dp')
+    barUi.AddChild(_leftIcon);
     
-    _rightUi = app.CreateLayout('Linear','Right');
-    _rightUi.SetSize(24,24,'dp')
-    _rightUi.SetMargins(24,null,16,null,'dp');
-    box.AddChild(_rightUi)
     
-    _rightIcon = app.CreateText(rightIcon,null,null,'')
+    _title = app.CreateText(title,null,null,'VCenter,FillXY,Wrap')
+    _title.SetFontFile(defaultFont)
+    _title.SetTextSize(26)
+    barUi.AddChild(_title)
+   
+    
+    _rightIcon = app.CreateText(rightIcon,null,null,'Right,VCenter,FillXY,Wrap')
     _rightIcon.SetFontFile(defaultIcons)
+    _rightIcon.SetMargins(24,null,16,null,'dp')
     _rightIcon.SetTextSize(24)
-    _rightUi.AddChild(_rightIcon);   
+    _rightIcon.SetOnTouchUp(function(){
+        alert('W')})    
+        barUi.AddChild(_rightIcon);   
     
  
     
     if(theme==='light'){
         barUi.SetBackColor(md_theme_light_surface)
-        _title.SetTextColor(md_theme_light_surface)
+        _title.SetTextColor(md_theme_light_onSurface)
+        _leftIcon.SetTextColor(md_theme_light_onSurfaceVariant)
+        _rightIcon.SetTextColor(md_theme_light_onSurfaceVariant)
     }
     else{
-        //box.SetBackColor(md_theme_dark_surface)
-        //_title.SetTextColor(md_theme_dark_surface)
+        barUi.SetBackColor(md_theme_dark_surface)
+        _title.SetTextColor(md_theme_dark_onSurface)
+        _leftIcon.SetTextColor(md_theme_dark_onSurfaceVariant)
+        _rightIcon.SetTextColor(md_theme_dark_onSurfaceVariant)
     }
     layout.AddChild(barUi)
     

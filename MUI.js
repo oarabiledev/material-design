@@ -180,6 +180,106 @@ function _Fab(icon,layout){
     drawFab(icon,layout,this)
 }
 
+
+ui.addSeekBar = function(value,range,width,layout){
+    return new seekBarObject(value,range,width,layout)
+}
+
+function seekBarObject(value,range,width,layout){
+    /*this.setValue = function(value){
+        _seekBar.SetValue(value);
+    }
+    This doesnt work for some reoson
+    */
+    this.setVisibility = function(mode){
+        _seekBar.SetVisibility(mode)
+    }
+    this.setSize = function(width,height,options){
+        _seekBar.SetSize(width,height,options)
+        }
+    this.setPosition = function(left, top, width, height, options ){
+        _seekBar.SetPosition(left, top, width, height, options )
+    }
+    this.setOnTouch = function(onTouch){
+        _seekBar.SetOnTouch(onTouch)
+    }
+    this.getValue = function(){
+        return _seekBar.GetValue();
+    }
+    this.isVisible = function(){
+        return _seekBar.IsVisible();
+    }
+    this.animate = function(type,callback,time){
+        _seekBar.Animate(type,callback,time)
+    }
+    this.goneComponent = function(){
+        _seekBar.Gone();
+    }
+    this.setDecimals = function(decimals){
+        _seekBar.SetDecimals(decimals)
+    }
+    drawSeekBar(value,range,width,layout)
+}
+
+function drawSeekBar(value,range,width,layout){
+    var getSeekColor = function(uitheme){
+        if(uitheme==='light'){
+            return md_theme_light_onSurfaceVariant;
+        }
+        else{
+            return md_theme_dark_onSurfaceVariant;
+        }
+    }
+    _seekBar = MUI.CreateSeekBar(value,range,width,getSeekColor(theme))
+    
+    layout.AddChild(_seekBar)
+}
+
+ui.addBottomSheet = function(sheetLayout,height){
+    return new bottomSheetObject(sheetLayout,height);
+}
+
+function bottomSheetObject(sheetLayout,height){
+    this.dismissSheet = function(){
+        dismissBSheet()
+    }
+    this.showSheet = function(){
+        drawBottomSheet(sheetLayout,height)
+    }
+}
+
+function drawBottomSheet(sheetLayout,height){
+    mainUi = app.CreateLayout('Linear','FillXY,VCenter,Bottom')
+    mainUi.SetSize(1,1)
+    mainUi.SetOnTouchUp(dismissBSheet)
+    
+    _bSheet = app.CreateLayout('Card','FillX,VCenter,Bottom')
+    _bSheet.SetSize(-1,height)
+    _bSheet.SetCornerRadius(28)
+    _bSheet.Animate('BounceBottom',null,550)
+    _bSheet.AddChild(sheetLayout)
+    mainUi.AddChild(_bSheet)
+    
+    app.AddLayout(mainUi)
+    
+    if(theme==='light'){
+        mainUi.SetBackColor(md_theme_light_scrim)
+        mainUi.SetBackAlpha(0.33)
+        _bSheet.SetBackColor(md_theme_light_surfaceVariant)
+    }
+    else{
+        mainUi.SetBackColor(md_theme_dark_scrim)
+        mainUi.SetBackAlpha(0.33)
+        _bSheet.SetBackColor(md_theme_dark_surfaceVariant)
+    }
+}
+
+function dismissBSheet(){
+    _bSheet.Animate('SlideToBottom',function(){
+        app.DestroyLayout(mainUi)
+        },210)
+    
+}
 ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
     return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
 }
@@ -581,7 +681,7 @@ ui.addFilledButton = function(btnName, width, height, icon, layout) {
     
     
 
-    btnText = app.AddText(btnUi, btnName, null, null, 'H/V,AutoScale,NoWrap,FillXY')
+    btnText = app.AddText(btnUi, btnName, null, null, 'H/VCenter,AutoScale,NoWrap,FillXY')
     btnText.SetTextColor('black');
 
     if (height === null) btnUi.SetSize(null, 40, 'dp');

@@ -235,20 +235,70 @@ function drawSeekBar(value,range,width,layout){
     layout.AddChild(_seekBar)
 }
 
-ui.addBottomSheet = function(sheetLayout,height){
-    return new bottomSheetObject(sheetLayout,height);
+ui.addSlideSheet = function(sheetLayout,width,options){
+    return new slideSheetObject(sheetLayout,width,options);
 }
 
-function bottomSheetObject(sheetLayout,height){
+function slideSheetObject(sheetLayout,width,options){
+    this.dismissSheet = function(){
+        dismissSlideSheet()
+    }
+    this.showSheet = function(){
+        drawSlideSheet(sheetLayout,width,options)
+    }
+}
+
+function drawSlideSheet(sheetLayout,width,options){
+    mainUi = app.CreateLayout('Linear','FillXY,VCenter,Bottom,Right')
+    mainUi.SetSize(1,1)
+    mainUi.SetOnTouchUp(dismissSlideSheet)
+    
+    _bSheet = app.CreateLayout('Card','FillX,VCenter,Right')
+    _bSheet.SetSize(width,1)
+    _bSheet.SetCornerRadius()
+    _bSheet.Animate('BounceRight',null,550)
+    _bSheet.AddChild(sheetLayout)
+    mainUi.AddChild(_bSheet)
+    
+    app.AddLayout(mainUi)
+    
+    if(theme==='light'){
+        mainUi.SetBackColor(md_theme_light_scrim)
+        mainUi.SetBackAlpha(0.33)
+        _bSheet.SetBackColor(md_theme_light_surfaceVariant)
+    }
+    else{
+        mainUi.SetBackColor(md_theme_dark_scrim)
+        mainUi.SetBackAlpha(0.33)
+        _bSheet.SetBackColor(md_theme_dark_surfaceVariant)
+    }
+}
+
+function dismissSlideSheet(){
+    _bSheet.Animate('SlideToRight',function(){
+        app.DestroyLayout(mainUi)
+        },210)
+}
+//Available Options For BottomSheet
+/*
+  
+  2. NoEdge
+  3. Expandable
+  */
+ui.addBottomSheet = function(sheetLayout,height,options){
+    return new bottomSheetObject(sheetLayout,height,options);
+}
+
+function bottomSheetObject(sheetLayout,height,options){
     this.dismissSheet = function(){
         dismissBSheet()
     }
     this.showSheet = function(){
-        drawBottomSheet(sheetLayout,height)
+        drawBottomSheet(sheetLayout,height,options)
     }
 }
 
-function drawBottomSheet(sheetLayout,height){
+function drawBottomSheet(sheetLayout,height,options){
     mainUi = app.CreateLayout('Linear','FillXY,VCenter,Bottom')
     mainUi.SetSize(1,1)
     mainUi.SetOnTouchUp(dismissBSheet)
@@ -908,7 +958,7 @@ function drawSnackUi(text, btnAction, width, align, top, animateIn, animateOut, 
     mainUi.SetBackAlpha(256)
     snackUi = MUI.CreateLayout('Card', '');
     try {
-        snackUi.Animate(animateIn)
+        snackUi.Animate(animateIn,null,timeout/10)
     } catch (err) {
         snackUi.Animate('Fade-In');
     }
@@ -955,9 +1005,9 @@ function drawSnackUi(text, btnAction, width, align, top, animateIn, animateOut, 
     if (timeOut === undefined) {
         setTimeout(function() {
             try {
-                snackUi.Animate(AnimateOut)
+                snackUi.Animate(AnimateOut,null,timeOut/10)
             } catch (err) {
-                snackUi.Animate('Fade-Out');
+                snackUi.Animate('Fade-Out',null,timeOut/10);
             }
             app.DestroyLayout(mainUi);
         }, 3000)

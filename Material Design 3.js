@@ -111,6 +111,59 @@ ui.setProps = function(colorSystem, userTheme) {
     }
 }
 
+ui.addProgressBar = function(progressType, width, layout) {
+    return new progressObject(progressType, width, layout)
+}
+
+function progressObject(progressType, width, layout) {
+    this.setValue = function(value) {
+        this.value = value;
+        _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
+
+    }
+    this.getValue = function() {
+        return this.value;
+    }
+    this.setMargins = function(left, top, right, bottom, mode){
+        mainUi.SetMargins(left, top, right, bottom, mode)
+    }
+    this.setPosition = function( left, top, width, height, options){
+        mainUi.SetPosition( left, top, width, height, options)
+    }
+    drawProgressBar(progressType, width, layout)
+}
+
+function drawProgressBar(progressType, width, layout) {
+    if (progressType.includes('linear')) {
+        let trackColor = '#E6E0E9';
+        mainUi = app.CreateLayout('Linear', 'Horizontal,Left,FillXY')
+        mainUi.SetSize(width, 0.005)
+        _progressIndicator = app.AddText(mainUi, '')
+        
+        if(theme==='light'){
+            mainUi.SetBackColor(md_theme_light_surfaceVariant)
+            _progressIndicator.SetBackColor(md_theme_light_primary)
+        }
+        else{
+            mainUi.SetBackColor(md_theme_dark_surfaceVariant)
+            _progressIndicator.SetBackColor(md_theme_dark_primary)
+        }
+        layout.AddChild(mainUi)
+    }
+    if (progressType.includes('linearIntermediate')) {
+        let trackColor = '#E6E0E9';
+        mainUi = app.CreateLayout('Linear', 'Horizontal,Left,FillXY')
+        mainUi.SetSize(width, 0.005)
+        mainUi.SetBackColor(trackColor)
+
+        _progressIndicator = app.AddText(mainUi, '')
+        _progressIndicator.SetBackColor('green')
+        _progressIndicator.SetSize(0.8)
+        _progressIndicator.Animate('SlideToLeft', null, 500)
+        layout.AddChild(mainUi)
+    }
+}
+
 ui.addLayout = function(type,options){
     
     lay = app.CreateLayout(type, options)
@@ -179,7 +232,6 @@ function _Fab(icon,layout){
     }
     drawFab(icon,layout,this)
 }
-
 
 ui.addSeekBar = function(value,range,width,layout){
     return new seekBarObject(value,range,width,layout)

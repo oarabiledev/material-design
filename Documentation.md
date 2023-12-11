@@ -1,6 +1,6 @@
 # Material Design 3
 
-This is MUI version 3, here is the documentation and how to’s, implemented in Droidscript.
+This is MUI version 3, implemented in Droidscript.
 
 Firstly We Must Call/Load The plugin:
 
@@ -12,7 +12,7 @@ app.LoadPlugin('Material Design 3')
 
 Material Design 3 has a new way of handling colors, and how they are implemented, so as of current Droidscript cannot use dynamic theming so its not an option:
 
-Firstly you must have your own color palletes to obtain this, go to this url and customize your apps palletes:
+Firstly you must have your own color pallets to obtain this, go to this url and customize your apps palletes:
 
 [Material Design](https://m3.material.io/theme-builder#/custom)
 
@@ -29,7 +29,7 @@ Downloads>material-theme>values>colors.xml
 
 You will now have to change xml to json, use any conveter.
 
-i.e: [Best XML to JSON Converter Online (jsonformatter.org)](https://jsonformatter.org/xml-to-json)
+i.e.: [Best XML to JSON Converter Online (jsonformatter.org)](https://jsonformatter.org/xml-to-json)
 
 Make this file and place it in your app directory in the appTheme Folder that you will create for your app, save the file as appTheme.json
 
@@ -338,6 +338,103 @@ ui.getLength()
 ui.insertItem(index,title,body,image)
 ui.isVisible()
 ui.isEnabled()
+```
+
+---
+
+### MUI SlideSheet
+
+- Use side sheets to provide optional content and actions without interrupting the main content
+- Two types: standard and modal
+- Users can navigate to another region within the sheet
+
+It used like:
+
+```jsx
+//Object Structure
+ui.addSlideSheet(sheetLayout,width,options);
+
+/*Available Options Are:
+  1. NoEdge (Remove Ruonded Corners)
+  2. NoDim (Remove Dim Element)
+*/
+```
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+
+function OnStart(){
+  ui.setProps('static','dark')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY')
+  
+  newPrj = ui.addExtendedFAB('New Project',null,null,lay)
+  newPrj.SetMargins(0.28,0.9)
+  newPrj.SetOnTouch(function(){
+      lay2 = ui.addLayout('Linear','FillXY')
+      btn = ui.addFilledButton('Close SlideSheet',0.65,null,null,lay2)
+      btn.SetOnTouch(function(){
+          bs.dismissSheet();
+          })
+      btn.SetMargins(null,0.92)
+      bs = ui.addSlideSheet(lay2,0.75)
+      bs.showSheet()})
+  app.AddLayout(lay)
+}
+```
+
+Methods:
+
+```jsx
+bs.dismissSheet()
+```
+
+---
+
+### MUI BottomSheets
+
+- Use bottom sheets in compact and medium window sizes
+- Two types: standard and modal
+- Content should be additional or secondary (not the app’s main content)
+- Bottom sheets can be dismissed in order to interact with the main content
+
+Implemented like:
+
+```jsx
+ui.addBottomSheet(sheetLayout,height,options)
+//options here does not include NoDim, but NoEdge works.
+```
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+function OnStart(){
+  ui.setProps('static','dark')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY')
+  
+  newPrj = ui.addExtendedFAB('New Project',null,null,lay)
+  newPrj.SetMargins(0.28,0.9)
+  newPrj.SetOnTouch(function(){
+      lay2 = ui.addLayout('Linear','FillXY')
+      btn = ui.addFilledButton('Close SlideSheet',0.65,null,null,lay2)
+      btn.SetOnTouch(function(){
+          bs.dismissSheet();
+          })
+      btn.SetMargins(null,0.58)
+      bs = ui.addBottomSheet(lay2,0.65)
+      bs.showSheet()})
+  app.AddLayout(lay)
+}
+```
+
+Methods:
+
+```jsx
+bs.dismissSheet
 ```
 
 ---

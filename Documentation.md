@@ -438,3 +438,48 @@ bs.dismissSheet
 ```
 
 ---
+
+### MUI Progress Indicators
+
+- Use the same progress indicator for all instances of a process (like loading)
+- Two types: linear and circular
+- Never use them as decoration
+- They capture attention through motion
+
+Invoke the object like:
+
+```jsx
+ui.addProgressBar(progressType, width, layout)
+/*progressTypes:
+  1. linear
+  2. linearIntermediate
+  3. circular
+*/
+```
+
+i.e. 
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+function OnStart(){
+  ui.setProps('static','dark')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY')
+  
+  br = ui.addProgressBar('linear',0.8,lay)
+  br.setValue(43)
+  br.setMargins(null,0.05)
+  
+  app.AddLayout(lay)
+}
+```
+
+Methods:
+
+```jsx
+br.setMargins(left, top, right, bottom, mode)
+br.setPosition(left, top, width, height, options)
+br.getValue()
+```

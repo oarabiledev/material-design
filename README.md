@@ -23,4 +23,5 @@ There are a people to thank whom this project heavily borrows some of its elemen
 
 [https://github.com/alex-Symbroson](https://github.com/alex-Symbroson)
 
+To Contribute read the 'Description of tracking components file' and refer to tracking components.pdf
 contact me at : oarabilekoore@protonmail.com

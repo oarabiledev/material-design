@@ -4,6 +4,8 @@ This is MUI version 3, implemented in Droidscript.
 
 Firstly We Must Call/Load The plugin:
 
+**NOTE : For Beta Testers, download Material Design 3 and use app.Script(’Material Design 3.js’)**
+
 ```jsx
 app.LoadPlugin('Material Design 3')
 ```
@@ -131,6 +133,17 @@ And use the SetOnTouch parameter to call your function.
     */
     btn = ui.addFilledButton('Make Payment',0.8,null,null,lay)
     btn.SetPosition(0.1,0.5);
+    ```
+    
+    Methods Available:
+    
+    ```jsx
+    btn.setMargins(left, top, right, bottom, mode)
+    btn.setPosition(left, top, width, height, options)
+    btn.setOnTouch(callback)
+    btn.setOnLongTouch(callback)
+    btn.setVisibility(mode)
+    btn.setPadding(left, top, right, bottom, mode)
     ```
     
 
@@ -476,10 +489,22 @@ function OnStart(){
 }
 ```
 
+Using linear Intermediate:
+
+//A progress bar that keeps going for a given time.
+
+```jsx
+prgI = ui.addProgressBar('linearIntermediate',0.8,lay)
+prgI.setTimeOut(600000)
+  //Will Dissapear In 10 minutes
+```
+
 Methods:
 
 ```jsx
 br.setMargins(left, top, right, bottom, mode)
 br.setPosition(left, top, width, height, options)
 br.getValue()
+br.setTimeOut(timeInMs)
+//setTimeOut Only Works For Intermediate
 ```

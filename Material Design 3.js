@@ -775,6 +775,7 @@ ui.addFilledButton = function(btnName, width, height, icon, layout) {
 }
 function filledButtonObject(btnName, width, height, icon, layout){
     this.onTouch = null;
+    this.onLongTouch = null;
     this.setOnTouch = function(onTouch){
         this.onTouch = onTouch;
     }
@@ -785,7 +786,7 @@ function filledButtonObject(btnName, width, height, icon, layout){
         filledButtonContainer.SetPosition(left, top, width, height, options)
     }
     this.setOnLongTouch = function(onLongTouch){
-        filledButtonContainer.SetOnLongTouch(onLongTouch)
+        this.onLongTouch = onLongTouch;
     }
     this.setPadding = function(left, top, right, bottom, mode){
         filledButtonContainer.SetPadding(left, top, right, bottom, mode);
@@ -821,8 +822,14 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
 
     layout.AddChild(filledButtonContainer);
     filledButtonContainer.SetOnTouch = filledBtnText.SetOnTouchUp;
+    filledButtonContainer.SetOnLongTouch = filledBtnText.SetOnLongTouch;
+    
+    filledButtonContainer.SetOnLongTouch(function(){
+        onTouchEvent.onLongTouch()
+        })
     filledButtonContainer.SetOnTouch(function(){
-        onTouchEvent.onTouch()})
+        onTouchEvent.onTouch()
+        })
 }
 
 ui.addElevatedButton = function(btnName, width, height, icon, layout) {

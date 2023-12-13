@@ -111,6 +111,25 @@ ui.setProps = function(colorSystem, userTheme) {
     }
 }
 
+
+
+
+ui.addLayout = function(type,options){
+    
+    lay = app.CreateLayout(type, options)
+    if (theme ==='dark') {
+        lay.SetBackColor(md_theme_dark_surface);
+        app.SetStatusBarColor(md_theme_dark_surface)
+    } else {
+        lay.SetBackColor(md_theme_light_surface);
+        //app.SetStatusBarColor()
+    }
+    return lay;
+}
+
+//Variable Is made global so that clearInterval with method
+//stopProgress works, to avoid an not defined error.
+var animation;
 ui.addProgressBar = function(progressType, width, layout) {
     return new progressObject(progressType, width, layout)
 }
@@ -120,9 +139,16 @@ function progressObject(progressType, width, layout) {
         this.progressTimeOut = progressTimeOut;
         drawProgressBar(progressType, width, layout,this.progressTimeOut)
     }
+    this.startProgress = function(){
+        drawProgressBar(progressType, width, layout,this.progressTimeOut)
+    }
+    this.stopProgress = function(){
+        progressContainer.Hide()
+        clearInterval(animation);
+    }
     this.setValue = function(value) {
         this.value = value;
-        drawProgressBar(progressType, width, layout,this.progressTimeOut)
+        drawProgressBar(progressType, width, layout)
         _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
     }
     this.hideContainer = function(){
@@ -166,14 +192,15 @@ function drawProgressBar(progressType, width, layout, timeOut) {
 
         _progressIndicator = app.AddText(progressContainer, '', null, null, 'Left,FillXy');
         
-        var animation = setInterval(function() {
+        animation = setInterval(function() {
             _progressIndicator.Animate('SlideToRight', null, null);
         }, 600);
+        if(timeOut!= undefined || timeOut!= null){
         setTimeout(function() {
             clearInterval(animation);
             progressContainer.Hide()
         }, timeOut);
-
+        }
         if (theme === 'light') {
             progressContainer.SetBackColor(md_theme_light_surfaceVariant);
             _progressIndicator.SetBackColor(md_theme_light_primary);
@@ -185,20 +212,35 @@ function drawProgressBar(progressType, width, layout, timeOut) {
     }
 }
 
-
-ui.addLayout = function(type,options){
-    
-    lay = app.CreateLayout(type, options)
-    if (theme ==='dark') {
-        lay.SetBackColor(md_theme_dark_surface);
-        app.SetStatusBarColor(md_theme_dark_surface)
-    } else {
-        lay.SetBackColor(md_theme_light_surface);
-        //app.SetStatusBarColor()
-    }
-    return lay;
+ui.addDrawer = function(drawerLayout,side,width){
+    return new navDrawerObject(drawerLayout,side,width)
 }
 
+function navDrawerObject(drawerLayout,side,width){
+    this.openDrawer = function(side){
+        app.OpenDrawer(side)
+    }
+    this.closeDrawer = function(side){
+        app.CloseDrawer(side)
+    }
+    this.removeDrawer = function(side){
+        
+    }
+    drawNavDrawer(drawerLayout,side,width)
+}
+
+function drawNavDrawer(drawerLayout,side,width){
+    _drawerContainer = app.CreateLayout('Card','FillXY')
+    
+    _drawerContainer.AddChild(drawerLayout)
+    
+    if (theme ==='dark') {
+        _drawerContainer.SetBackColor(md_theme_dark_surface);
+    } else {
+        _drawerContainer.SetBackColor(md_theme_light_surface);
+    }
+    app.AddDrawer(_drawerContainer,side,width)
+}
 ui.addFAB = function(icon, layout) {
     return new _Fab(icon, layout);
 }

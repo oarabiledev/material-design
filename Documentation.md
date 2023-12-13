@@ -10,7 +10,7 @@ Firstly We Must Call/Load The plugin:
 app.LoadPlugin('Material Design 3')
 ```
 
-### MUI 3 Color
+### MUI Color
 
 Material Design 3 has a new way of handling colors, and how they are implemented, so as of current Droidscript cannot use dynamic theming so its not an option:
 
@@ -64,7 +64,7 @@ function changeTheme(){
 
 ---
 
-### MUI 3 Icons
+### MUI Icons
 
 To change your icons style simply use:
 
@@ -79,7 +79,7 @@ ui.setIconFill(iconFill)
 
 ---
 
-### MUI 3 Layouts
+### MUI Layouts
 
 Its returns a layout, use as normal, no changes made.
 
@@ -111,7 +111,7 @@ All layout methods are available.
 
 ---
 
-### MUI 3 Buttons
+### MUI Buttons
 
 **** more Info ****
 buttons can be added to any layout, remember an Absolute layout can have the 
@@ -149,7 +149,7 @@ And use the SetOnTouch parameter to call your function.
 
 ---
 
-### MUI 3 BottomAppBar
+### MUI BottomAppBar
 
 Allows You To Use A Bottom App Bar:
 
@@ -189,7 +189,7 @@ bottomBar.setIcon1Func()
 
 ---
 
-### MUI 3 SnackBars
+### MUI SnackBars
 
 Key things to remember :
 
@@ -252,7 +252,7 @@ ui.showContainer()
 
 ---
 
-### MUI 3 FAB
+### MUI FAB
 
 There are 3 different types of FAB’s;
 
@@ -300,7 +300,7 @@ fab.setOnTouch()
 
 ---
 
-### MUI 3 Radio Button
+### MUI Radio Button
 
 Radio buttons are used if only one item is selectable from a list. i.e. A ringtone.
 
@@ -491,12 +491,43 @@ function OnStart(){
 
 Using linear Intermediate:
 
-//A progress bar that keeps going for a given time.
+1. For a progress bar that keeps going for a given time.
 
 ```jsx
 prgI = ui.addProgressBar('linearIntermediate',0.8,lay)
 prgI.setTimeOut(600000)
   //Will Dissapear In 10 minutes
+```
+
+1. For a progress bar that is given start and stop instructions.
+
+This does not use a timeout method and is **linearIntermediate**
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+function OnStart(){
+  ui.setProps('static','light')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY')  
+ 
+  prg = ui.addProgressBar('linear',0.8,lay)
+  prg.setValue(35)
+  prg.setMargins(null,0.15)
+
+  prgI = ui.addProgressBar('linearIntermediate',0.8,lay)
+  prgI.startProgress()
+  prgI.setMargins(null,0.35)
+  
+  bt = ui.addFilledButton('Stop Progress',0.35,null,null,lay)
+  bt.setMargins(null,0.3)
+  
+  bt.setOnTouch(function(){
+      prgI.stopProgress()
+      })
+  app.AddLayout(lay)
+}
 ```
 
 Methods:
@@ -506,5 +537,53 @@ br.setMargins(left, top, right, bottom, mode)
 br.setPosition(left, top, width, height, options)
 br.getValue()
 br.setTimeOut(timeInMs)
-//setTimeOut Only Works For Intermediate
+//setTimeOut Only Works For Intermediate With Given Time
+br.startProgress() 
+//Starts The Bar
+br.stopProgress()
+//Stops It
+
 ```
+
+---
+
+### MUI Navigation
+
+Adds a navigation layout either from left or right, which users can swipe left or right to reveal a navigation layout.
+
+```jsx
+cfg.MUI
+app.LoadPlugin('Material Design 3')
+function OnStart(){
+  ui.setProps('static','light')
+  ui.setIconFill('outline')
+  
+  lay = ui.addLayout('Linear','FillXY')  
+  
+   layDrawer = app.CreateLayout( "Linear", "FillXY,VCenter" );
+   
+    txt2 = app.CreateText( "Hello" );
+    txt2.SetTextSize( 40 );
+    layDrawer.AddChild( txt2 );
+
+  drrw = ui.addDrawer(layDrawer,'left',0.8)
+  
+  bt = ui.addFilledButton('Show Side Nav',0.35,null,null,lay)
+  bt.setMargins(null,0.8)
+  
+  bt.setOnTouch(function(){
+      drrw.openDrawer()
+      })
+  app.AddLayout(lay)
+}
+```
+
+Methods Available:
+
+```jsx
+drrw.openDrawer()
+drrw.closeDrawer()
+drrw.removeDrawer()
+```
+
+---

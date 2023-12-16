@@ -112,21 +112,147 @@ ui.setProps = function(colorSystem, userTheme) {
 }
 
 
-
+var layInfo;
 
 ui.addLayout = function(type,options){
-    
-    lay = app.CreateLayout(type, options)
+   lay = app.CreateLayout(type, options)
     if (theme ==='dark') {
         lay.SetBackColor(md_theme_dark_surface);
         app.SetStatusBarColor(md_theme_dark_surface)
     } else {
         lay.SetBackColor(md_theme_light_surface);
-        //app.SetStatusBarColor()
     }
+    layInfo = type;
     return lay;
 }
 
+
+ui.addSearch = function(width,hint,layout){
+    return new searchObject(width,hint,layout)
+}
+
+function searchObject(width,hint,layout){
+    this.leftIconFunc = null
+    this.withAvatar = function(leftIcon,avatarIcon){
+        
+    }
+    this.setOnTouch = function(icon,callBack){
+        if(icon==='leftIcon'){
+            this.leftIconFunc = callBack;
+        }
+        if(icon==='rightIcon'){
+            this.rightIconFunc = callBack;
+        }
+    }
+    this.withTrailingIcon = function(leftIcon,rightIcon){
+        this.leftIcon = leftIcon;
+        this.rightIcon = rightIcon
+        drawSearchwithTrailingIcon(width,hint,layout,this.leftIcon,this.rightIcon,this)
+    }
+    this.with2TrailingIcons = function(leftIcon,rightIcon1,rightIcon2){
+        
+    }
+    this.withAvaterTrailingIcon = function(leftIcon,rightIcon,avatarIcon){
+        
+    }
+    this.setMargins = function( left, top, right, bottom, mode){
+        searchContainer.SetMargins( left, top, right, bottom, mode)
+    }
+    this.setPosition = function( left, top, width, height, options){
+        searchContainer.SetPosition( left, top, width, height, options)
+    }
+    this.setOnEnter = function(onEnter){
+        this.onEnter = onEnter;
+    }
+    this.getText = function(){
+        return _searchArea.GetText();
+    }
+    this.setText = function(text){
+        
+    }
+    this.replaceText = function( text, start, end ){
+        
+    }
+    this.insertText = function( text, start){
+        
+    }
+    
+    this.isVisible = function(){
+        
+    }
+    this.isEnable = function(){
+        
+    }
+    this.undo = function(){
+        
+    }
+    this.redo = function(){
+        
+    }
+}
+/* SearchBAr Types
+   1. withAvater -  wA
+   2. withTrailingIcon - wTI
+   3. with2TrailingIcons - w2TI
+   4. withAvater&TrailingIcon - wATI
+*/
+function drawSearchwithTrailingIcon(width, hint, layout, leftIcon, rightIcon, onTouchEvent) {
+    searchContainer = app.CreateLayout('Card')
+    searchContainer.SetCornerRadius(36)
+    searchContainer.SetElevation(2.0)
+    searchContainer.SetSize(width, 0.08)
+    layout.AddChild(searchContainer)
+    
+    const searchBox = app.AddLayout(searchContainer, "Linear", "Left,Horizontal,VCenter");
+    searchBox.SetSize(width, 0.08)
+    
+    _leftIcon = app.AddText(searchBox,leftIcon, 0.065, 0.037, 'Left,VCenter')
+    _leftIcon.SetFontFile(defaultIcons)
+    _leftIcon.SetTextSize(24)
+    _leftIcon.SetMargins(16, null, 16, null, 'dp')
+    _leftIcon.SetOnTouchDown(function(){
+        try{
+            onTouchEvent.leftIconFunc();
+        }
+        catch(err){
+            return null;
+        }
+        })
+        
+        
+    _searchArea = app.AddTextEdit(searchBox, '', 0.5, null, 'SingleLine,Left')
+    _searchArea.SetHint(hint)
+    _searchArea.SetOnEnter(function(){
+        onTouchEvent.onEnter();
+        })
+    
+    
+    _rightIcon = app.AddText(searchBox,rightIcon,0.065,0.037,'Right,VCenter')
+    _rightIcon.SetTextSize(24)
+    _rightIcon.SetFontFile(defaultIcons)
+    _rightIcon.SetMargins(42,null,16,null,'dp')
+    _rightIcon.SetOnTouchDown(function(){
+        try{
+        onTouchEvent.rightIconFunc();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    if (theme == 'light') {
+        searchContainer.SetBackColor(md_theme_light_surfaceVariant);
+        _searchArea.SetBackColor(md_theme_light_surfaceVariant)
+        _searchArea.SetTextColor(md_theme_light_onSurfaceVariant)
+        _leftIcon.SetTextColor(md_theme_light_onSurface)
+        _rightIcon.SetTextColor(md_theme_light_onSurface)
+    } else {
+        searchContainer.SetBackColor(md_theme_dark_surfaceVariant)
+        _searchArea.SetBackColor(md_theme_dark_surfaceVariant)
+        _leftIcon.SetTextColor(md_theme_dark_onSurface)
+        _rightIcon.SetTextColor(md_theme_dark_onSurface)
+    }
+}
 //Variable Is made global so that clearInterval with method
 //stopProgress works, to avoid an not defined error.
 var animation;
@@ -410,11 +536,11 @@ function bottomSheetObject(sheetLayout, height, options) {
 }
 
 function drawBottomSheet(sheetLayout, height, options) {
-    let bottomSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
+    bottomSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
     bottomSheetContainer.SetSize(1, 1);
     bottomSheetContainer.SetOnTouchUp(dismissBSheet);
 
-    let _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Bottom');
+    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Bottom');
     _bSheet.SetSize(-1, height);
     _bSheet.SetCornerRadius(28);
     _bSheet.Animate('BounceBottom', null, 550);
@@ -440,24 +566,6 @@ function dismissBSheet() {
     }, 210);
 }
 
-ui.addBottomAppBar = function(icon1,icon2,icon3,icon4,fabIcon,layout){
-    return new _bottomBar(icon1,icon2,icon3,icon4,fabIcon,layout)
-}
-function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
-    this.icon1Func = null;
-    this.icon2Func = null;
-    this.icon3Func = null;
-    this.icon4Func = null;
-    this.callback = null;
-
-    this.setIcon1Func = function (icon1Func) { this.icon1Func = icon1Func; }
-    this.setIcon2Func = function (icon2Func) { this.icon2Func = icon2Func; }
-    this.setIcon3Func = function (icon3Func) { this.icon3Func = icon3Func; }
-    this.setIcon4Func = function (icon4Func) { this.icon4Func = icon4Func; }
-    this.setOnAction = function (callback) { this.callback = callback; }
-
-    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
-}
 
 ui.addSmallFAB = function(icon, layout) {
     return new _smallFab(icon, layout);
@@ -560,176 +668,50 @@ function _largeFab(icon, layout) {
     drawLargeFab(icon, layout, this);
 }
 
-var shader1,shader2,shader3;
- _shader2 = app.CreateLayout('Card');
-ui.addBottomNavBar = function(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5){
-    return new navObject(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5);
+
+
+ui.addBottomAppBar = function(barPropsInjson,parentLayout) {
+    return new bottomBarObject(barPropsInjson,parentLayout);
 }
 
-function navObject(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5){
-    this.setActiveTab = function(activeIcon){
-        
-    }
-    this.setIconLabel = function(label1,label2,label3,label4,label5){
-        _label1 = app.AddText(_shaderUi1,label1,null,null,'FillXY')
-        _label1.SetOnTouchUp(function(){
-          
-        })
-        
-        _label2 = app.AddText(_shaderUi2,label2,null,null,'H/VCenter,FillXY')
-        _label2.SetOnTouchUp(function(){
-       
-        })
-        _label3 = app.AddText(_shaderUi3,label3,null,null,'H/VCenter,FillXY')
-        this.label2 = label2;
-        this.label3 = label3;
-        this.label4 = label4;
-        this.label5 = label5;
-    }
-    this.setAnimation = function(state,animation){
-        this.state = state;
-        this.animation = animation;
-    }
-    this.goTo = function(goToIcon){
-        this.goToIcon = goToIcon;
-    }
-    this.setOnScrollUp = function(scrollType,objectVisibility,objectAnimation){
-        
-    }
-    this.setOnScrollDown = function(scrollType,objectVisibility,objectAnimation){
-        
-    }
-    drawNav(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5,this.activeIcon)
-}
-function drawNav(iconNum,icon1,icon2,icon3,icon4,icon5,lay1,lay2,lay3,lay4,lay5,activeIcon){
-    _mainUi = app.CreateLayout('linear')
-    _mainUi.SetSize(1,1)
-    
-    
-    _barUi = app.CreateLayout('Card');
-    _barUi.SetSize(1,0.108)
-    _barUi.SetMargins(0,0.892)
-    _mainUi.AddChild(_barUi)
-    
-    _iconUi = app.CreateLayout('linear','Horizontal')
-    _iconUi.SetBackAlpha(256)
-    _barUi.AddChild(_iconUi)
-    
-    if(iconNum === 3){
-        //1st Icon
-        _shaderUi1 = app.CreateLayout('Linear','vertical,VCenter')
-        _shaderUi1.SetSize(0.25,null)
-        
-        _iconUi.AddChild(_shaderUi1)
-        _shader1 = app.CreateLayout('Card');
-        _shader1.SetElevation(0)
-        
-        _shaderUi1.SetMargins(25,12,null,16,'dp')
-        _shader1.SetSize(64,32,'dp')
-        _shader1.SetCornerRadius(16)
-        _shaderUi1.AddChild(_shader1)
-        
-        _icon1 = app.AddText(_shader1,icon1,null,null,'H/VCenter,FillXY')
-        _icon1.SetFontFile(defaultIcons)
-        
-        //2nd Icon
-        _shaderUi2 = app.CreateLayout('Linear','vertical,VCenter')
-        _shaderUi2.SetSize(0.25,null)
-        
-        _iconUi.AddChild(_shaderUi2)
-       
-        _shader2.SetElevation(0)
-       
-        
-        _shaderUi2.SetMargins(35,12,null,16,'dp')
-        _shader2.SetSize(64,32,'dp')
-        _shader2.SetCornerRadius(16)
-        _shaderUi2.AddChild(_shader2)
-        _shader2.SetBackColor(md_theme_dark_surface)
-        
-        _icon2 = app.AddText(_shader2,icon2,null,null,'H/VCenter,FillXY')
-        _icon2.SetFontFile(defaultIcons)
-        
-        
-        //3nd Icon
-        _shaderUi3 = app.CreateLayout('Linear','Vertical,VCenter')
-        _shaderUi3.SetSize(0.25,null)
-        
-        _iconUi.AddChild(_shaderUi3)
-        _shader3 = app.CreateLayout('Card');
-       _shader3.SetElevation(0)
-       
-       
-        _shaderUi3.SetMargins(35,12,null,16,'dp')
-        _shader3.SetSize(64,32,'dp')
-        _shader3.SetCornerRadius(16)
-        _shaderUi3.AddChild(_shader3)
-        _shader3.SetBackColor(md_theme_dark_surface)
-        
-        _icon3 = app.AddText(_shader3,icon3,null,null,'H/VCenter,FillXY')
-        _icon3.SetFontFile(defaultIcons)
-        
-    }
-    
-    if(iconNum === 4){
-        
 
-    }
+function bottomBarObject(barPropsInjson,parentLayout) {
+    this.setOnTouch = function(onTouchFunc){
+       this.onTouchFunc = onTouchFunc;
+   }
+   this.setRawAdjustment = function(distanceFromTop) {
+       if(layInfo.toLowerCase().includes('linear')){
+           bottomBarContainer.SetMargins(0, distanceFromTop);
+           }
+           else{
+               bottomBarContainer.SetPosition(0, distanceFromTop);
+               }
+            }
+   drawBottomBar(barPropsInjson,parentLayout,this)
+}
+
+function drawBottomBar(barPropsInjson,parentLayout,bottomBarObj) {
+    
+    let props = JSON.stringify(barPropsInjson);
+    let info = JSON.parse(props);
+    icon1 = info.bottomBarProps.firstIcon;
+    icon2 = info.bottomBarProps.secondIcon;
+    icon3 = info.bottomBarProps.thirdIcon;
+    icon4 = info.bottomBarProps.fourthIcon;
+    fabIcon = info.bottomBarProps.fabIcon;
+       
+    bottomBarContainer = app.CreateLayout("Card", "Horizontal,Bottom,FillXY");
+    
+    bottomBarContainer.SetSize(null, 80, 'dp');
+    bottomBarContainer.SetElevation(3, 'dp');
     
     
-    if(iconNum === 5){
-        
-        
-    }
-        
-    if(theme==='light'){
-        _barUi.SetBackColor(md_theme_light_surface)
-        _shader1.SetBackColor(md_theme_light_onSecondaryContainer)
-        _icon1.SetTextColor(md_theme_light_onSurfaceVariant)
+    if(layInfo.toLowerCase().includes('linear')){
+        bottomBarContainer.SetMargins(0, 0.9);
     }
     else{
-         _barUi.SetBackColor(md_theme_dark_surface)
-         _shader1.SetBackColor(md_theme_dark_secondaryContainer)
-         _icon1.SetTextColor(md_theme_dark_onSurfaceVariant)
-         
+        bottomBarContainer.SetPosition(0, 0.9);
     }
-    
-    app.AddLayout(_mainUi);
-}
-
-
-
-
-function showPage(layouty){
-    
-}
-
-ui.addBottomAppBar = function(icon1, icon2, icon3, icon4, fabIcon, layout) {
-    return new _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout);
-}
-
-function _bottomBar(icon1, icon2, icon3, icon4, fabIcon, layout) {
-    this.icon1Func = null;
-    this.icon2Func = null;
-    this.icon3Func = null;
-    this.icon4Func = null;
-    this.callback = null;
-
-    this.setIcon1Func = function(icon1Func) { this.icon1Func = icon1Func; }
-    this.setIcon2Func = function(icon2Func) { this.icon2Func = icon2Func; }
-    this.setIcon3Func = function(icon3Func) { this.icon3Func = icon3Func; }
-    this.setIcon4Func = function(icon4Func) { this.icon4Func = icon4Func; }
-    this.setOnAction = function(callback) { this.callback = callback; }
-
-    drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, this);
-}
-
-function drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, barInfo) {
-    let bottomBarContainer = app.CreateLayout("Card", "Bottom,FillXY,Horizontal");
-    bottomBarContainer.SetSize(-1, 80, 'dp');
-    bottomBarContainer.SetMargins(0, 0.9);
-    bottomBarContainer.SetElevation(3, 'dp');
-
     const box = app.CreateLayout('Linear', 'Horizontal');
     bottomBarContainer.AddChild(box);
     box.SetSize(-1, 80, 'dp');
@@ -738,7 +720,8 @@ function drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, barInfo) {
     _icon1.SetFontFile(defaultIcons);
     _icon1.SetTextSize(24);
     _icon1.SetOnTouchUp(function() {
-        barInfo.icon1Func()
+        bottomBarObj.onTouchFunc(icon1);
+
     });
 
     _icon1.SetMargins(8, null, 16, null, 'dp');
@@ -747,23 +730,23 @@ function drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, barInfo) {
     _icon2.SetFontFile(defaultIcons);
     _icon2.SetTextSize(24);
     _icon2.SetOnTouchUp(function() {
-        barInfo.icon2Func();
+        bottomBarObj.onTouchFunc(icon2);
     });
     _icon2.SetMargins(8, null, 16, null, 'dp');
 
-    _icon3 = app.CreateText(icon3, null, null, 'H/V,FillXY');
+    _icon3 = app.CreateText(icon3, null, null, 'H/VCenter,FillXY');
     _icon3.SetFontFile(defaultIcons);
     _icon3.SetTextSize(24);
     _icon3.SetOnTouchUp(function() {
-        barInfo.icon3Func();
+        bottomBarObj.onTouchFunc(icon3);
     });
     _icon3.SetMargins(8, null, 16, null, 'dp');
 
-    _icon4 = app.CreateText(icon4, null, null, 'H/V,FillXY');
+    _icon4 = app.CreateText(icon4, null, null, 'H/Vcenter,FillXY');
     _icon4.SetFontFile(defaultIcons);
     _icon4.SetTextSize(24);
     _icon4.SetOnTouchUp(function() {
-        barInfo.icon4Func();
+        bottomBarObj.onTouchFunc(icon4);
     });
     _icon4.SetMargins(8, null, 16, null, 'dp');
 
@@ -771,13 +754,12 @@ function drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, barInfo) {
     fab.SetSize(56, 56, 'dp');
     fab.SetElevation(0);
     fab.SetCornerRadius(16);
-    fab.SetMargins(100, 12, 16, 12, 'dp');
+    fab.SetMargins(125, 12, 16, 12, 'dp');
 
-    _fabIcon = app.CreateText(fabIcon, null, null, 'H/V,FillXY');
+    _fabIcon = app.CreateText(fabIcon, null, null, 'H/VCenter,FillXY');
     _fabIcon.SetFontFile(defaultIcons);
     _fabIcon.SetOnTouchDown(function() {
-        console.log("FabIcon touched");
-        barInfo.callback(); // Check if this function is being called
+        bottomBarObj.onTouchFunc(fabIcon);
     });
 
     _fabIcon.SetTextSize(24);
@@ -807,8 +789,9 @@ function drawBottomBar(icon1, icon2, icon3, icon4, fabIcon, layout, barInfo) {
         _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer);
     }
 
-    layout.AddChild(bottomBarContainer);
+    parentLayout.AddChild(bottomBarContainer);
 }
+
 //Add OnTouch And SetMargin Methods 
  
 // For now, all buttons are kept the same
@@ -819,6 +802,7 @@ function filledButtonObject(btnName, width, height, icon, layout){
     this.onTouch = null;
     this.onLongTouch = null;
     this.setOnTouch = function(onTouch){
+        
         this.onTouch = onTouch;
     }
     this.setMargins = function( left, top, right, bottom, mode){
@@ -867,7 +851,12 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
     filledButtonContainer.SetOnLongTouch = filledBtnText.SetOnLongTouch;
     
     filledButtonContainer.SetOnLongTouch(function(){
-        onTouchEvent.onLongTouch()
+        try{
+            onTouchEvent.onLongTouch();
+        }
+        catch(err){
+            console.log('For Component onLongTouch Function Isnt Available');
+        }
         })
     filledButtonContainer.SetOnTouch(function(){
         onTouchEvent.onTouch()
@@ -1133,6 +1122,34 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
 
 function hideSnackBar() {
     app.DestroyLayout(snackContainer);
+}
+
+ui.addMenu = function(list,menuType,position){
+    return new menuObject(list,menuType,position)
+}
+
+function menuObject(list,menuType,position){
+    this.showMenu = function(){
+        if(menuType === 'simple') drawSimpleMenu(list,menuType,position);
+    }
+}
+
+function drawSimpleMenu(list,menuType,position){
+    _menu = app.CreateLayout('Linear','FillXY,Bottom');
+    _menu.SetSize(1,1)
+    _menu.SetOnTouchDown(function(){
+        //alert('OnBack')
+        })
+        
+    menuContainer = app.CreateLayout('Card',position+'');
+    menuContainer.SetSize(0.52,-1)
+    menuContainer.SetCornerRadius(4)
+    
+    _menuItems = app.AddList(menuContainer,list,null,null,'Menu,Bold')
+    menuContainer.Show()
+    
+    _menu.AddChild(menuContainer)
+    app.AddLayout(_menu);
 }
 
 ui.addDialog = function(title, text, dlgOptions, noAction, yesAction) {

@@ -156,35 +156,53 @@ Allows You To Use A Bottom App Bar:
 To use simply :
 
 ```jsx
-cfg.MUI
+cfg.Dark
 app.LoadPlugin('Material Design 3')
-
+let props = {
+	"bottomBarProps": {
+		"firstIcon": "inbox",
+		"secondIcon": "brush",
+		"thirdIcon": "mic",
+		"fourthIcon": "",
+		"fabIcon": "add"
+	}
+}
 function OnStart(){
-  ui.setProps('static','dark')
-  ui.setIconFill('outline')
-  
-  lay = ui.addLayout('Linear','FillXY');
-  
-//Structure:
-// ui.addBottomAppBar(icon1,icon2,icon3,icon4,fabIcon,layout)
-  bottomBar = ui.addBottomAppBar('check_box','brush','mic','collections_bookmark','add',lay)
-  app.AddLayout(lay)
+    ui.setProps('static','dark');
+    ui.setIconFill('outline');
+    
+    lay = ui.addLayout('Linear','FillXY')
+    
+    
+    bottomBar = ui.addBottomAppBar(props,lay)
+    bottomBar.setRawAdjustment(0.4)
+    bottomBar.setOnTouch(function(icon){
+        if(icon === 'brush') paintArt();
+        if(icon === 'mic') voiceRec();
+        if(icon === 'add') addNote();
+        })
+    app.AddLayout(lay)
+}
+
+function paintArt(){
+    
+}
+function voiceRec(){
+    
+}
+
+function addNote(){
+    
 }
 ```
 
 To call functions when specific buttons are pressed refer to this: 
 
 ```jsx
-bottomBar.setOnAction()
-//This is for the main FAB, if added
-//You call leave it as null, if not wanted
-bottomBar.setIcon1Func()
-//Function to be called for the first icon
-//Note the method increase till the 4th icon,
-//that means you will use:
-// setIcon2Func/setIcon3Func/setIcon4Func
-//If You dont need an icon alway set it to null.
-
+bottomBar.setOntouch()
+//Will Return the icon being touched
+bottomBar.setRawAlignment(distanceFromTop)
+//Works similar  to setMargins
 ```
 
 ---

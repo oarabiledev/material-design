@@ -127,34 +127,30 @@ ui.addLayout = function(type,options){
 }
 
 
-ui.addSearch = function(width,hint,layout){
-    return new searchObject(width,hint,layout)
+ui.addSearchBar = function(barProps,width,height,parent_Layout){
+    return new searchObject(barProps,width,height,parent_Layout)
 }
 
-function searchObject(width,hint,layout){
-    this.leftIconFunc = null
-    this.withAvatar = function(leftIcon,avatarIcon){
-        
+function searchObject(barProps,width,height,parent_Layout){
+    let props = JSON.stringify(barProps);
+    let info = JSON.parse(props)
+    let searchType = info.searchBarProps.barType;
+    
+    switch(searchType){
+        case 'withTrailingIcon':
+        drawSearchwithTrailingIcon(barProps,width,height,parent_Layout,this);
+        break;
+        case 'with2TrailingIcons':
+        drawSearchWith2TrailingIcons(barProps,width,height,parent_Layout,this);
+        break;
+        case 'withAvaterTrailingIcon':
+        drawSearchWithAvaterTrailingIcon(barProps,width,height,parent_Layout,this);
     }
-    this.setOnTouch = function(icon,callBack){
-        if(icon==='leftIcon'){
-            this.leftIconFunc = callBack;
-        }
-        if(icon==='rightIcon'){
-            this.rightIconFunc = callBack;
-        }
+    
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
     }
-    this.withTrailingIcon = function(leftIcon,rightIcon){
-        this.leftIcon = leftIcon;
-        this.rightIcon = rightIcon
-        drawSearchwithTrailingIcon(width,hint,layout,this.leftIcon,this.rightIcon,this)
-    }
-    this.with2TrailingIcons = function(leftIcon,rightIcon1,rightIcon2){
-        
-    }
-    this.withAvaterTrailingIcon = function(leftIcon,rightIcon,avatarIcon){
-        
-    }
+
     this.setMargins = function( left, top, right, bottom, mode){
         searchContainer.SetMargins( left, top, right, bottom, mode)
     }
@@ -196,12 +192,25 @@ function searchObject(width,hint,layout){
    3. with2TrailingIcons - w2TI
    4. withAvater&TrailingIcon - wATI
 */
-function drawSearchwithTrailingIcon(width, hint, layout, leftIcon, rightIcon, onTouchEvent) {
+
+function drawSearchWith2TrailingIcons(barProps,width,height,parent_Layout){
+}
+function drawSearchWithAvaterTrailingIcon(barProps,width,height,parent_Layout){
+    
+}
+function drawSearchwithTrailingIcon(barProps,width,height,parent_Layout,objFunc) {
+    let props = JSON.stringify(barProps);
+    let info = JSON.parse(props);
+    
+    let leftIcon = info.searchBarProps.leftHandIcon;
+    let rightIcon = info.searchBarProps.rightHandIcon;
+    let hint = info.searchBarProps.searchHint;
+    
     searchContainer = app.CreateLayout('Card')
     searchContainer.SetCornerRadius(36)
     searchContainer.SetElevation(2.0)
     searchContainer.SetSize(width, 0.08)
-    layout.AddChild(searchContainer)
+    
     
     const searchBox = app.AddLayout(searchContainer, "Linear", "Left,Horizontal,VCenter");
     searchBox.SetSize(width, 0.08)
@@ -212,28 +221,27 @@ function drawSearchwithTrailingIcon(width, hint, layout, leftIcon, rightIcon, on
     _leftIcon.SetMargins(16, null, 16, null, 'dp')
     _leftIcon.SetOnTouchDown(function(){
         try{
-            onTouchEvent.leftIconFunc();
+            objFunc.onTouch(leftIcon)
         }
         catch(err){
             return null;
         }
-        })
-        
-        
-    _searchArea = app.AddTextEdit(searchBox, '', 0.5, null, 'SingleLine,Left')
+    })
+            
+    _searchArea = app.AddTextEdit(searchBox, '', 0.52, null, 'SingleLine,Left')
     _searchArea.SetHint(hint)
     _searchArea.SetOnEnter(function(){
-        onTouchEvent.onEnter();
-        })
+        objFunc.onEnter();
+    })
     
-    
-    _rightIcon = app.AddText(searchBox,rightIcon,0.065,0.037,'Right,VCenter')
+    _rightIcon = app.AddText(searchBox,rightIcon,0.065,0.037,'VCenter')
     _rightIcon.SetTextSize(24)
     _rightIcon.SetFontFile(defaultIcons)
-    _rightIcon.SetMargins(42,null,16,null,'dp')
+    
+    _rightIcon.SetMargins(variableSpacer(width),null,null,null,'dp')
     _rightIcon.SetOnTouchDown(function(){
         try{
-        onTouchEvent.rightIconFunc();
+        objFunc.onTouch(rightIcon)
         }
         catch(err){
             return null;
@@ -251,6 +259,25 @@ function drawSearchwithTrailingIcon(width, hint, layout, leftIcon, rightIcon, on
         _searchArea.SetBackColor(md_theme_dark_surfaceVariant)
         _leftIcon.SetTextColor(md_theme_dark_onSurface)
         _rightIcon.SetTextColor(md_theme_dark_onSurface)
+    }
+    parent_Layout.AddChild(searchContainer)
+}
+
+function variableSpacer(width){
+    let fixedWidth = parseFloat(width.toFixed(1));
+    
+    switch(fixedWidth){
+        case 0.7:
+            return 4;
+            break;
+        case 0.8:
+            return 12;
+            break;
+        case 0.9:
+            return 42;
+            break;
+        case 1.0:
+            return 78;
     }
 }
 //Variable Is made global so that clearInterval with method
@@ -338,6 +365,119 @@ function drawProgressBar(progressType, width, layout, timeOut) {
     }
 }
 
+ui.addSwitch = function(switchType,value,parent_Layout){
+    return new switchObj(switchType,value,parent_Layout)
+}
+
+function switchObj(switchType,value,parent_Layout){
+    this.getValue = function(){
+        return switchValue;
+    }
+    this.setOnToggle = function(onToggle){
+        this.onToggle = onToggle;
+    }
+    this.setPosition = function( left, top, width, height, options){
+        _switch.SetPosition( left, top, width, height, options)
+    }
+    switch(switchType){
+        case 'noIcon':
+            drawSwitchNoIcon(value,parent_Layout,this);
+            break;
+        case 'onIcon':
+            drawSwitchOnIcon(value,parent_Layout,this);
+            break;
+        case 'allIcon':
+            drawSwitchAllIcon(value,parent_Layout,this);
+    }
+}
+
+var switchValue;
+function drawSwitchNoIcon(value,parent_Layout,objFunc){
+    switchValue = value;
+    
+    _switch = app.CreateLayout('Card')
+    _switch.SetSize(52,32,'dp');
+    _switch.SetElevation(0.9)
+    _switch.SetCornerRadius(16)
+    
+
+    handle = app.CreateImage(null,0.085,0.05)
+	handle.DrawCircle( 0.52, 0.42, 0.30 )
+	handle.SetAutoUpdate(false)
+	_switch.SetMargins(0.05)
+	handle.Hide()
+	
+	handle2 = app.CreateImage(null,0.085,0.05)
+	handle2.DrawCircle( 0.52, 0.42, 0.45 )
+	handle2.SetAutoUpdate(false)
+	handle2.SetMargins(0.052)
+	handle2.Hide()
+	
+	if(value){
+	    handle2.Show()
+	    if(theme==='light'){
+	        handle2.SetPaintColor(md_theme_light_onPrimary)
+	        _switch.SetBackColor(md_theme_light_primaryContainer)
+	    }
+	    else{
+	        handle2.SetPaintColor(md_theme_dark_onPrimary)
+	        _switch.SetBackColor(md_theme_dark_primaryContainer)
+	    }
+	}
+	else{
+	    handle.Show()
+	    handle2.Hide()
+	    if(theme==='light'){
+	        handle.SetPaintColor(md_theme_light_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_light_surfaceVariant)
+	    }
+	    else{
+	        handle.SetPaintColor(md_theme_dark_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_dark_surfaceVariant)
+	    }
+	}
+	
+	handle.SetOnTouchUp(function(){
+	       handle.Hide()
+	       handle2.Show()
+	       switchValue = true;
+	       objFunc.onToggle(switchValue)
+	       if(theme==='light'){
+	        handle2.SetPaintColor(md_theme_light_onPrimary)
+	        _switch.SetBackColor(md_theme_light_primaryContainer)
+	      }
+	      else{
+	        handle2.SetPaintColor(md_theme_dark_onPrimary)
+	        _switch.SetBackColor(md_theme_dark_primaryContainer)
+	      }
+})
+
+	handle2.SetOnTouchUp(function(){
+	       handle2.Hide()
+	       handle.Show()
+	       switchValue = false;
+	       objFunc.onToggle(switchValue)
+	       if(theme==='light'){
+	        handle.SetPaintColor(md_theme_light_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_light_surfaceVariant)
+	    }
+	    else{
+	        handle.SetPaintColor(md_theme_dark_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_dark_surfaceVariant)
+	    }
+})
+
+    parent_Layout.AddChild(_switch);
+    _switch.AddChild(handle)
+    _switch.AddChild(handle2)
+    
+}
+function drawSwitchOnIcon(value,parent_Layout,objFunc){
+    
+}
+function drawSwitchAllIcon(value,parent_Layout,objFunc){
+    
+}
 ui.addDrawer = function(drawerLayout,side,width){
     return new navDrawerObject(drawerLayout,side,width)
 }
@@ -855,12 +995,18 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
             onTouchEvent.onLongTouch();
         }
         catch(err){
-            console.log('For Component onLongTouch Function Isnt Available');
+            return null;
         }
-        })
+    })
+        
     filledButtonContainer.SetOnTouch(function(){
-        onTouchEvent.onTouch()
-        })
+        try{
+            onTouchEvent.onTouch()
+        }
+        catch(err){
+            return null;
+        }
+    })
 }
 
 ui.addElevatedButton = function(btnName, width, height, icon, layout) {
@@ -1123,35 +1269,120 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
 function hideSnackBar() {
     app.DestroyLayout(snackContainer);
 }
-
-ui.addMenu = function(list,menuType,position){
-    return new menuObject(list,menuType,position)
+var _text;
+ui.addText = function(text,width,height,options,parent_Layout){
+    return new textObject(text,width,height,options,parent_Layout)
 }
 
-function menuObject(list,menuType,position){
-    this.showMenu = function(){
-        if(menuType === 'simple') drawSimpleMenu(list,menuType,position);
+function textObject(text,width,height,options,parent_Layout){
+    this.setMargins = function(left,top,right,bottom,mode){
+        _text.SetMargins(left,top,right,bottom,mode)
+    }
+    this.setPosition = function( left, top, width, height, options){
+        _text.SetPosition( left, top, width, height, options)
+    }
+    this.setOnTouch = function(onTouch){
+        _text.SetOnTouch(onTouch)
+    }
+    this.setOnTouchDown = function(onTouchDown){
+        _text.SetOnTouchDown(onTouchDown)
+    }
+    this.setOnTouchUp  = function(onTouchUp){
+        _text.SetOnTouchUp(onTouchUp)
+     }
+    this.setVisibility = function(mode){
+        _text.SetVisibility(mode)
+    }
+    this.setTextColor = function(color){
+        _text.SetTextColor(color)   
+    }
+    this.setTextSize = function(size,mode){
+        _text.SetTextSize(size,mode)
+    }
+    this.setTextShadow = function( radius, dx, dy, color){
+        _text.SetTextShadow( radius, dx, dy, color)
+    }
+    this.setScale = function(x,y){
+        _text.SetScale(x,y)
+    }
+    this.setFontFile = function(fontFile){
+        _text.SetFontFile(fontFile)
+    }
+    this.setSize = function(width,height,options){
+        _text.SetSize(width,height,options)
+    }
+    this.setOnLongTouch = function(callback){
+        _text.SetOnLongTouch(callback)
+    }
+    this.setHtml = function(str){
+        _text.SetHtml(str)
+    }
+    this.setEllipsize = function(mode){
+        _text.SetEllipsize(mode)
+    }
+    this.setLog = function(maxLines){
+        _text.SetLog(maxLines)
+    }
+    this.show = function(){
+        _text.SHow();
+    }
+    this.hide = function(){
+        _text.Hide();
+    }
+    this.setBackAlpha = function(alpha){
+        _text.SetBackAlpha(alpha)
+    }
+    this.setBackColor = function(color){
+        _text.SetBackColor(color)
+    }
+    this.setBackGradient = function( color1, color2, color3, options){
+        _text.SetBackGradient( color1, color2, color3, options)
+    }
+    this.setBackground = function(file, options){
+        _text.SetBackground(file, options)   
+    }
+    this.setBackGradientRadial = function(x, y, radius, color1, color2, color3, options){
+        _text.SetBackGradientRadial( x, y, radius, color1, color2, color3, options)
+    }
+    this.setColorFilter = function(color, mode ){
+        _text.SetColorFilter(color, mode)
+    }
+    this.setDescription = function(desc){
+        _text.SetDescription(desc)
+    }
+    this.isVisible = function(){
+        return _text.IsVisible();
+    }
+    this.getText = function(){
+        return _text.GetText();
+    }
+    this.adjustColor = function( hue, saturation, brightness, contrast){
+        _text.AdjustColor( hue, saturation, brightness, contrast)
+    }
+    this.animate = function( type, callback, time){
+        _text.Animate( type, callback, time)
+    }
+    this.focus = function(){
+        _text.Focus()
+    }
+    this.tween = function( target, duration, type, repeat, yoyo, callback){
+        _text.Tween( target, duration, type, repeat, yoyo, callback)
+    }
+    drawText(text,width,height,options,parent_Layout)
+}
+
+function drawText(text,width,height,options,parent_Layout){
+    _text = app.CreateText(text,width,height,options);
+    _text.SetFontFile(defaultFont)
+    parent_Layout.AddChild(_text)
+    
+    if(theme==='light'){
+        _text.SetTextColor(md_theme_light_onSurface)
+    }
+    else{
+        _text.SetTextColor(md_theme_dark_onSurface)
     }
 }
-
-function drawSimpleMenu(list,menuType,position){
-    _menu = app.CreateLayout('Linear','FillXY,Bottom');
-    _menu.SetSize(1,1)
-    _menu.SetOnTouchDown(function(){
-        //alert('OnBack')
-        })
-        
-    menuContainer = app.CreateLayout('Card',position+'');
-    menuContainer.SetSize(0.52,-1)
-    menuContainer.SetCornerRadius(4)
-    
-    _menuItems = app.AddList(menuContainer,list,null,null,'Menu,Bold')
-    menuContainer.Show()
-    
-    _menu.AddChild(menuContainer)
-    app.AddLayout(_menu);
-}
-
 ui.addDialog = function(title, text, dlgOptions, noAction, yesAction) {
     return new dlgBar(title, text, dlgOptions, noAction, yesAction);
 }

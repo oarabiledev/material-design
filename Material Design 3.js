@@ -15,7 +15,21 @@ ui.getVersion = function() {
 }
 
 
-ui.setIconFill = function(iconFill){
+ui.setProps = function(appProps) {
+    appInfo = JSON.stringify(appProps);
+    props = JSON.parse(appInfo);
+    
+    theme = props.defaultMode;
+    colorSystem = props.colorSystem;
+    iconFill = props.defaultIconFill;
+    
+    if(!props.defaultFontFile){
+        defaultFont = 'Fonts/Text/Roboto.ttf';
+    }
+    else{
+        defaultFont = props.defaultFontFile;
+    }
+    
     if(iconFill==='outline'){
         defaultIcons = 'Fonts/Icons/Outlined-Regular.otf'
     }
@@ -28,9 +42,7 @@ ui.setIconFill = function(iconFill){
     if(iconFill==='round'){
         defaultIcons = 'Fonts/Icons/Round-Regular.otf'
     }
-}
-ui.setProps = function(colorSystem, userTheme) {
-    theme = userTheme
+    
     //alert(theme)
     if (colorSystem === 'static') {
         appTheme = app.ReadFile('appTheme/appTheme.json');
@@ -117,15 +129,26 @@ var layInfo;
 ui.addLayout = function(type,options){
    lay = app.CreateLayout(type, options)
     if (theme ==='dark') {
-        lay.SetBackColor(md_theme_dark_surface);
-        app.SetStatusBarColor(md_theme_dark_surface)
+        lay.SetBackColor(md_theme_dark_background);
+        app.SetStatusBarColor(md_theme_dark_background)
     } else {
-        lay.SetBackColor(md_theme_light_surface);
+        lay.SetBackColor(md_theme_light_background);
     }
     layInfo = type;
     return lay;
 }
 
+ui.addAvatar = function(imgFile,parent_Layout){
+    return new avatarObj(imgFile,parent_Layout);
+}
+
+function avatarObj(imgFile,parent_Layout){
+    drawAvatar(imgFile,parent_Layout)
+}
+
+function drawAvatar(imgFile,parent_Layout){
+    
+}
 
 ui.addSearchBar = function(barProps,width,height,parent_Layout){
     return new searchObject(barProps,width,height,parent_Layout)
@@ -441,7 +464,6 @@ function drawSwitchNoIcon(value,parent_Layout,objFunc){
 	       handle.Hide()
 	       handle2.Show()
 	       switchValue = true;
-	       objFunc.onToggle(switchValue)
 	       if(theme==='light'){
 	        handle2.SetPaintColor(md_theme_light_onPrimary)
 	        _switch.SetBackColor(md_theme_light_primaryContainer)
@@ -450,13 +472,20 @@ function drawSwitchNoIcon(value,parent_Layout,objFunc){
 	        handle2.SetPaintColor(md_theme_dark_onPrimary)
 	        _switch.SetBackColor(md_theme_dark_primaryContainer)
 	      }
+	       try{
+	           objFunc.onToggle(switchValue);
+	       }
+	       catch(err){
+	           return null;
+	       }
+	       
 })
 
 	handle2.SetOnTouchUp(function(){
 	       handle2.Hide()
 	       handle.Show()
 	       switchValue = false;
-	       objFunc.onToggle(switchValue)
+	       
 	       if(theme==='light'){
 	        handle.SetPaintColor(md_theme_light_onSurfaceVariant)
 	        _switch.SetBackColor(md_theme_light_surfaceVariant)
@@ -465,6 +494,13 @@ function drawSwitchNoIcon(value,parent_Layout,objFunc){
 	        handle.SetPaintColor(md_theme_dark_onSurfaceVariant)
 	        _switch.SetBackColor(md_theme_dark_surfaceVariant)
 	    }
+
+	       try{
+	           objFunc.onToggle(switchValue);
+	       }
+	       catch(err){
+	           return null;
+	       }
 })
 
     parent_Layout.AddChild(_switch);
@@ -507,12 +543,13 @@ function drawNavDrawer(drawerLayout,side,width){
     }
     app.AddDrawer(_drawerContainer,side,width)
 }
+var fabContainer;
 ui.addFAB = function(icon, layout) {
     return new _Fab(icon, layout);
 }
 
 function drawFab(icon, layout, _FabInfo) {
-    let fabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
+    fabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
     fabContainer.SetSize(56, 56, 'dp');
 
     let fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
@@ -706,13 +743,13 @@ function dismissBSheet() {
     }, 210);
 }
 
-
+var smallFabContainer;
 ui.addSmallFAB = function(icon, layout) {
     return new _smallFab(icon, layout);
 }
 
 function drawSmallFab(icon, layout, _FabInfo) {
-    let smallFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
+    smallFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
     smallFabContainer.SetSize(40, 40, 'dp');
 
     let fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
@@ -932,9 +969,7 @@ function drawBottomBar(barPropsInjson,parentLayout,bottomBarObj) {
     parentLayout.AddChild(bottomBarContainer);
 }
 
-//Add OnTouch And SetMargin Methods 
- 
-// For now, all buttons are kept the same
+var filledButtonContainer;
 ui.addFilledButton = function(btnName, width, height, icon, layout) {
     return new filledButtonObject(btnName, width, height, icon, layout);
 }
@@ -959,6 +994,21 @@ function filledButtonObject(btnName, width, height, icon, layout){
     }
     this.setVisibility = function(mode){
         filledButtonContainer.SetVisibility(mode);
+    }
+    this.show = function(){
+        filledButtonContainer.Show();
+    }
+    this.hide = function(){
+        filledButtonContainer.Hide()
+    }
+    this.isEnabled = function(){
+        return filledButtonContainer.IsEnabled();
+    }
+    this.animate = function( type, callback, time ){
+        filledButtonContainer.Animate( type, callback, time );
+    }
+    this.tween = function( target, duration, type, repeat, yoyo, callback){
+        filledButtonContainer.Tween( target, duration, type, repeat, yoyo, callback)
     }
     drawFilledBtn(btnName, width, height, icon, layout,this);
 }
@@ -1009,59 +1059,237 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
     })
 }
 
-ui.addElevatedButton = function(btnName, width, height, icon, layout) {
-    let elevatedButtonContainer = app.CreateLayout('Frame', 'Spy,TouchThrough');
+var elevatedButtonContainer,elevatedBtnText;
+
+ui.addElevatedButton = function(btnName, width, height, icon, parent_Layout) {
+    return new elevatedBtnObj(btnName, width, height, icon, parent_Layout)
+}
+
+function elevatedBtnObj(btnName, width, height, icon, parent_Layout){
+    this.setMargins = function( left, top, right, bottom, mode){
+        elevatedButtonContainer.SetMargins( left, top, right, bottom, mode)
+    }
+    this.setPosition = function( left, top, width, height, options ){
+        elevatedButtonContainer.SetPosition( left, top, width, height, options )
+    }
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    this.setOnLongTouch = function(onLongTouch){
+        this.onLongTouch = onLongTouch;
+    }
+    this.setScale = function(x,y){
+        elevatedButtonContainer.SetScale(x,y)
+    }
+    this.setDescription = function(desc){
+        elevatedButtonContainer.SetDescription(desc)
+    }
+    this.isVisible = function(){
+        return elevatedButtonContainer.IsVisible();
+    }
+    this.isEnabled = function(){
+        return elevatedButtonContainer.IsEnabled();
+    }
+    this.show = function(){
+        elevatedButtonContainer.Show()
+    }
+    this.hide = function(){
+        elevatedButtonContainer.Hide()
+    }
+    this.setVisibility = function(mode){
+        elevatedButtonContainer.SetVisibility(mode);
+    }
+    this.setSize = function(width,height,options){
+        elevatedButtonContainer.SetSize(width,height,options);
+    }
+    this.tween = function( target, duration, type, repeat, yoyo, callback){
+        elevatedButtonContainer.Tween( target, duration, type, repeat, yoyo, callback )
+    }
+    this.animate = function( type, callback, time ){
+        elevatedButtonContainer.Animate( type, callback, time )
+    }
+    drawElevatedBtn(btnName, width, height, icon, parent_Layout,this)
+}
+
+function drawElevatedBtn(btnName, width, height, icon, parent_Layout,elevatedFunc){
+    elevatedButtonContainer = app.CreateLayout('Card', 'Spy,TouchThrough');
     elevatedButtonContainer.SetBackAlpha(0);
+    elevatedButtonContainer.SetCornerRadius(20);
+    elevatedButtonContainer.SetElevation(2);
+    elevatedButtonContainer.SetSize(width, height);
     
-    let elevatedBtnUi = app.CreateLayout('Card', 'FillXY');
-    elevatedBtnUi.SetCornerRadius(20);
-    elevatedBtnUi.SetElevation(0);
+    elevatedBtnUi = app.CreateLayout('Linear','Horizontal,H/VCenter');
     elevatedBtnUi.SetSize(width, height);
     elevatedButtonContainer.AddChild(elevatedBtnUi);
-    elevatedBtnUi.SetBackColor(baseTheme);
-
-    let elevatedBtnText = app.AddText(elevatedBtnUi, btnName, null, null, 'H/VCenter,AutoScale,NoWrap,FillXY');
-    elevatedBtnText.SetTextColor('black');
+    
 
     if (height === null) {
         elevatedBtnUi.SetSize(null, 40, 'dp');
     }
-
-    layout.AddChild(elevatedButtonContainer);
-
-    elevatedButtonContainer.SetOnTouch = elevatedBtnText.SetOnTouchUp;
-    return elevatedButtonContainer;
+    
+    if(icon === null){
+        elevatedBtnText = app.AddText(elevatedBtnUi, btnName, null, null, 'H/VCenter,NoWrap,FillXY');
+    }
+    else{
+        iconUi = app.AddText(elevatedBtnUi,icon,null,null,'left')
+        iconUi.SetFontFile(defaultIcons)
+        iconUi.SetPadding(16,null,8,null,'dp')
+        elevatedBtnText = app.AddText(elevatedBtnUi,btnName, null, null, 'H/VCenter,NoWrap,FillXY');
+        elevatedBtnText.SetPadding(null,null,24,null,'dp')
+    }
+    elevatedBtnText.SetFontFile(defaultFont)
+    
+    if(theme==='light'){
+        elevatedBtnUi.SetBackColor(md_theme_light_surface);
+        elevatedBtnText.SetTextColor(md_theme_light_primary);
+        iconUi.SetTextColor(md_theme_light_primary);
+    }
+    else{
+        elevatedBtnUi.SetBackColor(md_theme_dark_surface);
+        elevatedBtnText.SetTextColor(md_theme_dark_primary);
+        iconUi.SetTextColor(md_theme_dark_primary);
+    }
+    
+    elevatedBtnText.SetOnTouchUp(function(){
+        try{
+            elevatedFunc.onTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    elevatedBtnText.SetOnLongTouch(function(){
+        try{
+            elevatedFunc.onLongTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    parent_Layout.AddChild(elevatedButtonContainer);
 }
-ui.addExtendedFAB = function(btnName, icon, width, layout) {
-    var btnText;
+var extendedFabContainer,btnText;
+ui.addExtendedFAB = function(btnName, icon, width, parent_Layout) {
+    return new extendedFABObj(btnName, icon, width, parent_Layout)
+}
 
-    let extendedFabContainer = app.CreateLayout('Frame', 'Spy,TouchThrough');
-    let fabUi = app.CreateLayout('Card', 'FillXY');
-    fabUi.SetCornerRadius(16);
-    fabUi.SetElevation(0);
-    fabUi.SetSize(-1, 56, 'dp');
+function extendedFABObj(btnName, icon, width, parent_Layout){
+    this.setMargins = function(left,top,right,bottom,mode){
+        extendedFabContainer.SetMargins(left,top,right,bottom,mode)
+    }
+    this.setPosition = function( left, top, width, height, options){
+        extendedFabContainer.SetPosition( left, top, width, height, options)
+    }
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch
+    }
+    this.setOnLongTouch = function(onLongTouch){
+        this.onLongTouch = onLongTouch;
+    }
+    this.setOnScroll = function(scrollProps){
+        
+    }
+    this.animate = function( type, callback, time ){
+        extendedFabContainer.Animate( type, callback, time )
+    }
+    this.isVisible = function(){
+        return extendedFabContainer.IsVisible();
+    }
+    this.setSize = function(width,height,options){
+        extendedFabContainer.SetSize(width,height,options)
+    }
+    this.setDesription = function(desc){
+        extendedFabContainer.SetDescription(desc)
+    }
+    this.setScale = function(x,y){
+        extendedFabContainer.SetScale(x,y)
+    }
+    drawExtendedFab(btnName, icon, width, parent_Layout,this)
+}
+
+function drawExtendedFab(btnName, icon, width, parent_Layout,extendedFunc){
+    extendedFabContainer = app.CreateLayout('Card', 'Spy,TouchThrough');
+    let fabUi = app.CreateLayout('Linear', 'Horizontal,H/VCenter');
+    fabUi.SetSize(null, 56, 'dp');
+    
+    extendedFabContainer.SetCornerRadius(16);
+    extendedFabContainer.SetElevation(0);
+    extendedFabContainer.SetSize(-1, 56, 'dp');
     extendedFabContainer.AddChild(fabUi);
 
     if (icon === null) {
-        btnText = app.AddText(fabUi, btnName, null, null, 'H/VCenter,AutoScale,NoWrap,FillXY');
-        btnText.SetPadding(24, null, 24, null, 'dp');
+        btnText = app.AddText(fabUi, btnName, null, null, 'H/VCenter,NoWrap,FillXY');
+        btnText.SetPadding(16, null, 16, null, 'dp');
+        btnText.SetFontFile(defaultFont)
+        btnText.SetTextSize(18)
     }
-
+    else{
+        iconUi = app.AddText(fabUi,icon,null,null,'Left')
+        iconUi.SetFontFile(defaultIcons)
+        iconUi.SetPadding(16,null,null,null,'dp')
+        iconUi.SetTextSize(24)
+        
+        btnText = app.AddText(fabUi, btnName, null, null, 'H/VCenter,NoWrap,FillXY');
+        btnText.SetFontFile(defaultFont)
+        btnText.SetPadding(16, null, 16, null, 'dp');
+        btnText.SetTextSize(18)
+    }
+    try{
     if (theme === 'light') {
-        fabUi.SetBackColor(md_theme_light_primaryContainer);
+        extendedFabContainer.SetBackColor(md_theme_light_primaryContainer);
         btnText.SetTextColor(md_theme_light_onPrimaryContainer);
+        iconUi.SetTextColor(md_theme_light_onPrimaryContainer);
     } else {
-        fabUi.SetBackColor(md_theme_dark_primaryContainer);
+        extendedFabContainer.SetBackColor(md_theme_dark_primaryContainer);
         btnText.SetTextColor(md_theme_dark_onPrimaryContainer);
+        iconUi.SetTextColor(md_theme_dark_onPrimaryContainer);
+    }
+    }
+    catch(err){
+        
     }
 
-    layout.AddChild(extendedFabContainer);
+    btnText.SetOnTouchUp(function(){
+        try{
+            extendedFunc.onTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    iconUi.SetOnTouchUp(function(){
+        try{
+            extendedFunc.onTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    btnText.SetOnLongTouch(function(){
+        try{
+            extendedFunc.onLongTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    iconUi.SetOnLongTouch(function(){
+        try{
+            extendedFunc.onLongTouch();
+        }
+        catch(err){
+            return null;
+        }
+    })
+    
+    parent_Layout.AddChild(extendedFabContainer);
 
-    extendedFabContainer.SetOnTouch = btnText.SetOnTouchUp;
-
-    return extendedFabContainer;
 }
-
 ui.addRadioButtons = function(list,width,height,layout){
     return new i_radioList(list,width,height,layout)
 }
@@ -1383,6 +1611,21 @@ function drawText(text,width,height,options,parent_Layout){
         _text.SetTextColor(md_theme_dark_onSurface)
     }
 }
+
+ui.addTimePickerInput = function(){
+    return new timeInputObj();
+}
+
+function timeInput(){
+    this.setOnAction = function(){
+        
+    }
+}
+
+function drawTimeInput(){
+    
+}
+
 ui.addDialog = function(title, text, dlgOptions, noAction, yesAction) {
     return new dlgBar(title, text, dlgOptions, noAction, yesAction);
 }
@@ -1405,7 +1648,6 @@ function dlgBar(title, text, dlgOptions, noAction, yesAction) {
         this.height = height;
     }
     this.show = function() {
-
         showDialogBar(title, text, dlgOptions, noAction, yesAction, this.width, this.height, this.onCancel, this.onTrue, this.onFalse, this.onBack)
     }
 }

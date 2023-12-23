@@ -6,6 +6,7 @@ var screenHeight = app.GetScreenHeight('Real');
 var screenWidth = app.GetScreenWidth('Real');
 var screenDensity = app.GetScreenDensity('Real');
 
+var lastPressedItem = null;
 //ui color constants
 
 const ui = {};
@@ -22,7 +23,7 @@ ui.setProps = function(appProps) {
     theme = props.defaultMode;
     colorSystem = props.colorSystem;
     iconFill = props.defaultIconFill;
-    
+    dir = props.defaultAppTheme;
     if(!props.defaultFontFile){
         defaultFont = 'Fonts/Text/Roboto.ttf';
     }
@@ -45,13 +46,12 @@ ui.setProps = function(appProps) {
     
     //alert(theme)
     if (colorSystem === 'static') {
-        appTheme = app.ReadFile('appTheme/appTheme.json');
+        appTheme = app.ReadFile(dir);
         jsonData = JSON.parse(appTheme)
         // Function to get the text value based on the color name
         const getColorTextValue = (jsonData, colorName) => {
             const colorObject = jsonData.resources.color.find(color => color._name === colorName);
             return colorObject ? colorObject.__text : null;
-
         };
 
         // Get the text value for "md_theme_dark_scrim"
@@ -123,6 +123,10 @@ ui.setProps = function(appProps) {
     }
 }
 
+ui.setTheme = function(userTheme){
+    theme = userTheme;
+    OnStart()
+}
 
 var layInfo;
 
@@ -135,6 +139,7 @@ ui.addLayout = function(type,options){
         lay.SetBackColor(md_theme_light_background);
     }
     layInfo = type;
+    layTop = lay.GetTop();
     return lay;
 }
 
@@ -254,7 +259,12 @@ function drawSearchwithTrailingIcon(barProps,width,height,parent_Layout,objFunc)
     _searchArea = app.AddTextEdit(searchBox, '', 0.52, null, 'SingleLine,Left')
     _searchArea.SetHint(hint)
     _searchArea.SetOnEnter(function(){
-        objFunc.onEnter();
+        try{
+            objFunc.onEnter();
+        }
+        catch(err){
+            return null;
+        }
     })
     
     _rightIcon = app.AddText(searchBox,rightIcon,0.065,0.037,'VCenter')
@@ -388,6 +398,123 @@ function drawProgressBar(progressType, width, layout, timeOut) {
     }
 }
 
+/* menuTypes:
+   - simple
+   - withIcon
+   */
+   
+ui.addMenu = function(menuType,list,position){
+    return new menuObj(menuType,list,position);
+}
+
+function menuObj(menuType,list,position){
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    switch(menuType){
+        case 'simple':
+            drawSimpleMenu(menuType,list,position,this);
+            break;
+        case 'withIcon':
+            drawMenuWithIcon(menuType,list,position,this);
+    }
+}
+
+function drawSimpleMenu(menuType,list,position,menuFunc){
+    let menuWidth = ()=>{
+        if(app.IsTablet()) return 280;
+        else return 190;
+    }
+    
+    //alert(top)
+    topValue = ()=>{
+        if( top< 0.25 ) return top + 0.03
+        else return top - 0.23;
+    }
+    menuContainer = app.CreateLayout('Linear',position);
+    menuContainer.SetSize(1,1)
+    menuContainer.SetOnTouch(function(){
+        app.RemoveLayout(menuContainer)
+        })
+        
+    menuUi = app.CreateLayout('Card',position + 'Center')
+    menuContainer.AddChild(menuUi)
+    menuUi.SetMargins(0.05,topValue())
+    menuUi.Animate('FadeIn',null,100)
+    menuUi.SetSize(menuWidth(),null,'dp')
+    menuUi.SetCornerRadius(4)
+    
+    list = app.CreateList(list,menuWidth(),null,'Menu,Expand')
+    list.SetOnTouch(function(title){
+        try{
+            menuFunc.onTouch(title)
+        }
+        catch(err){
+            return null;
+        }
+        })
+    menuUi.AddChild(list)
+    
+    app.AddLayout(menuContainer)
+    
+    if(theme === 'light'){
+        menuUi.SetBackColor(md_theme_light_secondary)
+        list.SetBackColor(md_theme_light_secondary)
+    }
+    else{
+        menuUi.SetBackColor(md_theme_dark_secondary)
+        list.SetBackColor(md_theme_dark_secondary)
+    }
+    
+}
+
+function drawMenuWithIcon(menuType,list,position,menuFunc){
+    let menuWidth = ()=>{
+        if(app.IsTablet()) return 280;
+        else return 190;
+    }
+    
+    //alert(top)
+    topValue = ()=>{
+        if( top< 0.25 ) return top + 0.03
+        else return top - 0.23;
+    }
+    menuContainer = app.CreateLayout('Linear',position);
+    menuContainer.SetSize(1,1)
+    menuContainer.SetOnTouch(function(){
+        app.RemoveLayout(menuContainer)
+        })
+        
+    menuUi = app.CreateLayout('Card',position + 'Center')
+    menuContainer.AddChild(menuUi)
+    menuUi.SetMargins(0.05,topValue())
+    menuUi.Animate('FadeIn',null,100)
+    menuUi.SetSize(menuWidth(),null,'dp')
+    menuUi.SetCornerRadius(4)
+    
+    list = app.CreateList(list,menuWidth(),null,'Menu,Expand')
+    list.SetFontFile(defaultFont)
+    list.SetOnTouch(function(title,icon){
+        try{
+            menuFunc.onTouch(title,icon)
+        }
+        catch(err){
+            return null;
+        }
+        })
+    menuUi.AddChild(list)
+    
+    app.AddLayout(menuContainer)
+    
+    if(theme === 'light'){
+        menuUi.SetBackColor(md_theme_light_secondary)
+        list.SetBackColor(md_theme_light_secondary)
+    }
+    else{
+        menuUi.SetBackColor(md_theme_dark_secondary)
+        list.SetBackColor(md_theme_dark_secondary)
+    }
+}
 ui.addSwitch = function(switchType,value,parent_Layout){
     return new switchObj(switchType,value,parent_Layout)
 }
@@ -976,8 +1103,10 @@ ui.addFilledButton = function(btnName, width, height, icon, layout) {
 function filledButtonObject(btnName, width, height, icon, layout){
     this.onTouch = null;
     this.onLongTouch = null;
+    this.getTop = function(){
+        return filledButtonContainer.GetTop();
+    }
     this.setOnTouch = function(onTouch){
-        
         this.onTouch = onTouch;
     }
     this.setMargins = function( left, top, right, bottom, mode){
@@ -1041,6 +1170,7 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
     filledButtonContainer.SetOnLongTouch = filledBtnText.SetOnLongTouch;
     
     filledButtonContainer.SetOnLongTouch(function(){
+        
         try{
             onTouchEvent.onLongTouch();
         }
@@ -1050,8 +1180,9 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
     })
         
     filledButtonContainer.SetOnTouch(function(){
+        top = filledButtonContainer.GetTop();
         try{
-            onTouchEvent.onTouch()
+            onTouchEvent.onTouch();
         }
         catch(err){
             return null;
@@ -1341,7 +1472,7 @@ function addRadioUi(list,width,height,layout,index){
     }
     
     layout.AddChild(_radio)
-    return _radio;
+    //return _radio;
 }
 
 ui.addCenterTopAppBar = function(title,rightIcon,leftIcon,layout){
@@ -1399,48 +1530,41 @@ function _drawCenterTopAppBar(title,rightIcon,leftIcon,layout,onNav,onIcon){
     }
     
     layout.AddChild(barUi)
-}ui.addSnackBar = function(text, btnAction, width) {
-    return new SnackBarObject(text, btnAction, width);
 }
 
-function SnackBarObject(text, btnAction, width) {
-    this.showContainer = function() {
-        drawSnackBarUi(text, btnAction, width, this.align, this.top, this.animateIn, this.animateOut, this.timeOut, this.callback);
-    }
-    this.setAlignment = function(align) {
-        this.align = align;
-    }
+var snackContainer;
+ui.addSnackBar = function(text, btnAction, width, alignment) {
+    return new SnackBarObject(text, btnAction, width, alignment);
+}
+
+function SnackBarObject(text, btnAction, width, alignment) {
+
     this.setRawAlignment = function(top){
-        this.top = top;
-    }
-    this.setAnimateIn = function(animateIn) {
-        this.animateIn = animateIn;
-    }
-    this.setAnimateOut = function(animateOut) {
-        this.animateOut = animateOut;
+        snackContainer.SetMargins(null,top)
     }
     this.setTimeOut = function(timeOut) {
-        this.timeOut = timeOut
+        this.timeOut = timeOut;
     }
     this.setOnAction = function(callback) {
-        this.callback = callback;
+        this.callback = callback; 
+    } 
+    this.show = function(){
+        drawSnackBarUi(text, btnAction, width, this.timeOut, this.callback);
     }
+    
 }
-
-function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOut, timeOut, callback) {
-    let snackContainer = app.CreateLayout('Linear', align + ',FillXY,TouchThrough,Center');
-    snackContainer.SetBackAlpha(256);
-    let snackUi = MUI.CreateLayout('Card', '');
-    try {
-        snackUi.Animate(animateIn, null, timeout/10);
-    } catch (err) {
-        snackUi.Animate('Fade-In');
-    }
+// notice we didnt use something like snackFunc.callback()
+// I dont know why it dont work but this works
+function drawSnackBarUi(text, btnAction, width, alignment, timeOut, callback) {
+   
+    snackContainer = app.CreateLayout('Linear', alignment + ',FillXY,TouchThrough,Center');
+    let snackUi = app.CreateLayout('Card', '');
+    
     snackContainer.AddChild(snackUi);
 
     snackUi.SetMargins(0.055, 0.018, 0.055, 0.018);
     snackUi.SetCornerRadius(4);
-    snackUi.SetElevation(6, '');
+    snackUi.SetElevation(6);
     snackUi.SetSize(width, 0.065);
 
     const box = MUI.CreateLayout("Linear", "Horizontal");
@@ -1458,11 +1582,10 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
     snackButton.SetMargins(null, null, 16, null, 'dp');
     snackButton.SetTextSize(16);
     snackButton.SetFontFile(defaultFont);
-    snackButton.SetOnTouchUp(callback);
+    snackButton.SetOnTouchUp(callback)
     box.AddChild(snackButton);
 
     app.AddLayout(snackContainer);
-    
     if (theme === 'light') {
         box.SetBackColor(md_theme_light_inverseSurface);
         snackText.SetTextColor(md_theme_light_inverseOnSurface);
@@ -1472,7 +1595,7 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
         snackText.SetTextColor(md_theme_dark_inverseOnSurface);
         snackButton.SetTextColor(md_theme_dark_inversePrimary);
     }
-        
+    
     if (timeOut === undefined) {
         setTimeout(function() {
             try {
@@ -1480,7 +1603,7 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
             } catch (err) {
                 snackUi.Animate('Fade-Out', null, timeOut/10);
             }
-            app.DestroyLayout(snackContainer);
+            app.DestroyLayout(this.snackContainer);
         }, 3000);
     } else {
         setTimeout(function() {
@@ -1489,14 +1612,12 @@ function drawSnackBarUi(text, btnAction, width, align, top, animateIn, animateOu
             } catch (err) {
                 snackUi.Animate('Fade-Out');
             }
-            app.DestroyLayout(snackContainer);
+            app.DestroyLayout(this.snackContainer);
         }, timeOut);
     }
+    
 }
 
-function hideSnackBar() {
-    app.DestroyLayout(snackContainer);
-}
 var _text;
 ui.addText = function(text,width,height,options,parent_Layout){
     return new textObject(text,width,height,options,parent_Layout)
@@ -1616,17 +1737,70 @@ ui.addTimePickerInput = function(){
     return new timeInputObj();
 }
 
-function timeInput(){
+function timeInputObj(){
     this.setOnAction = function(){
         
     }
+    drawTimeInput()
 }
 
 function drawTimeInput(){
     
+    let borderColor = function(){
+        if(theme==='light') return md_theme_light_primaryContainer;
+        else return md_theme_dark_primaryContainer;
+    }
+    let backColor = function(){
+        if(theme==='light') return md_theme_light_onPrimaryContainer;
+        else return md_theme_dark_onPrimaryContainer;
+    }
+    pickerDlg = app.CreateDialog();
+    pickerDlg.SetBackColor("#00000000");
+    
+    pickerUi = app.CreateLayout('Card');
+    pickerDlg.AddLayout(pickerUi);
+    
+    pickerUi.SetCornerRadius(24);
+    pickerUi.SetSize(320,250,'dp')
+    
+    const box = app.CreateLayout('Linear','Left');
+    box.SetSize(320,250,'dp');
+    pickerUi.AddChild(box);
+    
+    title = app.AddText(box,'Enter Time',null,null,'Left')
+    title.SetMargins(24,24,null,null,'dp')
+    
+    const tbox = app.CreateLayout('Linear','Horizontal,Left');
+    tbox.SetSize(320,82,'dp')
+    tbox.SetMargins(null,20,null,null,'dp')
+    //tbox.SetBackColor('green')
+    box.AddChild(tbox)
+    
+    hrInput = MUI.AddTextAreaOutlineA(tbox,0.25,0.1,'',false,borderColor(),backColor())
+    hrInput.SetMargins(20,null,null,null,'dp')
+    
+    minInput = MUI.AddTextAreaOutlineA(tbox,0.25,0.1,'',false,borderColor(),backColor())
+    minInput.SetMargins(20,null,null,null,'dp')
+    
+    hrText = app.AddText(box,'Hour',null,null,null)
+    hrText.SetMargins(23,null,null,null,'dp')
+    
+    minText = app.AddText(box,'Minute',null,null)
+    minText.SetMargins(144,null,null,null,'dp')
+    if(theme==='light'){
+        pickerUi.SetBackColor(md_theme_light_surface);
+        title.SetTextColor(md_theme_light_onSurfaceVariant)
+        hrText.SetTextColor(md_theme_light_onSurfaceVariant)
+    }
+    else{
+        pickerUi.SetBackColor(md_theme_dark_surface);
+        title.SetTextColor(md_theme_dark_onSurfaceVariant)
+        hrText.SetTextColor(md_theme_dark_onSurfaceVariant)
+    }
+    this.pickerDlg.Show();
 }
 
-ui.addDialog = function(title, text, dlgOptions, noAction, yesAction) {
+ui.showDialog = function(title, text, dlgOptions, noAction, yesAction) {
     return new dlgBar(title, text, dlgOptions, noAction, yesAction);
 }
 
@@ -1634,41 +1808,40 @@ function dlgBar(title, text, dlgOptions, noAction, yesAction) {
     this.setOnCancel = function(onCancel) {
         this.onCancel = onCancel;
     }
-    this.setOnTrue = function(onTrue) {
-        this.onTrue = onTrue;
+    this.setOnAction = function(onAction){
+        this.onAction = onAction;
     }
-    this.setOnBack = function(onBack) {
-        this.onBack = onBack
-    }
-    this.setOnFalse = function(onFalse) {
-        this.onFalse = onFalse;
-    }
-    this.setDimensions = function(width, height) {
-        this.width = width;
-        this.height = height;
-    }
-    this.show = function() {
-        showDialogBar(title, text, dlgOptions, noAction, yesAction, this.width, this.height, this.onCancel, this.onTrue, this.onFalse, this.onBack)
-    }
+    showDialogBar(title, text, dlgOptions, noAction, yesAction,this)
 }
 
-function showDialogBar(title, text, dlgOptions, noAction, yesAction, width, height, onCancel, onTrue, onFalse, onBack) {
-
+function showDialogBar(title, text, dlgOptions, noAction, yesAction,dlgFunc) {
+    
+    let width = function(){
+        if(app.IsTablet()) return 560;
+        else return 280;
+    }
+    
     dlgA = app.CreateDialog();
     dlgA.SetBackColor("#00000000");
-    dlgA.SetOnCancel(onCancel)
-    dlgA.SetOnBack(onBack)
-
-    dlgUi = MUI.CreateLayout('Card')
+    dlgA.SetOnCancel(function(){
+        try{
+            dlgFunc.onCancel();
+            }
+        catch(err){
+            return null;
+            }
+    })
+    
+    dlgUi = app.CreateLayout('Card')
     dlgA.AddLayout(dlgUi)
 
-    dlgUi.SetBackColor(hexValueOfColorA200)
+    
     dlgUi.SetElevation(0)
-    dlgUi.SetSize(width, null)
+    dlgUi.SetSize(width(), null,'dp')
     dlgUi.SetCornerRadius(28)
 
     const box = app.CreateLayout("Linear", "Left");
-    box.SetSize(width, null)
+    box.SetSize(width(), null,'dp')
     dlgUi.AddChild(box);
 
     dlgTitle = app.AddText(box, title, 1, null, 'Bold,Left')
@@ -1682,18 +1855,46 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction, width, heig
     dlgText.SetFontFile(defaultFont)
 
     const footer = app.AddLayout(box, "Linear", "Horizontal,Right");
-    footer.SetSize(width, null);
+    footer.SetSize(width(), null,'dp');
     footer.SetPadding(24, null, 24, 24, "dp");
 
     noBtn = app.AddText(footer, noAction, null, null, 'Bold')
-    noBtn.SetTextColor(hexValueOfColor700)
-    noBtn.SetOnTouchUp(onFalse)
+    noBtn.SetOnTouchUp(function(){
+        try{
+            dlgFunc.onAction(false);
+            dlgA.Dismiss();
+        }
+        catch(err){
+            return null;
+        }
+    })
     noBtn.SetPadding(8, null, 8, null, "dp");
 
     yesBtn = app.AddText(footer, yesAction, null, null, 'Bold,VCenter')
-    yesBtn.SetTextColor(hexValueOfColor700)
-    yesBtn.SetOnTouchUp(onTrue)
+    yesBtn.SetOnTouchUp(function(){
+        try{
+            dlgFunc.onAction(true);
+            dlgA.Dismiss();
+        }
+        catch(err){
+            return null;
+        }
+    })
     yesBtn.SetPadding(8, null, 8, null, "dp");
-
+    
+    if(theme === 'light'){
+        noBtn.SetBackColor(md_theme_light_primary)
+        yesBtn.SetBackColor(md_theme_light_primary)
+        dlgUi.SetBackColor(md_theme_light_secondaryContainer)
+        dlgTitle.SetTextColor(md_theme_light_onSurface)
+        dlgText.SetTextColor(md_theme_light_onSurfaceVariant)
+    }
+    else{
+        noBtn.SetTextColor(md_theme_dark_primary)
+        yesBtn.SetTextColor(md_theme_dark_primary)
+        dlgUi.SetBackColor(md_theme_dark_secondaryContainer)
+        dlgTitle.SetTextColor(md_theme_dark_onSurface)
+        dlgText.SetTextColor(md_theme_dark_onSurfaceVariant)
+    }
     this.dlgA.Show()
 }

@@ -426,11 +426,12 @@ function drawSimpleMenu(menuType,list,position,menuFunc){
         else return 190;
     }
     
-    //alert(top)
     topValue = ()=>{
         if( top< 0.25 ) return top + 0.03
         else return top - 0.23;
     }
+    
+    
     menuContainer = app.CreateLayout('Linear',position);
     menuContainer.SetSize(1,1)
     menuContainer.SetOnTouch(function(){
@@ -1181,6 +1182,7 @@ function drawFilledBtn(btnName, width, height, icon, layout,onTouchEvent){
         
     filledButtonContainer.SetOnTouch(function(){
         top = filledButtonContainer.GetTop();
+        left = filledButtonContainer.GetLeft();
         try{
             onTouchEvent.onTouch();
         }

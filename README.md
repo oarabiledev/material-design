@@ -1,27 +1,39 @@
+[](Material3 For Ds.png)
 # Md3 Implementation In Droidscript:
 
-Hey there, MUI 3 has been released some time ago.
 
-I am tring to implement MUI 3 in droidscript, because MUI 2 is aging and is deprecated as of Droidscript version : 2.66.3
+Here is the implementation of Material Design 3 for Droidscript,
+For those who dont know Droidscript is a JS Framework that allows
+Js developers to easily and speedily release apps for the android
+Os and many other OS's in the future via the react based Hybrid UI
+Enjine
+or Enjine IO.
+Still unclear, remember I am not a part of the official Ds Team.
+This plugin will also have intentions to be exportable as Hybrid 
+is.
 
-Which can be downloaded from the official Playstore, or directly:
+I would like to give special thanks, this project relies on the 
+following community plugins and codebases:
 
-[Index of /apk/DroidScript_266 (androidscript.org)](http://androidscript.org/apk/DroidScript_266/)
+- DroidScript 
+_[DroidScript Javascript IDE](https://droidscript.org/)_
+_[https://github.com/DroidScript](https://github.com/DroidScript)_
+
+- Symbroson (Co-Dev at Droidscript)
+_[https://github.com/alex-Symbroson](https://github.com/alex-Symbroson)_
+
+
+- Hamac Jumar (MUI 2 & Hybrid Ui/AKA Enjine IO Dev)
+_[https://github.com/hamacjumar](https://github.com/hamacjumar)_
+
+
+__CONTRIBUTING DETAILS__
+
 
 When implementing ui objects refer to components from [Material Design 3](https://m3.material.io/components)
-There are a people to thank whom this project heavily borrows some of its elements/their code contributions:
+Please remember your code must document itself, and also please be respectful. 👻
 
-- Dave Hurren (Founder Of DroidScript & Main Dev)
+__My Contacts__
 
-[https://github.com/DroidScript](https://github.com/DroidScript)
-
-- Hamac Jumar (MUI 2 & Hybrid Ui Dev)
-
-[https://github.com/hamacjumar](https://github.com/hamacjumar)
-
-- Symbroson (Dev at Droidscript)
-
-[https://github.com/alex-Symbroson](https://github.com/alex-Symbroson)
-
-To Contribute read the 'Description of tracking components file' and refer to tracking components.pdf
-contact me at : oarabilekoore@protonmail.com
+[Email : Proton](oarabilekoore@protonmail.com)
+[Social : Instagram](https://www.instagram.com/oneofakind_tm/)

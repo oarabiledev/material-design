@@ -1,4 +1,4 @@
-![](Material3 For Ds.png)
+![](MaterialDs.png)
 # Md3 Implementation In Droidscript:
 
 
@@ -25,6 +25,53 @@ _[https://github.com/alex-Symbroson](https://github.com/alex-Symbroson)_
 
 - Hamac Jumar (MUI 2 & Hybrid Ui/AKA Enjine IO Dev)
 _[https://github.com/hamacjumar](https://github.com/hamacjumar)_
+
+
+Here Is A Code Snippet For The Impatient::
+
+```javascript
+
+cfg.Dark
+app.LoadPlugin('Material3')
+
+
+let barProps = {
+	"bottomBarProps": {
+		"firstIcon": "inbox",
+		"secondIcon": "brush",
+		"thirdIcon": "mic",
+		"fourthIcon": "settings",
+		"fabIcon": "add"
+	}
+}
+function OnStart(){
+    ui.setProps('static','dark');
+    ui.setIconFill('outline');
+    
+    lay = ui.addLayout('Linear','FillXY')
+    
+    search = ui.addSearch(0.9,'Find Your Notes 👻',lay)
+    search.withTrailingIcon('sticky_note_2', 'search')
+    search.setMargins(null, 0.02)
+    
+    
+    progressLoader = ui.addProgressBar('linearIntermediate',0.85,lay)
+    progressLoader.setTimeOut(1800)
+    progressLoader.setMargins(null,0.4)
+    
+    bottomBar = ui.addBottomAppBar(barProps,lay)
+    bottomBar.setRawAdjustment(0.4)
+    bottomBar.setOnTouch(function(icon){
+        if(icon === 'brush') paintArt();
+        if(icon === 'mic') voiceRec();
+        if(icon === 'add') addNote();
+        })
+    app.AddLayout(lay)
+}
+
+// I didnt add relevant functions
+
+```
 
 
 __CONTRIBUTING DETAILS__

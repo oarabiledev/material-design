@@ -78,9 +78,11 @@ __CONTRIBUTING DETAILS__
 
 
 When implementing ui objects refer to components from [Material Design 3](https://m3.material.io/components)
+
 Please remember your code must document itself, and also please be respectful. 👻
 
 __My Contacts__
 
 [Email : Proton](oarabilekoore@protonmail.com)
+
 [Social : Instagram](https://www.instagram.com/oneofakind_tm/)

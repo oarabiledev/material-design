@@ -1,3 +1,14 @@
+/*
+      |\      /|   ________
+      | \    / |          /
+      |  \  /  |         /
+      |   \/   |         \ 
+      |        |   _______\       
+      
+*/
+
+// :: PROJECT WILL BE SWITCHED OVER TO CLASS BASED CHECK THE Material3 FOLDER 🫠
+
 var uiVersion = 0.01;
 var defaultFont = 'Fonts/Text/Roboto.ttf'
 var defaultIcons = 'Fonts/Icons/Regular.ttf'
@@ -7,7 +18,6 @@ var screenWidth = app.GetScreenWidth('Real');
 var screenDensity = app.GetScreenDensity('Real');
 
 var lastPressedItem = null;
-//ui color constants
 
 const ui = {};
 
@@ -1098,6 +1108,7 @@ function drawBottomBar(barPropsInjson,parentLayout,bottomBarObj) {
 }
 
 var filledButtonContainer;
+
 ui.addFilledButton = function(btnName, width, height, icon, layout) {
     return new filledButtonObject(btnName, width, height, icon, layout);
 }
@@ -1303,6 +1314,7 @@ function drawElevatedBtn(btnName, width, height, icon, parent_Layout,elevatedFun
     
     parent_Layout.AddChild(elevatedButtonContainer);
 }
+
 var extendedFabContainer,btnText;
 ui.addExtendedFAB = function(btnName, icon, width, parent_Layout) {
     return new extendedFABObj(btnName, icon, width, parent_Layout)

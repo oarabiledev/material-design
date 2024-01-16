@@ -62,7 +62,7 @@ function OnStart(){
 
 // I didnt add relevant functions
 /* NOTE THE NEWER Material3 CodeBase using classes is not yet
-*/ upto-date with some componenets
+ upto-date with some componenets */
 ```
 
 

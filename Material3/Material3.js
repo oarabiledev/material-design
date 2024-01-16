@@ -28,6 +28,8 @@ app.Script('m3Buttons.js');
 
 var theme,iconFill,m3ColorSystem;
 var layoutTopDistance,layoutInfo;
+var defaultIcons;
+var defaultFont = 'Fonts/Text/Roboto.ttf';
 
 class Material3{
     /* appProps Are Predefined Data That The Applications
@@ -41,6 +43,20 @@ class Material3{
         theme = niceProps.defaultMode;
         iconFill = niceProps.defaultIconFill;
         m3ColorSystem = niceProps.m3ColorDir;
+        
+        switch(iconFill){
+            case 'outline':
+                defaultIcons = 'Fonts/Icons/Outlined-Regular.otf';
+                break;
+            case 'sharp':
+                defaultIcons = 'Fonts/Icons/Sharp-Regular.otf';
+                break;
+            case 'two-tone':
+                defaultIcons = 'Fonts/Icons/TwoTone-Regular.otf';
+                break;
+            case 'round':
+                defaultIcons = 'Fonts/Icons/Round-Regular.otf'
+        }
         
         setM3BaseColors(m3ColorSystem)
         
@@ -67,6 +83,7 @@ class Material3{
             layoutInfo = type;
             return layout;
         } else {
+            
             const layout = app.CreateLayout(type, options);
             if (width && height) {
                 layout.SetSize(width, height);
@@ -78,12 +95,36 @@ class Material3{
         }
     }
     
-    addFilledButton(btnName, width, height, icon, layout){
-        return new filledButtonObject(btnName, width, height, icon, layout)
+    // m3 Buttons 
+    addFilledButton(btnName, width, height, icon, parentLay){
+        return new filledButtonObject(btnName, width, height, icon, parentLay)
+    }
+    addElevatedButton(btnName, width, height, icon, parentLay){
+        return new elevatedButtonObject(btnName, width, height, icon, parentLay)
+    }
+    addFilledTonalButton(btnName, width, height, icon, parentLay){
+        return new filledButtonObject(btnName, width, height, icon, parentLay);
+    }
+    addOutlinedButton(btnName, width, height, icon, parentLay){
+        return new outlinedButtonObject(btnName, width, height, icon, parentLay);
+    }
+    addTextButton(btnName, width, height, icon, parentLay){
+        return new textButtonObject(btnName, width, height, icon, parentLay)
     }
 }
 
+//This Function Basically Returns The Appropraite Color For The Correct Theme
 
+const stateColor = (lightColor,darkColor)=>{
+    if(theme === 'light') return lightColor;
+    else return darkColor;
+}
+
+const backgroundColor = ()=>{
+    if(theme === 'light') return md_theme_light_background;
+    else return md_theme_dark_background;
+}
+    
 function setM3BaseColors(colorDir) {
     appTheme = app.ReadFile(colorDir);
     jsonData = JSON.parse(appTheme)

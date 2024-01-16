@@ -1,5 +1,5 @@
 ![](Material3.png)
-# Md3 Implementation In Droidscript:
+# Md3 For Droidscript:
 
 
 Here is the implementation of Material Design 3 for Droidscript,

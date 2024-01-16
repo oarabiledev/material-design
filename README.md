@@ -35,25 +35,16 @@ cfg.Dark
 app.LoadPlugin('Material3')
 
 
-let barProps = {
-	"bottomBarProps": {
-		"firstIcon": "inbox",
-		"secondIcon": "brush",
-		"thirdIcon": "mic",
-		"fourthIcon": "settings",
-		"fabIcon": "add"
-	}
-}
 function OnStart(){
-    ui.setProps('static','dark');
-    ui.setIconFill('outline');
+
+    const ui = new Material3({
+    "m3ColorDir":"appTheme.json",
+    "defaultMode":"dark",
+    "defaultIconFill":"outline"
+    });
+    
     
     lay = ui.addLayout('Linear','FillXY')
-    
-    search = ui.addSearch(0.9,'Find Your Notes 👻',lay)
-    search.withTrailingIcon('sticky_note_2', 'search')
-    search.setMargins(null, 0.02)
-    
     
     progressLoader = ui.addProgressBar('linearIntermediate',0.85,lay)
     progressLoader.setTimeOut(1800)
@@ -70,7 +61,8 @@ function OnStart(){
 }
 
 // I didnt add relevant functions
-
+/* NOTE THE NEWER Material3 CodeBase using classes is not yet
+*/ upto-date with some componenets
 ```
 
 

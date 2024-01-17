@@ -20,6 +20,7 @@
 //Import Relevant Files:
 
 app.Script('m3Buttons.js');
+app.Script('m3Switches.js');
 
 /* The following values will be used by other M3 Componets
        To SetPositions and Accuratly Align Properly:
@@ -110,6 +111,11 @@ class Material3{
     }
     addTextButton(btnName, width, height, icon, parentLay){
         return new textButtonObject(btnName, width, height, icon, parentLay)
+    }
+    
+    // m3 Switches
+    addSwitch(switchType,value,parent_Layout){
+        return new switchObject(switchType,value,parent_Layout);
     }
 }
 

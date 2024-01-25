@@ -7,20 +7,12 @@
    a large codebase, thats why i migrated from objects 😒
 */
 
-/* How appProps can are used:
-   i.e:
-      let appProps = {
-                        "m3ColorDir":"appTheme.json"
-                        "defaultMode":"light",
-                        "defaultIconFill":"outline"
-      }
-      
-*/
-
 //Import Relevant Files:
 
 app.Script('m3Buttons.js');
-app.Script('m3Switches.js');
+//Ignore button Import Because Im currently Working on this file
+
+app.Script('uxElements/m3Switches.js');
 
 /* The following values will be used by other M3 Componets
        To SetPositions and Accuratly Align Properly:
@@ -33,17 +25,30 @@ var defaultIcons;
 var defaultFont = 'Fonts/Text/Roboto.ttf';
 
 class Material3{
-    /* appProps Are Predefined Data That The Applications
-       UI will base off, i.e: default theme & location of 
-       the m3Color System Values : 🫠
-    */
-    constructor(appProps) {
-        const rawProps = JSON.stringify(appProps);
-        const niceProps = JSON.parse(rawProps);
+    
+    constructor(defaultTheme,defaultIconFill,defaultThemeDir) {
         
-        theme = niceProps.defaultMode;
-        iconFill = niceProps.defaultIconFill;
-        m3ColorSystem = niceProps.m3ColorDir;
+        theme = defaultTheme;
+        iconFill = defaultIconFill;
+        
+        /* To Make Things Easy We Will Take 'default' or dflt
+        Which will reference the location uxDesign/appTheme.json
+        As The Path Were The m3ColorSystem JSON File 'appTheme'is
+        located 🫠
+        */
+        
+        if(defaultThemeDir === 'default' || defaultThemeDir === 'dflt'){
+            m3ColorSystem = 'uxDesign/appTheme.json';
+        }
+        else{
+            m3ColorSystem = defaultThemeDir;
+        }
+        
+        // Test Function if All Data Has Been Recieved Well
+        //alert(theme + ' ' + iconFill + ' ' + m3ColorSystem)
+        
+        
+        // Variable Location For Icon Fills
         
         switch(iconFill){
             case 'outline':
@@ -77,7 +82,6 @@ class Material3{
             }
             else{
                 layout.SetBackColor(md_theme_dark_background);
-                app.SetStatusBarColor(md_theme_dark_background);
             }
             
             layoutTopDistance = layout.GetTop();
@@ -111,6 +115,9 @@ class Material3{
     }
     addTextButton(btnName, width, height, icon, parentLay){
         return new textButtonObject(btnName, width, height, icon, parentLay)
+    }
+    addExtendedFAB(btnName, icon, width, parentLay){
+        return new extendedFABObject(btnName, icon, width, parentLay);
     }
     
     // m3 Switches

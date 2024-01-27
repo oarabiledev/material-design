@@ -9,9 +9,9 @@
 
 //Import Relevant Files:
 
-app.Script('m3Buttons.js');
-//Ignore button Import Because Im currently Working on this file
-
+app.Script('uxElements/m3Buttons.js');
+app.Script('uxElements/m3Progress.js')
+app.Script('uxElements/m3SnackBar.js')
 app.Script('uxElements/m3Switches.js');
 
 /* The following values will be used by other M3 Componets

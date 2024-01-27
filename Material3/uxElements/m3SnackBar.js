@@ -69,13 +69,13 @@ class SnackBarObject{
     
     if (timeout === undefined) {
         setTimeout(function() {
-            snackUi.Animate('Fade-Out', null, 980);
+            this.snackContainer.Animate('FadeOut', null, 980);
             app.DestroyLayout(this.snackContainer);
             this.snackContainer.Destroy()
         }, 3000);
     } else {
         setTimeout(function() {
-            this.snackContainer.Animate('Fade-Out', null, 300);
+            this.snackContainer.Animate('FadeOut', null, 300);
             app.DestroyLayout(this.snackContainer);
             this.snackContainer.Destroy()
         }, timeout);

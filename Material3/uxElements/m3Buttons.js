@@ -484,3 +484,187 @@ class extendedFABObject{
         return stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer)
     }
 }
+
+var fabContainer;
+class fabObject{
+    constructor(){
+        this.setOnTouch = null;
+        this.drawFAB(icon, layout, this)
+    }
+   
+    setOnTouch(onTouch) {
+        this.onTouch = onTouch;
+    }
+
+    setMargins(left, top, right, bottom, mode) {
+        fabContainer.SetMargins(left, top, right, bottom, mode);
+    }
+
+    setPosition(left, top, width, height, options) {
+        fabContainer.SetPosition(left, top, width, height, options);
+    }
+    
+    drawFab(icon, layout, fabObj) {
+    
+    fabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
+    fabContainer.SetSize(56, 56, 'dp');
+
+    const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
+    fab.SetSize(56, 56, 'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(16);
+
+    const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
+    _fabIcon.SetFontFile(defaultIcons);
+    _fabIcon.SetOnTouchDown(function() {
+        _FabInfo.onTouch();
+    });
+
+    _fabIcon.SetTextSize(24);
+    fab.AddChild(_fabIcon);
+    fabContainer.AddChild(fab);
+
+    layout.AddChild(fabContainer);
+    
+    fab.SetBackColor(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer));
+    _fabIcon.SetTextColor(stateColor(md_theme_light_onPrimaryContainer,md_theme_dark_onPrimaryContainer));
+    }
+}
+
+var smallFabContainer;
+
+class smallFABObject{
+    constructor(){
+        this.setOnTouch = null;
+        this.drawSmallFab(icon, parentLay, this)
+    }
+    
+    setOnTouch(onTouch) {
+        this.onTouch = onTouch;
+    }
+
+    setMargins(left, top, right, bottom, mode) {
+        smallFabContainer.SetMargins(left, top, right, bottom, mode);
+    }
+
+    setPosition(left, top, width, height, options) {
+        smallFabContainer.SetPosition(left, top, width, height, options);
+    }
+    
+    drawSmallFab(icon, parentLay, fabObj) {
+    smallFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
+    smallFabContainer.SetSize(40, 40, 'dp');
+
+    const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
+    fab.SetSize(40, 40, 'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(12);
+
+    const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
+    _fabIcon.SetFontFile(defaultIcons);
+    
+    if(fabObj.onTouch){
+        _fabIcon.SetOnTouchDown(function() {
+            fabObj.onTouch();
+        });
+    }
+
+    _fabIcon.SetTextSize(18);
+    fab.AddChild(_fabIcon);
+    smallFabContainer.AddChild(fab);
+
+    fab.SetBackColor(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer));
+    _fabIcon.SetTextColor(stateColor(md_theme_light_onPrimaryContainer,md_theme_dark_onPrimaryContainer));
+    
+    parentLay.AddChild(smallFabContainer);
+    
+    }
+}
+
+
+var largeFabContainer;
+class largeFABObject{
+    constructor(){
+        this.setOnTouch = null;
+        this.drawLargeFab(icon, parentLay, this)
+    }
+    
+    setOnTouch(onTouch) {
+        this.onTouch = onTouch;
+    }
+
+    setMargins(left, top, right, bottom, mode) {
+        largeFabContainer.SetMargins(left, top, right, bottom, mode);
+    }
+
+    setPosition(left, top, width, height, options) {
+        largeFabContainer.SetPosition(left, top, width, height, options);
+    }
+    
+    drawLargeFab(icon, parentLay, largefabOBj) {
+    largeFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
+    largeFabContainer.SetSize(96, 96, 'dp');
+
+    const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
+    fab.SetSize(96, 96, 'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(28);
+
+    const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
+    _fabIcon.SetFontFile(defaultIcons);
+    _fabIcon.SetOnTouchDown(function() {
+        _FabInfo.onTouch();
+    });
+
+    _fabIcon.SetTextSize(36);
+    fab.AddChild(_fabIcon);
+    largeFabContainer.AddChild(fab);
+
+
+    fab.SetBackColor(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer));
+    _fabIcon.SetTextColor(stateColor(md_theme_light_onPrimaryContainer,md_theme_dark_onPrimaryContainer))
+    
+    parentLay.AddChild(largeFabContainer);
+    
+    }
+}
+
+class radioListObject{
+    constructor(list, width, height, parentLay){
+        this.addRadioUi(list, width, height, parentLay)
+    }
+    
+    getCheckedItems(){return _radio.GetCheckItem();}
+    checkItemByIndex(checkItem){return _radio.CheckItemByIndex(checkItem);}
+    getItem(title){return _radio.GetItem(title);}
+    removeAll(){return _radio.RemoveAll()}
+    removeItem(title){return _radio.RemoveItem(title);}
+    removeItemByIndex(index){return _radio.RemoveItemByIndex(index);}
+    scrollToItem(title,body){return _radio.ScrollToItem(title,body);}
+    scrollToItemByIndex(index){return _radio.ScrollToItemByIndex(index);}
+    selectItem(item){return _radio.SelectItem(item)}
+    selectItemByIndex(index,scroll){_radio.SelectItemByIndex(index,scroll)}
+    setOnSelect = function(onSelect){return _radio.SetOnSelect(onSelect);}
+    setOnTouch = function(onTouch){return _radio.SetOnTouch(onTouch);}
+    setList = function(list,delim){return _radio.SetList(list,delim);}
+    setMargins = function(left,top,right,bottom){ _radio.SetMargins(left,top,right,bottom)}
+    setPosition = function(left, top, width, height, options){_radio.SetPosition( left, top, width, height, options)}
+    setSize = function(width,height){_radio.SetSize(width,height)}
+    setScale = function(x,y){_radio.SetScale(x,y)}
+    showContainer = function(){_radio.Show()}
+    hideContainer = function(){_radio.Hide()}
+    getLength = function(){return _radio.GetLength();}
+    insertItem = function(index,title,body,image){_radio.InsertItem(index,title,body,image)}
+    isVisible = function(){return _radio.IsVisible()}
+    isEnabled = function(){return _radio.IsEnabled()}
+    
+    addRadioUi(list,width,height,parentLay,index){
+    _radio = MUI.CreateRadio(list,width,height,stateColor(md_theme_light_primary,md_theme_dark_primary));
+    _radio.SetTextColor(stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant))
+    _radio.SetFontFile(defaultFont);
+    
+    
+    parentLay.AddChild(_radio);
+    }
+}
+

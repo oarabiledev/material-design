@@ -37,32 +37,17 @@ app.LoadPlugin('Material3')
 
 function OnStart(){
 
-    const ui = new Material3({
-    "m3ColorDir":"appTheme.json",
-    "defaultMode":"dark",
-    "defaultIconFill":"outline"
-    });
+    const ui = new Material3('dark','outline','dflt');
     
     
     lay = ui.addLayout('Linear','FillXY')
     
-    progressLoader = ui.addProgressBar('linearIntermediate',0.85,lay)
-    progressLoader.setTimeOut(1800)
+    progressLoader = ui.addProgressBar('linear',0.85,lay)
     progressLoader.setMargins(null,0.4)
     
-    bottomBar = ui.addBottomAppBar(barProps,lay)
-    bottomBar.setRawAdjustment(0.4)
-    bottomBar.setOnTouch(function(icon){
-        if(icon === 'brush') paintArt();
-        if(icon === 'mic') voiceRec();
-        if(icon === 'add') addNote();
-        })
     app.AddLayout(lay)
 }
 
-// I didnt add relevant functions
-/* NOTE THE NEWER Material3 CodeBase using classes is not yet
- upto-date with some componenets */
 ```
 
 

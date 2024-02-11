@@ -9,10 +9,17 @@
 
 //Import Relevant Files:
 
-app.Script('uxElements/m3Buttons.js');
-app.Script('uxElements/m3Progress.js')
-app.Script('uxElements/m3SnackBar.js')
+cfg.MUI
+
+app.Script('uxElements/m3Navigation.js');
 app.Script('uxElements/m3Switches.js');
+app.Script('uxElements/m3Progress.js');
+app.Script('uxElements/m3SnackBar.js');
+app.Script('uxElements/m3Buttons.js');
+app.Script('uxElements/m3Dialog.js');
+app.Script('uxElements/m3Search.js');
+app.Script('uxElements/m3Text.js');
+
 
 /* The following values will be used by other M3 Componets
        To SetPositions and Accuratly Align Properly:
@@ -52,52 +59,37 @@ class Material3{
         
         switch(iconFill){
             case 'outline':
-                defaultIcons = 'Fonts/Icons/Outlined-Regular.otf';
+                defaultIcons = 'uxFonts/Icons/Outlined-Regular.otf';
                 break;
             case 'sharp':
-                defaultIcons = 'Fonts/Icons/Sharp-Regular.otf';
+                defaultIcons = 'uxFonts/Icons/Sharp-Regular.otf';
                 break;
             case 'two-tone':
-                defaultIcons = 'Fonts/Icons/TwoTone-Regular.otf';
+                defaultIcons = 'uxFonts/Icons/TwoTone-Regular.otf';
                 break;
             case 'round':
-                defaultIcons = 'Fonts/Icons/Round-Regular.otf'
+                defaultIcons = 'uxFonts/Icons/Round-Regular.otf'
         }
         
         setM3BaseColors(m3ColorSystem)
         
     }
     
+    getVersion(){
+        return 'uiVersion : 0.51 \nuiPatch : 0.0 \nexportDate : 05/02/2024'   
+    }
     
     addLayout(type, options, width, height, parentLay) {
-        if (parentLay === 'main') {
-            const layout = app.CreateLayout(type, options);
-            
-            if (width && height) {
-                layout.SetSize(width, height);
-            }
-            
-            if (theme === 'light'){
-                layout.SetBackColor(md_theme_light_background);
-            }
-            else{
-                layout.SetBackColor(md_theme_dark_background);
-            }
-            
-            layoutTopDistance = layout.GetTop();
-            layoutInfo = type;
-            return layout;
-        } else {
-            
-            const layout = app.CreateLayout(type, options);
-            if (width && height) {
-                layout.SetSize(width, height);
-            }
-            layoutTopDistance = layout.GetTop();
-            layoutInfo = type;
-            parentLay.AddChild(layout);
-            return layout;
-        }
+    const lay = app.CreateLayout(type, options)
+    if (theme ==='dark') {
+        lay.SetBackColor(md_theme_dark_background);
+        
+    } else {
+        lay.SetBackColor(md_theme_light_background);
+    }
+    layoutInfo = type;
+    layoutTopDistance = lay.GetTop();
+    return lay;
     }
     
     // m3 Buttons 
@@ -120,9 +112,75 @@ class Material3{
         return new extendedFABObject(btnName, icon, width, parentLay);
     }
     
+    addFAB(icon, layout) {
+        return new fabObject(icon, layout);
+    }
+    
+    addSmallFAB(icon, layout) {
+        return new smallFABObject(icon, layout);
+    }
+    
+    addLargeFAB(icon, layout) {
+        return new largeFABObject(icon, layout);
+    }
+    
+    addRadioButtons(list,width,height,layout){
+        return new radioListObject(list,width,height,layout);
+    }
     // m3 Switches
     addSwitch(switchType,value,parent_Layout){
         return new switchObject(switchType,value,parent_Layout);
+    }
+    
+    // m3 Progress
+    addProgressBar(progressType, width, layout){
+        return new progressObject(progressType, width, layout);
+    }
+    
+    // m3 SnackBar
+    addSnackBar(text, btnAction, width, alignment){
+        return new SnackBarObject(text, btnAction, width, alignment);
+    }
+    
+    // m3 Navigation
+    addMenu(menuType,list,position){
+        return new menuObj(menuType,list,position);
+    }
+
+    addBottomAppBar(barPropsInjson,parentLayout){
+        return new bottomBarObject(barPropsInjson,parentLayout)
+    }
+    
+    addDrawer(drawerLayout,side,width){
+        return new navDrawerObject(drawerLayout,side,width)
+    }
+    
+    addSeekBar(value,range,width,layout){
+        return new seekBarObject(value,range,width,layout)
+    }
+    
+    addSlideSheet(sheetLayout, width, options){
+        return new slideSheetObject(sheetLayout, width, options);
+    }
+    
+    addBottomSheet(sheetLayout, height, options){
+        return new bottomSheetObject(sheetLayout, height, options);
+    }
+    
+    // m3Dialogs
+    
+    showDialog(title, text, dlgOptions, noAction, yesAction) {
+        return new dlgBarObject(title, text, dlgOptions, noAction, yesAction);
+    }
+    
+    // m3Search
+    addSearchBar(barProps,width,height,parent_Layout){
+        return new searchObject(barProps,width,height,parent_Layout)
+    }
+    
+    // m3Text
+    addText(text,width,height,options,parent_Layout){
+        return new textObject(text,width,height,options,parent_Layout)
     }
 }
 

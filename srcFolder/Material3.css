@@ -1,0 +1,184 @@
+/* Reset specific jQuery Mobile styles */
+.ui-mobile {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    text-align: inherit !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    cursor: auto !important;
+    box-shadow: none !important;
+    /* Add more properties as needed */
+}
+
+
+/* Your original styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 20px; 
+    background-color: white;
+}
+
+.headerImg {
+    display: block;
+    margin-top: 80px;
+    max-width: 100%;
+    height: auto;
+}
+
+.imgExample {
+    max-width: 100%;
+    height: auto;
+}
+
+h2 {
+    color: #2c3e50;
+}
+
+h3 {
+    color: #2c3e50; /* Dark color that suits the page */
+    margin-bottom: 10px; /* Provides spacing between elements */
+}
+
+h4 {
+    color: #2c3e50; /* Dark color that suits the page */
+    margin-bottom: 10px; /* Provides spacing between elements */
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0px;
+}
+
+code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+    padding: 20px;
+    font-size: 100%;
+    font-family: monospace;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+blockquote {
+    background-color: #7772;
+    border-left: 5px solid #3498db;
+    margin: 10px 0;
+}
+
+.fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-btn,
+.menu-icon {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+    border: 3px solid;
+    padding: 0.25em 0.5em;
+    box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.back-btn:active,
+.menu-icon:active {
+    box-shadow: 0px 0px 0px 0px;
+    top: 5px;
+    left: 5px;
+}
+
+.menu-icon {
+    margin-right: 25px;
+}
+
+/* Table of contents styles */
+.table-of-contents {
+    display: none;
+    position: fixed;
+    top: 50px; 
+    left: 10%;
+    width: 300px;
+    background-color: #222;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+.table-of-contents ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.table-of-contents li {
+    margin-bottom: 5px;
+}
+
+.table-of-contents a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Show/hide animation for table of contents */
+.show-toc {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 768px) {
+    img {
+        max-width: 70%;
+        margin: 80px auto;
+    }
+
+    pre {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

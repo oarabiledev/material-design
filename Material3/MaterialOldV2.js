@@ -6,7 +6,11 @@
    They are better and make it easy to manage  
    a large codebase, thats why i migrated from objects ðŸ˜’ 
 */ 
- 
+
+/* Due to autocompletion issues this code and its subscripts are
+   deprecated take a look at Material3.js4
+*/
+
 //Import Relevant Files: 
  
 cfg.MUI 

@@ -1,18 +1,17 @@
-/* Material 3 For Ds 🌚 
-   by Oarabile Koore 
-*/ 
+/* Material 3 For DroidScript
+   This Project Is Licensed
+   Under The MIT License.
 
-/* Why Use Classes ? 
-   They are better and make it easy to manage  
-   a large codebase, thats why i migrated from objects 😓 
-*/ 
-
-
-/* Yeah I changed away from classes, DS doesnt recognize
-   them for autocomplete.
+   This Project Was Ported 
+   By Oarabile Koore.
+   The Following Contributers 
+   Helped:
+   - David Hurren
+   - Symbrosom
+   - Alan H
+   - Hamac Jumar
+   - captainstarbuck
 */
-
-//Import Relevant Files: 
 
 cfg.MUI 
 
@@ -69,6 +68,9 @@ ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
     if(m3ColorSystem) setM3BaseColors(m3ColorSystem);
 }
 
+app.CreateMaterial3 = function(defaultTheme,defaultIconFill,defaultThemeDir){
+    ui.InitializeUIKit(defaultTheme,defaultIconFill,defaultThemeDir)
+}
 
 ui.getVersion = function() { 
     return 'uiVersion : 0.61 \nuiPatch : 0.0 \nexportDate : 22/02/2024';    
@@ -97,7 +99,7 @@ ui.addElevatedButton = function(btnName, width, height, icon, parentLay) {
 }; 
 
 ui.addFilledTonalButton = function(btnName, width, height, icon, parentLay) { 
-    return new filledButtonObject(btnName, width, height, icon, parentLay); 
+    return new filledTonalButtonObject(btnName, width, height, icon, parentLay); 
 }; 
 
 ui.addOutlinedButton = function(btnName, width, height, icon, parentLay) { 
@@ -111,6 +113,7 @@ ui.addTextButton = function(btnName, width, height, icon, parentLay) {
 ui.addExtendedFAB = function(btnName, icon, width, parentLay) { 
     return new extendedFABObject(btnName, icon, width, parentLay); 
 }; 
+
 
 ui.addFAB = function(icon, layout) { 
     return new fabObject(icon, layout); 
@@ -126,7 +129,7 @@ ui.addLargeFAB = function(icon, layout) {
 
 ui.addRadioButtons = function(list,width,height,layout) { 
     return new radioListObject(list,width,height,layout); 
-}; 
+};
 
 // m3 Switches 
 ui.addSwitch = function(switchType,value,parent_Layout) { 
@@ -138,52 +141,20 @@ ui.addProgressBar = function(progressType, width, layout) {
     return new progressObject(progressType, width, layout); 
 }; 
 
-// m3 SnackBar 
-ui.addSnackBar = function(text, btnAction, width, alignment) { 
-    return new SnackBarObject(text, btnAction, width, alignment); 
-}; 
-
-// m3 Navigation 
-ui.addMenu = function(menuType,list,position) { 
-    return new menuObj(menuType,list,position); 
-}; 
-
-ui.addBottomAppBar = function(barPropsInjson,parentLayout) { 
-    return new bottomBarObject(barPropsInjson,parentLayout); 
-}; 
-
-ui.addDrawer = function(drawerLayout,side,width) { 
-    return new navDrawerObject(drawerLayout,side,width); 
-}; 
-
-ui.addSeekBar = function(value,range,width,layout) { 
-    return new seekBarObject(value,range,width,layout); 
-}; 
-
-ui.addSlideSheet = function(sheetLayout, width, options) { 
-    return new slideSheetObject(sheetLayout, width, options); 
-}; 
-
-ui.addBottomSheet = function(sheetLayout, height, options) { 
-    return new bottomSheetObject(sheetLayout, height, options); 
-}; 
-
-// m3Dialogs 
 
 ui.showDialog = function(title, text, dlgOptions, noAction, yesAction) { 
     return new dlgBarObject(title, text, dlgOptions, noAction, yesAction); 
 }; 
 
-// m3Search 
-ui.addSearchBar = function(barProps,width,height,parent_Layout) { 
-    return new searchObject(barProps,width,height,parent_Layout); 
+
+ui.addSnackBar = function(text, btnAction, width, alignment) { 
+    return new SnackBarObject(text, btnAction, width, alignment); 
 }; 
 
-// m3Text 
-ui.addText = function(text,width,height,options,parent_Layout) { 
-    return new textObject(text,width,height,options,parent_Layout); 
-}; 
 
+ui.addSeekBar = function(value,range,width,layout) { 
+    return new seekBarObject(value,range,width,layout); 
+}; 
 
 //This Function Basically Returns The Appropraite Color For The Correct Theme 
 
@@ -273,11 +244,12 @@ function setM3BaseColors(colorDir) {
 }
 
 
+
 var filledButton;
 
 function filledButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    
+    this.onTouch = null;
     this.animate = function (type, callback, time) {
         filledButton.Animate(type, callback, time);
     }
@@ -340,7 +312,7 @@ function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
     filledButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
     
     filledButton.SetTextColor(stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary))
-    filledButton.SetStyle(stateColor(md_theme_light_primary,md_theme_dark_primary),tateColor(md_theme_light_primary,md_theme_dark_primary), 20, null, null, 0)
+    filledButton.SetStyle(stateColor(md_theme_light_primary,md_theme_dark_primary),stateColor(md_theme_light_primary,md_theme_dark_primary), 20, null, null, 0)
     filledButton.SetFontFile(defaultFont)
     filledButton.SetOnTouch(() => {
         if (filledObj.onTouch) {
@@ -362,7 +334,7 @@ var elevatedButton;
 
 function elevatedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    
+    this.onTouch = null;
     this.animate = function (type, callback, time) {
         elevatedButton.Animate(type, callback, time);
     }
@@ -425,7 +397,7 @@ function elevatedButtonObject(btnName, width, height, icon, parentLay) {
 
 function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
     elevatedButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
-    elevatedButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
+    elevatedButton.SetTextColor(stateColor(md_theme_light_primary,md_theme_dark_primary));
     elevatedButton.SetFontFile(defaultFont)
     elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0.1);
     
@@ -435,7 +407,7 @@ function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
         }
     });
     
-    elevatedButton.SetOnTouch(() => {
+    elevatedButton.SetOnLongTouch(() => {
         if (elevatedObj.onLongTouch) {
             elevatedObj.onLongTouch();
         }
@@ -453,7 +425,7 @@ var filledTonalButton;
 
 function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    
+    this.onTouch = null;
     this.animate = function (type, callback, time) {
         filledTonalButton.Animate(type, callback, time);
     }
@@ -605,13 +577,14 @@ function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
     
     outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20,strokeClrOutlined(), 1, 0.1);
     
+    console.log(outlineObj.onTouch)
     outlinedButton.SetOnTouch(() => {
         if (outlineObj.onTouch) {
             outlineObj.onTouch()
         }
     });
     
-    outlinedButton.SetOnTouch(() => {
+    outlinedButton.SetOnLongTouch(() => {
         if (outlineObj.onLongTouch) {
             outlineObj.onLongTouch();
         }
@@ -706,7 +679,7 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
         }
     });
     
-    textButton.SetOnTouch(() => {
+    textButton.SetOnLongTouch(() => {
         if (textBtnObj.onLongTouch) {
             textBtnObj.onLongTouch();
         }
@@ -714,55 +687,6 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
 }
 
 
-var extendedFAB, extendedFABText;
-
-function extendedFABObject(btnName, icon, width, parentLay) {
-    this.setMargins = function (left, top, right, bottom, mode) {
-        extendedFAB.SetMargins(left, top, right, bottom, mode)
-    }
-    this.setPosition = function (left, top, width, height, options) {
-        extendedFAB.SetPosition(left, top, width, height, options)
-    }
-    this.setOnTouch = function (onTouch) {
-        this.onTouch = onTouch
-    }
-    this.setOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
-    }
-    this.animate = function (type, callback, time) {
-        extendedFAB.Animate(type, callback, time)
-    }
-    this.isVisible = function () {
-        return extendedFAB.IsVisible();
-    }
-    this.setSize = function (width, height, options) {
-        extendedFAB.SetSize(width, height, options)
-    }
-    this.setDesription = function (desc) {
-        extendedFAB.SetDescription(desc)
-    }
-    this.setScale = function (x, y) {
-        extendedFAB.SetScale(x, y)
-    }
-    
-    //Calll It 
-    drawExtendedFAB(btnName, icon, width, parentLay, this);
-}
-
-function drawExtendedFAB(btnName, icon, width, parentLay, extendedObj) {
-    
-    const extendedFAB = app.AddButton(parentLay, `${icon} ${btnName}`, null, null, 'Custom');
-    extendedFAB.SetSize(118, 56, 'dp');
-    extendedFAB.SetFontFile(defaultIcons)
-    
-    extendedFAB.SetTextColor(stateColor(md_theme_light_onPrimaryContainer, md_theme_dark_onPrimaryContainer))
-    extendedFAB.SetStyle(clrExtended(), clrExtended(), 16, null, null, 0);
-    parentLay.AddChild(extendedFAB)
-}
-
-function clrExtended() {
-    return stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer)
-}
 
 var fabContainer;
 
@@ -790,6 +714,7 @@ function drawFAB(icon, parentLay, fabObj) {
     fabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
     fabContainer.SetSize(56, 56, 'dp');
     
+    
     const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
     fab.SetSize(56, 56, 'dp');
     fab.SetElevation(0);
@@ -798,7 +723,7 @@ function drawFAB(icon, parentLay, fabObj) {
     const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
     _fabIcon.SetFontFile(defaultIcons);
     _fabIcon.SetOnTouchDown(function () {
-        _FabInfo.onTouch();
+        fabObj.onTouch();
     });
     
     _fabIcon.SetTextSize(24);
@@ -836,6 +761,7 @@ function smallFABObject(icon, parentLay) {
 function drawSmallFab(icon, parentLay, fabObj) {
     smallFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
     smallFabContainer.SetSize(40, 40, 'dp');
+
     
     const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
     fab.SetSize(40, 40, 'dp');
@@ -845,11 +771,11 @@ function drawSmallFab(icon, parentLay, fabObj) {
     const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
     _fabIcon.SetFontFile(defaultIcons);
     
-    if (fabObj.onTouch) {
-        _fabIcon.SetOnTouchDown(function () {
-            fabObj.onTouch();
-        });
-    }
+    _fabIcon.SetOnTouchDown(function (){
+        if(fabObj.onTouch){
+            fabObj.onTouch()
+        }
+    })
     
     _fabIcon.SetTextSize(18);
     fab.AddChild(_fabIcon);
@@ -887,6 +813,7 @@ function drawLargeFab(icon, parentLay, largefabOBj) {
     largeFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
     largeFabContainer.SetSize(96, 96, 'dp');
     
+    
     const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
     fab.SetSize(96, 96, 'dp');
     fab.SetElevation(0);
@@ -895,7 +822,7 @@ function drawLargeFab(icon, parentLay, largefabOBj) {
     const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
     _fabIcon.SetFontFile(defaultIcons);
     _fabIcon.SetOnTouchDown(function () {
-        _FabInfo.onTouch();
+        largefabOBj.onTouch();
     });
     
     _fabIcon.SetTextSize(36);
@@ -909,6 +836,79 @@ function drawLargeFab(icon, parentLay, largefabOBj) {
     parentLay.AddChild(largeFabContainer);
     
 }
+
+//Variable Is made global so that clearInterval with method
+//stopProgress works, to avoid an not defined error.
+var animation, progressContainer, _progressIndicator;
+
+
+function progressObject(progressType, width, parentLay) {
+    
+    this.stopProgress = function () {
+        progressContainer.Hide();
+        progressContainer.Destroy();
+        clearInterval(animation);
+    }
+    
+    this.setValue = function (value) {
+        this.value = value;
+        _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
+    }
+    
+    this.hideContainer = function () {
+        app.DestroyLayout(this.progressContainer);
+    }
+    
+    this.getValue = function () {
+        return this.value;
+    }
+    
+    this.setMargins = function (left, top, right, bottom, mode) {
+        progressContainer.SetMargins(left, top, right, bottom, mode)
+    }
+    this.setPosition = function (left, top, width, height, options) {
+        progressContainer.SetPosition(left, top, width, height, options)
+    }
+    
+    drawProgressBar(progressType, width, parentLay, this)
+}
+
+function drawProgressBar(progressType, width, parentLay, progressObj) {
+    
+    if (progressType === 'linear') {
+        let trackColor = '#E6E0E9';
+        progressContainer = app.CreateLayout('Linear', 'Horizontal,Left,FillXY');
+        progressContainer.SetSize(width, 0.005);
+        _progressIndicator = app.AddText(progressContainer, '');
+        
+        if (theme === 'light') {
+            progressContainer.SetBackColor(md_theme_light_surfaceVariant);
+            _progressIndicator.SetBackColor(md_theme_light_primary);
+        } else {
+            progressContainer.SetBackColor(md_theme_dark_surfaceVariant);
+            _progressIndicator.SetBackColor(md_theme_dark_primary);
+        }
+        parentLay.AddChild(progressContainer);
+    }
+    
+    if (progressType === 'linearIntermediate') {
+        
+        progressContainer = app.CreateLayout('Linear', 'Horizontal,Left,FillXY');
+        progressContainer.SetSize(width, 0.005);
+        
+        _progressIndicator = app.AddText(progressContainer, '', null, null, 'Left,FillXy');
+        
+        animation = setInterval(function () {
+            _progressIndicator.Animate('SlideToRight', null, null);
+        }, 600);
+        
+        progressContainer.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
+        _progressIndicator.SetBackColor(stateColor(md_theme_light_primary, md_theme_dark_primary))
+        
+        parentLay.AddChild(progressContainer);
+    }
+}
+
 
 var _radio;
 
@@ -1021,7 +1021,6 @@ function addRadioUi(list, width, height, parentLay, index) {
 
 
 
-
 function dlgBarObject(title, text, dlgOptions, noAction, yesAction) {
     this.setOnCancel = function(onCancel) {
         this.onCancel = onCancel;
@@ -1078,24 +1077,18 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction,dlgFunc) {
 
     noBtn = app.AddText(footer, noAction, null, null, 'Bold')
     noBtn.SetOnTouchUp(function(){
-        try{
+        if(dlgFunc.onAction){
             dlgFunc.onAction(false);
             dlgA.Dismiss();
-        }
-        catch(err){
-            return null;
         }
     })
     noBtn.SetPadding(8, null, 8, null, "dp");
 
     yesBtn = app.AddText(footer, yesAction, null, null, 'Bold,VCenter')
     yesBtn.SetOnTouchUp(function(){
-        try{
+        if(dlgFunc.onAction){
             dlgFunc.onAction(true);
             dlgA.Dismiss();
-        }
-        catch(err){
-            return null;
         }
     })
     yesBtn.SetPadding(8, null, 8, null, "dp");
@@ -1117,610 +1110,11 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction,dlgFunc) {
     this.dlgA.Show()
 }
 
-var bottomBarContainer;
-
-function bottomBarObject() {
-    
-    this.setOnTouch = function (onTouchFunc) {
-        this.onTouchFunc = onTouchFunc;
-    }
-    
-    this.setRawAdjustment = function (distanceFromTop) {
-        if (layoutInfo.toLowerCase().includes('linear')) {
-            bottomBarContainer.SetMargins(0, distanceFromTop);
-        } else {
-            bottomBarContainer.SetPosition(0, distanceFromTop);
-        }
-    }
-    
-    
-    drawBottomBar(barPropsInjson, parentLay, this);
-}
-
-function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
-    
-    let props = JSON.stringify(barPropsInjson);
-    let info = JSON.parse(props);
-    const icon1 = info.firstIcon;
-    const icon2 = info.secondIcon;
-    const icon3 = info.thirdIcon;
-    const icon4 = info.fourthIcon;
-    const fabIcon = info.fabIcon;
-    
-    bottomBarContainer = app.CreateLayout("Card", "Horizontal,Bottom,FillXY");
-    
-    bottomBarContainer.SetSize(null, 80, 'dp');
-    bottomBarContainer.SetElevation(3, 'dp');
-    
-    
-    if (layoutInfo.toLowerCase().includes('linear')) {
-        bottomBarContainer.SetMargins(0, 0.9);
-    } else {
-        bottomBarContainer.SetPosition(0, 0.9);
-    }
-    const box = app.CreateLayout('Linear', 'Horizontal');
-    bottomBarContainer.AddChild(box);
-    box.SetSize(-1, 80, 'dp');
-    
-    const _icon1 = app.CreateText(icon1, null, null, 'H/VCenter,FillXY');
-    _icon1.SetFontFile(defaultIcons);
-    _icon1.SetTextSize(24);
-    _icon1.SetOnTouchUp(function () {
-        bottomBarObj.onTouchFunc(icon1);
-    });
-    
-    _icon1.SetMargins(8, null, 16, null, 'dp');
-    
-    const _icon2 = app.CreateText(icon2, null, null, 'H/VCenter,FillXY');
-    _icon2.SetFontFile(defaultIcons);
-    _icon2.SetTextSize(24);
-    _icon2.SetOnTouchUp(function () {
-        bottomBarObj.onTouchFunc(icon2);
-    });
-    _icon2.SetMargins(8, null, 16, null, 'dp');
-    
-    const _icon3 = app.CreateText(icon3, null, null, 'H/VCenter,FillXY');
-    _icon3.SetFontFile(defaultIcons);
-    _icon3.SetTextSize(24);
-    _icon3.SetOnTouchUp(function () {
-        bottomBarObj.onTouchFunc(icon3);
-    });
-    _icon3.SetMargins(8, null, 16, null, 'dp');
-    
-    const _icon4 = app.CreateText(icon4, null, null, 'H/Vcenter,FillXY');
-    _icon4.SetFontFile(defaultIcons);
-    _icon4.SetTextSize(24);
-    _icon4.SetOnTouchUp(function () {
-        bottomBarObj.onTouchFunc(icon4);
-    });
-    _icon4.SetMargins(8, null, 16, null, 'dp');
-    
-    const fab = app.CreateLayout('Card', 'Right,FillXY');
-    fab.SetSize(56, 56, 'dp');
-    fab.SetElevation(0);
-    fab.SetCornerRadius(16);
-    fab.SetMargins(125, 12, 16, 12, 'dp');
-    
-    const _fabIcon = app.CreateText(fabIcon, null, null, 'H/VCenter,FillXY');
-    _fabIcon.SetFontFile(defaultIcons);
-    _fabIcon.SetOnTouchDown(function () {
-        bottomBarObj.onTouchFunc(fabIcon);
-    });
-    
-    _fabIcon.SetTextSize(24);
-    fab.AddChild(_fabIcon);
-    
-    box.AddChild(_icon1);
-    box.AddChild(_icon2);
-    box.AddChild(_icon3);
-    box.AddChild(_icon4);
-    box.AddChild(fab);
-    
-    if (theme === 'light') {
-        bottomBarContainer.SetBackColor(md_theme_light_surfaceVariant);
-        _icon1.SetTextColor(md_theme_light_onPrimaryContainer);
-        _icon2.SetTextColor(md_theme_light_onPrimaryContainer);
-        _icon3.SetTextColor(md_theme_light_onPrimaryContainer);
-        _icon4.SetTextColor(md_theme_light_onPrimaryContainer);
-        fab.SetBackColor(md_theme_light_primaryContainer);
-        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer);
-    } else {
-        bottomBarContainer.SetBackColor(md_theme_dark_surfaceVariant);
-        _icon1.SetTextColor(md_theme_dark_onPrimaryContainer);
-        _icon2.SetTextColor(md_theme_dark_onPrimaryContainer);
-        _icon3.SetTextColor(md_theme_dark_onPrimaryContainer);
-        _icon4.SetTextColor(md_theme_dark_onPrimaryContainer);
-        fab.SetBackColor(md_theme_dark_primaryContainer);
-        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer);
-    }
-    parentLay.AddChild(bottomBarContainer);
-}
-
-
-/// NAV DRAWWER
-
-function navDrawerObject(drawerLayout, side, width) {
-    this.openDrawer = function (side) {
-        app.OpenDrawer(side)
-    }
-    this.closeDrawer = function (side) {
-        app.CloseDrawer(side)
-    }
-    this.removeDrawer = function (side) {
-        
-    }
-    drawNavDrawer(drawerLayout, side, width, this)
-}
-
-
-function drawNavDrawer(drawerLayout, side, width) {
-    _drawerContainer = app.CreateLayout('Card', 'FillXY')
-    
-    _drawerContainer.AddChild(drawerLayout)
-    
-    if (theme === 'dark') {
-        _drawerContainer.SetBackColor(md_theme_dark_surface);
-    } else {
-        _drawerContainer.SetBackColor(md_theme_light_surface);
-    }
-    app.AddDrawer(_drawerContainer, side, width)
-}
-
-var _seekBar;
-
-
-function seekBarObject(value, range, width, parentLay) {
-    
-    this.setVisibility = function (mode) {
-        _seekBar.SetVisibility(mode)
-    }
-    
-    this.setSize = function (width, height, options) {
-        _seekBar.SetSize(width, height, options)
-    }
-    this.setPosition = function (left, top, width, height, options) {
-        _seekBar.SetPosition(left, top, width, height, options)
-    }
-    this.setOnTouch = function (onTouch) {
-        _seekBar.SetOnTouch(onTouch)
-    }
-    this.getValue = function () {
-        return _seekBar.GetValue();
-    }
-    this.isVisible = function () {
-        return _seekBar.IsVisible();
-    }
-    this.animate = function (type, callback, time) {
-        _seekBar.Animate(type, callback, time)
-    }
-    this.goneComponent = function () {
-        _seekBar.Gone();
-    }
-    this.setDecimals = function (decimals) {
-        _seekBar.SetDecimals(decimals)
-    }
-    
-    drawSeekBar(value, range, width, parentLay, this);
-}
-
-function drawSeekBar(value, range, width, parentLay, seekObj) {
-    
-    const seekColor = function () {
-        return stateColor(md_theme_light_onSurfaceVariant, md_theme_dark_onSurfaceVariant);
-    }
-    
-    _seekBar = MUI.CreateSeekBar(value, range, width, seekColor())
-    
-    parentLay.AddChild(_seekBar)
-}
-
-var _bSheet;
-
-function slideSheetObject(sheetLayout, width, options) {
-    
-    this.dismissSheet = function () {
-        _bSheet.Animate('SlideToRight', function () {
-            app.DestroyLayout(slideSheetContainer);
-        }, 210);
-    }
-    
-    this.showSheet = function () {
-        drawSlideSheet(sheetLayout, width, options);
-    }
-    
-    drawSlideSheet(sheetLayout, width, options)
-}
-
-function drawSlideSheet(sheetLayout, width, options) {
-    const slideSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom,Right');
-    slideSheetContainer.SetSize(1, 1);
-    slideSheetContainer.SetOnTouchUp(dismissSlideSheet);
-    
-    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Right');
-    _bSheet.SetSize(width, 1);
-    _bSheet.SetCornerRadius();
-    _bSheet.Animate('BounceRight', null, 550);
-    _bSheet.AddChild(sheetLayout);
-    slideSheetContainer.AddChild(_bSheet);
-    
-    slideSheetContainer.SetBackAlpha(0.33);
-    
-    app.AddLayout(slideSheetContainer);
-    
-    slideSheetContainer.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim))
-    _bSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
-    
-}
-
-
-function bottomSheetObject(sheetLayout, height, options) {
-    this.dismissSheet = function () {
-        dismissBSheet();
-    }
-    this.showSheet = function () {
-        drawBottomSheet(sheetLayout, height, options);
-    }
-}
-
-function drawBottomSheet(sheetLayout, height, options) {
-    bottomSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
-    bottomSheetContainer.SetSize(1, 1);
-    bottomSheetContainer.SetOnTouchUp(dismissBSheet);
-    bottomSheetContainer.SetBackAlpha(0.33);
-    
-    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Bottom');
-    _bSheet.SetSize(-1, height);
-    _bSheet.SetCornerRadius(28);
-    _bSheet.Animate('BounceBottom', null, 550);
-    _bSheet.AddChild(sheetLayout);
-    bottomSheetContainer.AddChild(_bSheet);
-    
-    bottomSheetContainer.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim));
-    _bSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
-    
-    app.AddLayout(bottomSheetContainer);
-    
-}
-
-
-function menuObj(menuType, list, position) {
-    this.setOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
-    }
-    switch (menuType) {
-    case 'simple':
-        drawSimpleMenu(menuType, list, position, this);
-        break;
-    case 'withIcon':
-        drawMenuWithIcon(menuType, list, position, this);
-    }
-}
-
-function drawSimpleMenu(menuType, list, position, menuFunc) {
-    let menuWidth = () => {
-        if (app.IsTablet()) return 280;
-        else return 190;
-    }
-    
-    topValue = () => {
-        if (top < 0.25) return top + 0.03
-        else return top - 0.23;
-    }
-    
-    
-    menuContainer = app.CreateLayout('Linear', position);
-    menuContainer.SetSize(1, 1)
-    menuContainer.SetOnTouch(function () {
-        app.RemoveLayout(menuContainer)
-    })
-    
-    menuUi = app.CreateLayout('Card', position + 'Center')
-    menuContainer.AddChild(menuUi)
-    menuUi.SetMargins(0.05, topValue())
-    menuUi.Animate('FadeIn', null, 100)
-    menuUi.SetSize(menuWidth(), null, 'dp')
-    menuUi.SetCornerRadius(4)
-    
-    list = app.CreateList(list, menuWidth(), null, 'Menu,Expand')
-    list.SetOnTouch(function (title) {
-        try {
-            menuFunc.onTouch(title)
-        } catch (err) {
-            return null;
-        }
-    })
-    menuUi.AddChild(list)
-    
-    app.AddLayout(menuContainer)
-    
-    if (theme === 'light') {
-        menuUi.SetBackColor(md_theme_light_secondary)
-        list.SetBackColor(md_theme_light_secondary)
-    } else {
-        menuUi.SetBackColor(md_theme_dark_secondary)
-        list.SetBackColor(md_theme_dark_secondary)
-    }
-    
-}
-
-function drawMenuWithIcon(menuType, list, position, menuFunc) {
-    let menuWidth = () => {
-        if (app.IsTablet()) return 280;
-        else return 190;
-    }
-    
-    //alert(top)
-    topValue = () => {
-        if (top < 0.25) return top + 0.03
-        else return top - 0.23;
-    }
-    menuContainer = app.CreateLayout('Linear', position);
-    menuContainer.SetSize(1, 1)
-    menuContainer.SetOnTouch(function () {
-        app.RemoveLayout(menuContainer)
-    })
-    
-    menuUi = app.CreateLayout('Card', position + 'Center')
-    menuContainer.AddChild(menuUi)
-    menuUi.SetMargins(0.05, topValue())
-    menuUi.Animate('FadeIn', null, 100)
-    menuUi.SetSize(menuWidth(), null, 'dp')
-    menuUi.SetCornerRadius(4)
-    
-    list = app.CreateList(list, menuWidth(), null, 'Menu,Expand')
-    list.SetFontFile(defaultFont)
-    list.SetOnTouch(function (title, icon) {
-        try {
-            menuFunc.onTouch(title, icon)
-        } catch (err) {
-            return null;
-        }
-    })
-    menuUi.AddChild(list)
-    
-    app.AddLayout(menuContainer)
-    
-    if (theme === 'light') {
-        menuUi.SetBackColor(md_theme_light_secondary)
-        list.SetBackColor(md_theme_light_secondary)
-    } else {
-        menuUi.SetBackColor(md_theme_dark_secondary)
-        list.SetBackColor(md_theme_dark_secondary)
-    }
-}
-
-//Variable Is made global so that clearInterval with method
-//stopProgress works, to avoid an not defined error.
-var animation, progressContainer, _progressIndicator;
-
-
-function progressObject(progressType, width, parentLay) {
-    
-    this.stopProgress = function () {
-        progressContainer.Hide();
-        progressContainer.Destroy();
-        clearInterval(animation);
-    }
-    
-    this.setValue = function (value) {
-        this.value = value;
-        _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
-    }
-    
-    this.hideContainer = function () {
-        app.DestroyLayout(this.progressContainer);
-    }
-    
-    this.getValue = function () {
-        return this.value;
-    }
-    
-    this.setMargins = function (left, top, right, bottom, mode) {
-        progressContainer.SetMargins(left, top, right, bottom, mode)
-    }
-    this.setPosition = function (left, top, width, height, options) {
-        progressContainer.SetPosition(left, top, width, height, options)
-    }
-    
-    drawProgressBar(progressType, width, parentLay, this)
-}
-
-function drawProgressBar(progressType, width, parentLay, progressObj) {
-    
-    if (progressType === 'linear') {
-        let trackColor = '#E6E0E9';
-        progressContainer = app.CreateLayout('Linear', 'Horizontal,Left,FillXY');
-        progressContainer.SetSize(width, 0.005);
-        _progressIndicator = app.AddText(progressContainer, '');
-        
-        if (theme === 'light') {
-            progressContainer.SetBackColor(md_theme_light_surfaceVariant);
-            _progressIndicator.SetBackColor(md_theme_light_primary);
-        } else {
-            progressContainer.SetBackColor(md_theme_dark_surfaceVariant);
-            _progressIndicator.SetBackColor(md_theme_dark_primary);
-        }
-        parentLay.AddChild(progressContainer);
-    }
-    
-    if (progressType === 'linearIntermediate') {
-        
-        progressContainer = app.CreateLayout('Linear', 'Horizontal,Left,FillXY');
-        progressContainer.SetSize(width, 0.005);
-        
-        _progressIndicator = app.AddText(progressContainer, '', null, null, 'Left,FillXy');
-        
-        animation = setInterval(function () {
-            _progressIndicator.Animate('SlideToRight', null, null);
-        }, 600);
-        
-        progressContainer.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
-        _progressIndicator.SetBackColor(stateColor(md_theme_light_primary, md_theme_dark_primary))
-        
-        parentLay.AddChild(progressContainer);
-    }
-}
-
-
-
-function searchObject(barProps,width,height,parent_Layout){
-    let props = JSON.stringify(barProps);
-    let info = JSON.parse(props)
-    let searchType = info.searchBarProps.barType;
-    
-    switch(searchType){
-        case 'withTrailingIcon':
-        drawSearchwithTrailingIcon(barProps,width,height,parent_Layout,this);
-        break;
-        case 'with2TrailingIcons':
-        drawSearchWith2TrailingIcons(barProps,width,height,parent_Layout,this);
-        break;
-        case 'withAvaterTrailingIcon':
-        drawSearchWithAvaterTrailingIcon(barProps,width,height,parent_Layout,this);
-    }
-    
-    this.setOnTouch = function(onTouch){
-        this.onTouch = onTouch;
-    }
-
-    this.setMargins = function( left, top, right, bottom, mode){
-        searchContainer.SetMargins( left, top, right, bottom, mode)
-    }
-    this.setPosition = function( left, top, width, height, options){
-        searchContainer.SetPosition( left, top, width, height, options)
-    }
-    this.setOnEnter = function(onEnter){
-        this.onEnter = onEnter;
-    }
-    this.getText = function(){
-        return _searchArea.GetText();
-    }
-    this.setText = function(text){
-        
-    }
-    this.replaceText = function( text, start, end ){
-        
-    }
-    this.insertText = function( text, start){
-        
-    }
-    
-    this.isVisible = function(){
-        
-    }
-    this.isEnable = function(){
-        
-    }
-    this.undo = function(){
-        
-    }
-    this.redo = function(){
-        
-    }
-}
-/* SearchBAr Types
-   1. withAvater -  wA
-   2. withTrailingIcon - wTI
-   3. with2TrailingIcons - w2TI
-   4. withAvater&TrailingIcon - wATI
-*/
-
-function drawSearchWith2TrailingIcons(barProps,width,height,parent_Layout){
-}
-function drawSearchWithAvaterTrailingIcon(barProps,width,height,parent_Layout){
-    
-}
-function drawSearchwithTrailingIcon(barProps,width,height,parent_Layout,objFunc) {
-    let props = JSON.stringify(barProps);
-    let info = JSON.parse(props);
-    
-    let leftIcon = info.searchBarProps.leftHandIcon;
-    let rightIcon = info.searchBarProps.rightHandIcon;
-    let hint = info.searchBarProps.searchHint;
-    
-    searchContainer = app.CreateLayout('Card')
-    searchContainer.SetCornerRadius(36)
-    searchContainer.SetElevation(2.0)
-    searchContainer.SetSize(width, 0.08)
-    
-    
-    const searchBox = app.AddLayout(searchContainer, "Linear", "Left,Horizontal,VCenter");
-    searchBox.SetSize(width, 0.08)
-    
-    _leftIcon = app.AddText(searchBox,leftIcon, 0.065, 0.037, 'Left,VCenter')
-    _leftIcon.SetFontFile(defaultIcons)
-    _leftIcon.SetTextSize(24)
-    _leftIcon.SetMargins(16, null, 16, null, 'dp')
-    _leftIcon.SetOnTouchDown(function(){
-        try{
-            objFunc.onTouch(leftIcon)
-        }
-        catch(err){
-            return null;
-        }
-    })
-            
-    _searchArea = app.AddTextEdit(searchBox, '', 0.52, null, 'SingleLine,Left')
-    _searchArea.SetHint(hint)
-    _searchArea.SetOnEnter(function(){
-        try{
-            objFunc.onEnter();
-        }
-        catch(err){
-            return null;
-        }
-    })
-    
-    _rightIcon = app.AddText(searchBox,rightIcon,0.065,0.037,'VCenter')
-    _rightIcon.SetTextSize(24)
-    _rightIcon.SetFontFile(defaultIcons)
-    
-    _rightIcon.SetMargins(variableSpacer(width),null,null,null,'dp')
-    _rightIcon.SetOnTouchDown(function(){
-        try{
-        objFunc.onTouch(rightIcon)
-        }
-        catch(err){
-            return null;
-        }
-    })
-    
-    if (theme == 'light') {
-        searchContainer.SetBackColor(md_theme_light_surfaceVariant);
-        _searchArea.SetBackColor(md_theme_light_surfaceVariant)
-        _searchArea.SetTextColor(md_theme_light_onSurfaceVariant)
-        _leftIcon.SetTextColor(md_theme_light_onSurface)
-        _rightIcon.SetTextColor(md_theme_light_onSurface)
-    } else {
-        searchContainer.SetBackColor(md_theme_dark_surfaceVariant)
-        _searchArea.SetBackColor(md_theme_dark_surfaceVariant)
-        _leftIcon.SetTextColor(md_theme_dark_onSurface)
-        _rightIcon.SetTextColor(md_theme_dark_onSurface)
-    }
-    parent_Layout.AddChild(searchContainer)
-}
-
-function variableSpacer(width){
-    let fixedWidth = parseFloat(width.toFixed(1));
-    
-    switch(fixedWidth){
-        case 0.7:
-            return 4;
-            break;
-        case 0.8:
-            return 12;
-            break;
-        case 0.9:
-            return 42;
-            break;
-        case 1.0:
-            return 78;
-    }
-}
 
 var snackUi, snackContainer;
 
 function SnackBarObject(text, btnAction, width, alignment) {
+    
     this.setRawAlignment = function (top) {
         snackContainer.SetMargins(null, top)
     }
@@ -1734,7 +1128,7 @@ function SnackBarObject(text, btnAction, width, alignment) {
     }
     
     this.showObj = function () {
-        drawSnackBarUi(this.text, this.btnAction, this.width, this.alignment, this.onTouch, this.timeout);
+        drawSnackBarUi(text, btnAction, width, alignment, this.onTouch, this.timeout);
     }
     
 }
@@ -1794,4 +1188,52 @@ function drawSnackBarUi(text, btnAction, width, alignment, onTouch, timeout) {
             this.snackContainer.Destroy()
         }, timeout);
     }
+}
+
+var _seekBar;
+
+
+function seekBarObject(value, range, width, parentLay) {
+    
+    this.setVisibility = function (mode) {
+        _seekBar.SetVisibility(mode)
+    }
+    
+    this.setSize = function (width, height, options) {
+        _seekBar.SetSize(width, height, options)
+    }
+    this.setPosition = function (left, top, width, height, options) {
+        _seekBar.SetPosition(left, top, width, height, options)
+    }
+    this.setOnTouch = function (onTouch) {
+        _seekBar.SetOnTouch(onTouch)
+    }
+    this.getValue = function () {
+        return _seekBar.GetValue();
+    }
+    this.isVisible = function () {
+        return _seekBar.IsVisible();
+    }
+    this.animate = function (type, callback, time) {
+        _seekBar.Animate(type, callback, time)
+    }
+    this.goneComponent = function () {
+        _seekBar.Gone();
+    }
+    this.setDecimals = function (decimals) {
+        _seekBar.SetDecimals(decimals)
+    }
+    
+    drawSeekBar(value, range, width, parentLay, this);
+}
+
+function drawSeekBar(value, range, width, parentLay, seekObj) {
+    
+    const seekColor = function () {
+        return stateColor(md_theme_light_onSurfaceVariant, md_theme_dark_onSurfaceVariant);
+    }
+    
+    _seekBar = MUI.CreateSeekBar(value, range, width, seekColor())
+    
+    parentLay.AddChild(_seekBar)
 }

@@ -37,8 +37,7 @@ app.LoadPlugin('Material3')
 
 function OnStart(){
 
-    const ui = app.CreateMaterial3('dark','outline','dflt');
-    
+    app.CreateMaterial3('dark','outline','dflt');
     
     lay = ui.addLayout('Linear','FillXY')
     

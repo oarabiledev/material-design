@@ -136,12 +136,18 @@ ui.addSwitch = function(switchType,value,parent_Layout) {
     return new switchObject(switchType,value,parent_Layout); 
 }; 
 
-// m3 Progress 
+// m3 Progress & Seekbars
 ui.addProgressBar = function(progressType, width, layout) { 
     return new progressObject(progressType, width, layout); 
 }; 
 
 
+ui.addSeekBar = function(value,range,width,layout) { 
+    return new seekBarObject(value,range,width,layout); 
+}; 
+
+
+// m3 Dialogs And SnackBars
 ui.showDialog = function(title, text, dlgOptions, noAction, yesAction) { 
     return new dlgBarObject(title, text, dlgOptions, noAction, yesAction); 
 }; 
@@ -152,9 +158,32 @@ ui.addSnackBar = function(text, btnAction, width, alignment) {
 }; 
 
 
+
+// m3 Navigation 
+ui.addMenu = function(menuType,list,position) { 
+    return new menuObj(menuType,list,position); 
+}; 
+
+ui.addBottomAppBar = function(barPropsInjson,parentLayout) { 
+    return new bottomBarObject(barPropsInjson,parentLayout); 
+}; 
+
+ui.addDrawer = function(drawerLayout,side,width) { 
+    return new navDrawerObject(drawerLayout,side,width); 
+}; 
+
 ui.addSeekBar = function(value,range,width,layout) { 
     return new seekBarObject(value,range,width,layout); 
 }; 
+
+ui.addSlideSheet = function(sheetLayout, width, options) { 
+    return new slideSheetObject(sheetLayout, width, options); 
+}; 
+
+ui.addBottomSheet = function(sheetLayout, height, options) { 
+    return new bottomSheetObject(sheetLayout, height, options); 
+}; 
+
 
 //This Function Basically Returns The Appropraite Color For The Correct Theme 
 
@@ -1237,3 +1266,260 @@ function drawSeekBar(value, range, width, parentLay, seekObj) {
     
     parentLay.AddChild(_seekBar)
 }
+
+function menuObj(menuType, list, position) {
+    this.setOnTouch = function (onTouch) {
+        this.onTouch = onTouch;
+    }
+    switch (menuType) {
+    case 'simple':
+        drawSimpleMenu(menuType, list, position, this);
+        break;
+    case 'withIcon':
+        drawMenuWithIcon(menuType, list, position, this);
+    }
+}
+
+function drawSimpleMenu(menuType, list, position, menuFunc) {
+    let menuWidth = () => {
+        if (app.IsTablet()) return 280;
+        else return 190;
+    }
+    
+    topValue = () => {
+        if (top < 0.25) return top + 0.03
+        else return top - 0.23;
+    }
+    
+    
+    menuContainer = app.CreateLayout('Linear', position);
+    menuContainer.SetSize(1, 1)
+    menuContainer.SetOnTouch(function () {
+        app.RemoveLayout(menuContainer)
+    })
+    
+    menuUi = app.CreateLayout('Card', position + 'Center')
+    menuContainer.AddChild(menuUi)
+    menuUi.SetMargins(0.05, topValue())
+    menuUi.Animate('FadeIn', null, 100)
+    menuUi.SetSize(menuWidth(), null, 'dp')
+    menuUi.SetCornerRadius(4)
+    
+    list = app.CreateList(list, menuWidth(), null, 'Menu,Expand')
+    list.SetOnTouch(function (title) {
+        try {
+            menuFunc.onTouch(title)
+        } catch (err) {
+            return null;
+        }
+    })
+    menuUi.AddChild(list)
+    
+    app.AddLayout(menuContainer)
+    
+    if (theme === 'light') {
+        menuUi.SetBackColor(md_theme_light_secondary)
+        list.SetBackColor(md_theme_light_secondary)
+    } else {
+        menuUi.SetBackColor(md_theme_dark_secondary)
+        list.SetBackColor(md_theme_dark_secondary)
+    }
+    
+}
+
+function drawMenuWithIcon(menuType, list, position, menuFunc) {
+    let menuWidth = () => {
+        if (app.IsTablet()) return 280;
+        else return 190;
+    }
+    
+    //alert(top)
+    topValue = () => {
+        if (top < 0.25) return top + 0.03
+        else return top - 0.23;
+    }
+    menuContainer = app.CreateLayout('Linear', position);
+    menuContainer.SetSize(1, 1)
+    menuContainer.SetOnTouch(function () {
+        app.RemoveLayout(menuContainer)
+    })
+    
+    menuUi = app.CreateLayout('Card', position + 'Center')
+    menuContainer.AddChild(menuUi)
+    menuUi.SetMargins(0.05, topValue())
+    menuUi.Animate('FadeIn', null, 100)
+    menuUi.SetSize(menuWidth(), null, 'dp')
+    menuUi.SetCornerRadius(4)
+    
+    list = app.CreateList(list, menuWidth(), null, 'Menu,Expand')
+    list.SetFontFile(defaultFont)
+    list.SetOnTouch(function (title, icon) {
+        try {
+            menuFunc.onTouch(title, icon)
+        } catch (err) {
+            return null;
+        }
+    })
+    menuUi.AddChild(list)
+    
+    app.AddLayout(menuContainer)
+    
+    if (theme === 'light') {
+        menuUi.SetBackColor(md_theme_light_secondary)
+        list.SetBackColor(md_theme_light_secondary)
+    } else {
+        menuUi.SetBackColor(md_theme_dark_secondary)
+        list.SetBackColor(md_theme_dark_secondary)
+    }
+}
+
+
+
+function navDrawerObject(drawerLayout, side, width) {
+    this.openDrawer = function (side) {
+        app.OpenDrawer(side)
+    }
+    this.closeDrawer = function (side) {
+        app.CloseDrawer(side)
+    }
+    this.removeDrawer = function (side) {
+        
+    }
+    drawNavDrawer(drawerLayout, side, width, this)
+}
+
+
+function drawNavDrawer(drawerLayout, side, width) {
+    _drawerContainer = app.CreateLayout('Card', 'FillXY')
+    
+    _drawerContainer.AddChild(drawerLayout)
+    
+    if (theme === 'dark') {
+        _drawerContainer.SetBackColor(md_theme_dark_surface);
+    } else {
+        _drawerContainer.SetBackColor(md_theme_light_surface);
+    }
+    app.AddDrawer(_drawerContainer, side, width)
+}
+
+
+var bottomBarContainer;
+
+function bottomBarObject(barPropsInjson, parentLay) {
+    
+    this.setOnTouch = function (onTouchFunc) {
+        this.onTouchFunc = onTouchFunc;
+    }
+    
+    this.setRawAdjustment = function (distanceFromTop) {
+        if (layoutInfo.toLowerCase().includes('linear')) {
+            bottomBarContainer.SetMargins(0, distanceFromTop);
+        } else {
+            bottomBarContainer.SetPosition(0, distanceFromTop);
+        }
+    }
+    
+    
+    drawBottomBar(barPropsInjson, parentLay, this);
+}
+
+function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
+    
+    let props = JSON.stringify(barPropsInjson);
+    let info = JSON.parse(props);
+    const icon1 = info.firstIcon;
+    const icon2 = info.secondIcon;
+    const icon3 = info.thirdIcon;
+    const icon4 = info.fourthIcon;
+    const fabIcon = info.fabIcon;
+    
+    bottomBarContainer = app.CreateLayout("Card", "Horizontal,Bottom,FillXY");
+    
+    bottomBarContainer.SetSize(null, 80, 'dp');
+    bottomBarContainer.SetElevation(3, 'dp');
+    
+    
+    if (layoutInfo.toLowerCase().includes('linear')) {
+        bottomBarContainer.SetMargins(0, 0.9);
+    } else {
+        bottomBarContainer.SetPosition(0, 0.9);
+    }
+    const box = app.CreateLayout('Linear', 'Horizontal');
+    bottomBarContainer.AddChild(box);
+    box.SetSize(-1, 80, 'dp');
+    
+    const _icon1 = app.CreateText(icon1, null, null, 'H/VCenter,FillXY');
+    _icon1.SetFontFile(defaultIcons);
+    _icon1.SetTextSize(24);
+    _icon1.SetOnTouchUp(function () {
+        bottomBarObj.onTouchFunc(icon1);
+    });
+    
+    _icon1.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon2 = app.CreateText(icon2, null, null, 'H/VCenter,FillXY');
+    _icon2.SetFontFile(defaultIcons);
+    _icon2.SetTextSize(24);
+    _icon2.SetOnTouchUp(function () {
+        bottomBarObj.onTouchFunc(icon2);
+    });
+    _icon2.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon3 = app.CreateText(icon3, null, null, 'H/VCenter,FillXY');
+    _icon3.SetFontFile(defaultIcons);
+    _icon3.SetTextSize(24);
+    _icon3.SetOnTouchUp(function () {
+        bottomBarObj.onTouchFunc(icon3);
+    });
+    _icon3.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon4 = app.CreateText(icon4, null, null, 'H/Vcenter,FillXY');
+    _icon4.SetFontFile(defaultIcons);
+    _icon4.SetTextSize(24);
+    _icon4.SetOnTouchUp(function () {
+        bottomBarObj.onTouchFunc(icon4);
+    });
+    _icon4.SetMargins(8, null, 16, null, 'dp');
+    
+    const fab = app.CreateLayout('Card', 'Right,FillXY');
+    fab.SetSize(56, 56, 'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(16);
+    fab.SetMargins(125, 12, 16, 12, 'dp');
+    
+    const _fabIcon = app.CreateText(fabIcon, null, null, 'H/VCenter,FillXY');
+    _fabIcon.SetFontFile(defaultIcons);
+    _fabIcon.SetOnTouchDown(function () {
+        bottomBarObj.onTouchFunc(fabIcon);
+    });
+    
+    _fabIcon.SetTextSize(24);
+    fab.AddChild(_fabIcon);
+    
+    box.AddChild(_icon1);
+    box.AddChild(_icon2);
+    box.AddChild(_icon3);
+    box.AddChild(_icon4);
+    box.AddChild(fab);
+    
+    if (theme === 'light') {
+        bottomBarContainer.SetBackColor(md_theme_light_surfaceVariant);
+        _icon1.SetTextColor(md_theme_light_onPrimaryContainer);
+        _icon2.SetTextColor(md_theme_light_onPrimaryContainer);
+        _icon3.SetTextColor(md_theme_light_onPrimaryContainer);
+        _icon4.SetTextColor(md_theme_light_onPrimaryContainer);
+        fab.SetBackColor(md_theme_light_primaryContainer);
+        _fabIcon.SetTextColor(md_theme_light_onPrimaryContainer);
+    } else {
+        bottomBarContainer.SetBackColor(md_theme_dark_surfaceVariant);
+        _icon1.SetTextColor(md_theme_dark_onPrimaryContainer);
+        _icon2.SetTextColor(md_theme_dark_onPrimaryContainer);
+        _icon3.SetTextColor(md_theme_dark_onPrimaryContainer);
+        _icon4.SetTextColor(md_theme_dark_onPrimaryContainer);
+        fab.SetBackColor(md_theme_dark_primaryContainer);
+        _fabIcon.SetTextColor(md_theme_dark_onPrimaryContainer);
+    }
+    parentLay.AddChild(bottomBarContainer);
+}
+
+

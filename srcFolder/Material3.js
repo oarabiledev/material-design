@@ -345,15 +345,20 @@ function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
     filledButton.SetFontFile(defaultFont)
     filledButton.SetOnTouch(() => {
         if (filledObj.onTouch) {
-            filledObj.onTouch();
+            //Added To Allow Menus To Position Correct
+            filledObj.onTouch(filledButton.GetTop());
+
         }
     });
     
     filledButton.SetOnLongTouch(() => {
         if (filledObj.onTouch) {
             filledObj.onLongTouch();
+            //Added To Allow Menus To Position Correct
+            top = filledButton.GetTop(); 
         }
     });
+    
     
 }
 
@@ -866,6 +871,128 @@ function drawLargeFab(icon, parentLay, largefabOBj) {
     
 }
 
+function switchObject(switchType,value,parent_Layout){
+    this.getValue = function(){
+        return switchValue;
+    }
+    this.setOnToggle = function(onToggle){
+        this.onToggle = onToggle;
+    }
+    this.setPosition = function( left, top, width, height, options){
+        _switch.SetPosition( left, top, width, height, options)
+    }
+    /*
+    switch(switchType){
+        case 'noIcon':
+            drawSwitchNoIcon(value,parent_Layout,this);
+            break;
+        case 'onIcon':
+            drawSwitchOnIcon(value,parent_Layout,this);
+            break;
+        case 'allIcon':
+            drawSwitchAllIcon(value,parent_Layout,this);
+    }
+    */
+    
+    //Temporary !
+    drawSwitchNoIcon(value,parent_Layout,this);
+}
+
+var switchValue;
+function drawSwitchNoIcon(value,parent_Layout,objFunc){
+    switchValue = value;
+    
+    _switch = app.CreateLayout('Card')
+    _switch.SetSize(52,32,'dp');
+    _switch.SetElevation(0.9)
+    _switch.SetCornerRadius(16)
+    
+
+    handle = app.CreateImage(null,0.085,0.05)
+	handle.DrawCircle( 0.52, 0.42, 0.30 )
+	handle.SetAutoUpdate(false)
+	_switch.SetMargins(0.05)
+	handle.Hide()
+	
+	handle2 = app.CreateImage(null,0.085,0.05)
+	handle2.DrawCircle( 0.52, 0.42, 0.45 )
+	handle2.SetAutoUpdate(false)
+	handle2.SetMargins(0.052)
+	handle2.Hide()
+	
+	if(value){
+	    handle2.Show()
+	    if(theme==='light'){
+	        handle2.SetPaintColor(md_theme_light_onPrimary)
+	        _switch.SetBackColor(md_theme_light_primaryContainer)
+	    }
+	    else{
+	        handle2.SetPaintColor(md_theme_dark_onPrimary)
+	        _switch.SetBackColor(md_theme_dark_primaryContainer)
+	    }
+	}
+	else{
+	    handle.Show()
+	    handle2.Hide()
+	    if(theme==='light'){
+	        handle.SetPaintColor(md_theme_light_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_light_surfaceVariant)
+	    }
+	    else{
+	        handle.SetPaintColor(md_theme_dark_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_dark_surfaceVariant)
+	    }
+	}
+	
+	handle.SetOnTouchUp(function(){
+	       handle.Hide()
+	       handle2.Show()
+	       switchValue = true;
+	       if(theme==='light'){
+	        handle2.SetPaintColor(md_theme_light_onPrimary)
+	        _switch.SetBackColor(md_theme_light_primaryContainer)
+	      }
+	      else{
+	        handle2.SetPaintColor(md_theme_dark_onPrimary)
+	        _switch.SetBackColor(md_theme_dark_primaryContainer)
+	      }
+	       try{
+	           objFunc.onToggle(switchValue);
+	       }
+	       catch(err){
+	           return null;
+	       }
+	       
+})
+
+	handle2.SetOnTouchUp(function(){
+	       handle2.Hide()
+	       handle.Show()
+	       switchValue = false;
+	       
+	       if(theme==='light'){
+	        handle.SetPaintColor(md_theme_light_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_light_surfaceVariant)
+	    }
+	    else{
+	        handle.SetPaintColor(md_theme_dark_onSurfaceVariant)
+	        _switch.SetBackColor(md_theme_dark_surfaceVariant)
+	    }
+
+	       try{
+	           objFunc.onToggle(switchValue);
+	       }
+	       catch(err){
+	           return null;
+	       }
+})
+
+    parent_Layout.AddChild(_switch);
+    _switch.AddChild(handle)
+    _switch.AddChild(handle2)
+    
+}
+
 //Variable Is made global so that clearInterval with method
 //stopProgress works, to avoid an not defined error.
 var animation, progressContainer, _progressIndicator;
@@ -1267,6 +1394,86 @@ function drawSeekBar(value, range, width, parentLay, seekObj) {
     parentLay.AddChild(_seekBar)
 }
 
+
+
+var _bSheet;
+
+function slideSheetObject(sheetLayout, width, options) {
+    
+    this.dismissSheet = function () {
+        _bSheet.Animate('SlideToRight', function () {
+            app.DestroyLayout(slideSheetContainer);
+        }, 210);
+    }
+    
+    this.showSheet = function () {
+        drawSlideSheet(sheetLayout, width, options);
+    }
+
+}
+
+function drawSlideSheet(sheetLayout, width, options) {
+    slideSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom,Right');
+    slideSheetContainer.SetSize(1, 1);
+    slideSheetContainer.SetOnTouchUp(dismissSlideSheet);
+    
+    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Right');
+    _bSheet.SetSize(width, 1);
+    _bSheet.SetCornerRadius();
+    _bSheet.Animate('BounceRight', null, 550);
+    _bSheet.AddChild(sheetLayout);
+    slideSheetContainer.AddChild(_bSheet);
+    slideSheetContainer.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim))
+    _bSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
+    slideSheetContainer.SetBackAlpha(0.33);
+    
+    app.AddLayout(slideSheetContainer);
+    
+    
+}
+
+function dismissSlideSheet() {
+    _bSheet.Animate('SlideToRight', function() {
+        app.DestroyLayout(slideSheetContainer);
+    }, 210);
+}
+
+
+function bottomSheetObject(sheetLayout, height, options) {
+    this.dismissSheet = function () {
+        dismissBSheet();
+    }
+    this.showSheet = function () {
+        drawBottomSheet(sheetLayout, height, options);
+    }
+}
+
+function drawBottomSheet(sheetLayout, height, options) {
+    bottomSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
+    bottomSheetContainer.SetSize(1, 1);
+    bottomSheetContainer.SetOnTouchUp(dismissBSheet);
+    bottomSheetContainer.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim));
+    bottomSheetContainer.SetBackAlpha(0.33);
+    
+    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Bottom');
+    _bSheet.SetSize(-1, height);
+    _bSheet.SetCornerRadius(28);
+    _bSheet.Animate('BounceBottom', null, 550);
+    _bSheet.AddChild(sheetLayout);
+    _bSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
+    bottomSheetContainer.AddChild(_bSheet);
+    
+    
+    app.AddLayout(bottomSheetContainer);
+    
+}
+
+function dismissBSheet() {
+    _bSheet.Animate('SlideToBottom', function() {
+        app.DestroyLayout(bottomSheetContainer);
+    }, 210);
+}
+
 function menuObj(menuType, list, position) {
     this.setOnTouch = function (onTouch) {
         this.onTouch = onTouch;
@@ -1287,6 +1494,7 @@ function drawSimpleMenu(menuType, list, position, menuFunc) {
     }
     
     topValue = () => {
+        //alert(top)
         if (top < 0.25) return top + 0.03
         else return top - 0.23;
     }

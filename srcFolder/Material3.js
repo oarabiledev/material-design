@@ -185,6 +185,14 @@ ui.addBottomSheet = function(sheetLayout, height, options) {
 }; 
 
 
+ui.addTextField = function(type, width, height, hint, options, labeled, parentLay){
+    return new textFieldObject(type, width, height, hint, options, labeled, parentLay);
+}
+
+ui.addChip = function(type, text, icon, width, height, parentLay){
+    return new chipObject(type, text, icon, width, height, parentLay);
+}
+
 //This Function Basically Returns The Appropraite Color For The Correct Theme 
 
 const stateColor = (lightColor,darkColor) => { 
@@ -272,8 +280,70 @@ function setM3BaseColors(colorDir) {
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim"); 
 }
 
+var chipElem;
+
+function chipObject(type, text, icon, width, height, parentLay){
+    drawChip(type, text, icon, width, height, parentLay)
+}
 
 
+function drawChip(type, text, icon, width, height, parentLay){
+    if(type.toLowerCase() === 'assist'){
+        chipElem = app.AddButton(parentLay, text, width, height, 'Custom,FontAwesome' );
+        chipElem.SetFontFile(defaultFont)
+        chipElem.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface));
+        chipElem.SetText(text)
+        chipElem.SetStyle(clrOutlined(), clrOutlined(), 8, stateColor(md_theme_light_outline,md_theme_dark_outline), 1, 0.1); 
+    }
+    else if(type.toLowerCase() === 'filter'){
+        chipElem = app.AddButton(parentLay, text, width, height, 'Custom,FontAwesome');
+        chipElem.SetFontFile(defaultFont)
+        chipElem.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface));
+        chipElem.SetText(text)
+        chipElem.SetStyle(clrOutlined(), clrOutlined(), 8, stateColor(md_theme_light_outline,md_theme_dark_outline), 1, 0.1); 
+        
+        chipElem.SetOnTouch(()=>{
+            chipElem.SetText(`[fa-check]`+' '+text)
+            chipElem.SetStyle(stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant), stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant), 8, stateColor(md_theme_light_outline,md_theme_dark_outline), 1, 0.1); 
+        });
+    }
+}
+
+
+var textEdit;
+function textFieldObject(type, width, height, hint, options, labeled, parentLay){
+    this.setOnEnter = function(onEnter){
+        textEdit.SetOnEnter(onEnter)
+    }
+    drawTextField(type, width, height, hint, options, labeled, parentLay)
+}
+
+function drawTextField(type, width, height, hint, options, labeled, parentLay){
+    if (type.toLowerCase() === 'texteditfilled' || type.toLowerCase() === 'tef'){
+        
+        textEdit = MUI.CreateTextEditFilled(width, options, hint , labeled, stateColor(md_theme_light_primary,md_theme_dark_primary));
+        parentLay.AddChild(textEdit);
+        
+    }
+    else if (type.toLowerCase() === 'texteditfilledactive' || type.toLowerCase() === 'tefa'){
+        
+        textEdit = MUI.CreateTextEditFilledA(width, options, hint , labeled, stateColor(md_theme_light_primary,md_theme_dark_primary));
+        parentLay.AddChild(textEdit);
+        
+    }
+    else if (type.toLowerCase() === 'texteditoutline' || type.toLowerCase() === 'teo'){
+        
+        textEdit = MUI.CreateTextEditOutline(width, options, hint , labeled, stateColor(md_theme_light_primary,md_theme_dark_primary));
+        parentLay.AddChild(textEdit);
+        
+    }
+    else if (type.toLowerCase() === 'texteditoutlineactive' || type.toLowerCase() === 'teoa'){
+        
+        textEdit = MUI.CreateTextEditOutlineA(width, options, hint , labeled, stateColor(md_theme_light_primary,md_theme_dark_primary),stateColor(md_theme_light_primary,md_theme_dark_primary));
+        parentLay.AddChild(textEdit);
+        
+    }
+}
 var filledButton;
 
 function filledButtonObject(btnName, width, height, icon, parentLay) {
@@ -338,11 +408,12 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
-    filledButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
+    filledButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     
     filledButton.SetTextColor(stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary))
     filledButton.SetStyle(stateColor(md_theme_light_primary,md_theme_dark_primary),stateColor(md_theme_light_primary,md_theme_dark_primary), 20, null, null, 0)
-    filledButton.SetFontFile(defaultFont)
+    filledButton.SetFontFile(defaultFont);
+    filledButton.SetText(`[fa-${icon}]`+' '+btnName)
     filledButton.SetOnTouch(() => {
         if (filledObj.onTouch) {
             //Added To Allow Menus To Position Correct
@@ -430,9 +501,10 @@ function elevatedButtonObject(btnName, width, height, icon, parentLay) {
 
 
 function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
-    elevatedButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
+    elevatedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     elevatedButton.SetTextColor(stateColor(md_theme_light_primary,md_theme_dark_primary));
     elevatedButton.SetFontFile(defaultFont)
+    elevatedButton.SetText(`[fa-${icon}]`+' '+btnName)
     elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0.1);
     
     elevatedButton.SetOnTouch(() => {
@@ -521,7 +593,7 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawFilledTonalBtn(btnName, width, height, icon, parentLay) {
-    filledTonalButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
+    filledTonalButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     filledTonalButton.SetFontFile(defaultFont)
     filledTonalButton.SetTextColor(stateColor(md_theme_light_onSecondaryContainer, md_theme_dark_onSecondaryContainer));
     
@@ -605,13 +677,12 @@ function outlinedButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
-    outlinedButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
+    outlinedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     outlinedButton.SetFontFile(defaultFont)
     outlinedButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
-    
+    outlinedButton.SetText(`[fa-${icon}]`+' '+btnName)
     outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20,strokeClrOutlined(), 1, 0.1);
     
-    console.log(outlineObj.onTouch)
     outlinedButton.SetOnTouch(() => {
         if (outlineObj.onTouch) {
             outlineObj.onTouch()
@@ -701,10 +772,10 @@ function textButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
-    textButton = app.AddButton(parentLay, btnName, width, height, 'Custom');
+    textButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     textButton.SetFontFile(defaultFont)
     textButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
-    
+    textButton.SetText(`[fa-${icon}]`+' '+btnName)
     textButton.SetStyle(backgroundColor(), backgroundColor(), 20, null, null, 0);
     
     textButton.SetOnTouch(() => {

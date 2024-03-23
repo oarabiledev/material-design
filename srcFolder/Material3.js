@@ -29,6 +29,10 @@ var layoutTopDistance,layoutInfo;
 var defaultIcons; 
 var defaultFont = _path + 'Fonts/Text/Roboto.ttf'; 
 
+var pluginVersion = 'v0.81';
+var isUpToDateText = `Material3 Plugin At The Latest Version: ${pluginVersion}`
+
+
 const ui = {};
 
 ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
@@ -68,13 +72,57 @@ ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
     if(m3ColorSystem) setM3BaseColors(m3ColorSystem);
 }
 
+
+//Configure UI Model And First Run Model
+var isThisAppFirstRun = app.LoadBoolean('isFirstRun?', true, 'defaultM3Config');
+
 app.CreateMaterial3 = function(defaultTheme,defaultIconFill,defaultThemeDir){
-    ui.InitializeUIKit(defaultTheme,defaultIconFill,defaultThemeDir)
+    ui.InitializeUIKit(defaultTheme,defaultIconFill,defaultThemeDir);
+    
+    if (isThisAppFirstRun){
+        app.SaveBoolean('isFirstRun?', false, 'defaultM3Config');
+    }
 }
 
 ui.getVersion = function() { 
-    return 'uiVersion : 0.61 \nuiPatch : 0.0 \nexportDate : 22/02/2024';    
+    return `Material3 Plugin Version :: ${pluginVersion}`
 }; 
+
+ui.isFirstStart = function() {
+    return isThisAppFirstRun;
+}
+
+/*Provide An Easier Way To Clear Material Color Data
+  And FirstStartData.
+*/
+
+ui.clearConfiguration = function(){
+    app.ClearData('defaultConfig');
+}
+
+
+function updateCheck() {
+    const apiUrl = `https://api.github.com/repos/oarabiledev/Material3/releases/latest`;
+
+    // Fetch the release information
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            const latestVersion = data.tag_name; 
+
+            // Compare versions (using semver or a custom comparison logic)
+            if (latestVersion !== pluginVersion) {
+                console.warn("<div style='color:yellow'> " + `An update is available, Version ${latestVersion} \n 
+                Update Link:: https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`);
+            }
+        })
+        .catch((error) => {
+            console.error('Error fetching release information:', error.message);
+    });
+}
+
+updateCheck()
+
 
 ui.addLayout = function(type, options, width, height, parentLay) { 
     const lay = app.CreateLayout(type, options); 
@@ -146,6 +194,9 @@ ui.addSeekBar = function(value,range,width,layout) {
     return new seekBarObject(value,range,width,layout); 
 }; 
 
+ui.addSlider = function(value, range, width, layout){
+    return new sliderObject(value, range, width, layout);
+}
 
 // m3 Dialogs And SnackBars
 ui.showDialog = function(title, text, dlgOptions, noAction, yesAction) { 
@@ -208,6 +259,7 @@ const backgroundColor = () => {
 
     
 function setM3BaseColors(colorDir) { 
+    
     appTheme = app.ReadFile(colorDir); 
     jsonData = JSON.parse(appTheme) 
     // Function to get the text value based on the color name 
@@ -278,6 +330,42 @@ function setM3BaseColors(colorDir) {
     md_theme_dark_surfaceTint = getColorTextValue(jsonData, "md_theme_dark_surfaceTint"); 
     md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant"); 
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim"); 
+}
+
+var sliderElem;
+function sliderObject(value, range , width, layout){
+    this.getValue = function(){
+        
+    }
+    
+    this.setValue = function(value){
+        
+    }
+    
+    drawSlider(value, range, width, layout)
+}
+
+function drawSlider(value, range , width, layout){
+    sliderElem = app.AddImage(layout, null, width, 0.1);
+    //sliderElem.SetMargins( 16,16,16,16,"px")
+    sliderElem.SetOnTouchMove((ev)=>{
+        drawSliderShading(ev.x[0]);
+    })
+    sliderElem.SetAutoUpdate( false )
+    drawSliderShading(0);
+}
+
+function drawSliderShading(x){
+
+    sliderElem.Clear()
+    sliderElem.SetLineWidth( 8 ) 
+    sliderElem.SetPaintColor(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer))
+    sliderElem.DrawLine( x,0.5 ,1 ,0.5 ) 
+    sliderElem.SetPaintColor(stateColor(md_theme_light_primary,md_theme_dark_primary))
+    sliderElem.DrawLine( 0,0.5 ,x ,0.5 ) 
+    sliderElem.SetPaintColor(stateColor(md_theme_light_primary,md_theme_dark_primary))
+    sliderElem.DrawLine( x,0.25 ,x ,0.75 ) 
+    sliderElem.Update()
 }
 
 var chipElem;
@@ -1802,3 +1890,5 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
 }
 
 
+
+	

@@ -27,9 +27,10 @@ const _path = __debug ? '' : app.GetPrivateFolder('Plugins') + '/material3/'
 var theme,iconFill,m3ColorSystem; 
 var layoutTopDistance,layoutInfo; 
 var defaultIcons; 
-var defaultFont = _path + 'Fonts/Text/Roboto.ttf'; 
+var defaultFont = _path + 'uxFonts/Text/Roboto.ttf'; 
 
-var pluginVersion = 'v0.81';
+
+var pluginVersion = 'v0.78';
 var isUpToDateText = `Material3 Plugin At The Latest Version: ${pluginVersion}`
 
 
@@ -48,6 +49,11 @@ ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
     if(defaultThemeDir === 'default' || defaultThemeDir === 'dflt'){ 
         m3ColorSystem = 'uxDesign/appTheme.json'; 
     } 
+    
+    else if(!app.FileExists(defaultThemeDir) || !defaultThemeDir || defaultThemeDir === undefined){
+        defaultThemeDir = _path + 'uxFonts/defaultTheme.json';
+    }
+    
     else{ 
         m3ColorSystem = defaultThemeDir; 
     } 
@@ -1890,5 +1896,3 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
 }
 
 
-
-	

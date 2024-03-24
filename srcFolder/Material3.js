@@ -110,21 +110,18 @@ ui.clearConfiguration = function(){
 function updateCheck() {
     const apiUrl = `https://api.github.com/repos/oarabiledev/Material3/releases/latest`;
 
-    // Fetch the release information
-    fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-            const latestVersion = data.tag_name; 
+    app.HttpRequest('GET','https://api.github.com','/repos/oarabiledev/Material3/releases/latest',null,handleUpdateReply);
+    
+}
 
-            // Compare versions (using semver or a custom comparison logic)
-            if (latestVersion !== pluginVersion) {
-                console.warn("<div style='color:yellow'> " + `An update is available, Version ${latestVersion} \n 
-                Update Link:: https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`);
-            }
-        })
-        .catch((error) => {
-            console.error('Error fetching release information:', error.message);
-    });
+function handleUpdateReply(error,reply){
+    let info = JSON.parse(reply);
+    const latestVersion = info.tag_name;
+    
+    if(latestVersion !== pluginVersion){
+        console.warn("<div style='color:yellow'> " + `An update is available, Version ${latestVersion} \n 
+        Update Link:: https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`);
+    }
 }
 
 updateCheck()
@@ -273,7 +270,7 @@ function setM3BaseColors(colorDir) {
         const colorObject = jsonData.resources.color.find(color => color._name === colorName); 
         return colorObject ? colorObject.__text : null; 
     }; 
-     
+    
     // Get the text value for "md_theme_dark_scrim" 
     seed = getColorTextValue(jsonData, "seed"); 
     md_theme_light_primary = getColorTextValue(jsonData, "md_theme_light_primary") 
@@ -686,22 +683,22 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
     drawFilledTonalBtn(btnName, width, height, icon, parentLay, this)
 }
 
-function drawFilledTonalBtn(btnName, width, height, icon, parentLay) {
-    filledTonalButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
+function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledObj) {
+    filledTonalButton = app.AddButton(parentLay, btnName, width, height, 'Custom,FontAwesome');
     filledTonalButton.SetFontFile(defaultFont)
     filledTonalButton.SetTextColor(stateColor(md_theme_light_onSecondaryContainer, md_theme_dark_onSecondaryContainer));
     
-    filledTonalButton.SetStyle(stateColor(md_theme_light_surface,md_theme_dark_surface), stateColor(md_theme_light_surface,md_theme_dark_surface), 20, null, null, 0.1);
+    filledTonalButton.SetStyle(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer), stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer), 20, null, null, 0);
     
     filledTonalButton.SetOnTouch(() => {
-        if (elevatedObj.onTouch) {
-            elevatedObj.onTouch()
+        if (filledObj.onTouch) {
+            filledObj.onTouch()
         }
     });
     
     filledTonalButton.SetOnTouch(() => {
-        if (elevatedObj.onLongTouch) {
-            elevatedObj.onLongTouch();
+        if (filledObj.onLongTouch) {
+            filledObj.onLongTouch();
         }
     });
 }
@@ -1894,5 +1891,3 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     }
     parentLay.AddChild(bottomBarContainer);
 }
-
-

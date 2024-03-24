@@ -19,6 +19,7 @@ const __debug = app.GetAppPath().endsWith('/Material3');
 const _path = __debug ? '' : app.GetPrivateFolder('Plugins') + '/material3/' 
 
 
+
 /* The following values will be used by other M3 Componets 
        To SetPositions and Accuratly Align Properly: 
        layoutInfo and layoutTopDistance 
@@ -30,9 +31,37 @@ var defaultIcons;
 var defaultFont = _path + 'uxFonts/Text/Roboto.ttf'; 
 
 
-var pluginVersion = 'v0.78';
+var pluginVersion = 'v0.7';
 var isUpToDateText = `Material3 Plugin At The Latest Version: ${pluginVersion}`
+let showUpdates = app.LoadBoolean('showUpdate?',true,'defaultM3Config')
 
+app.HttpRequest('GET','https://api.github.com','/repos/oarabiledev/Material3/releases/latest',
+null,handleUpdateReply);
+    
+function handleUpdateReply(error,reply){
+    let info = JSON.parse(reply);
+    const latestVersion = info.tag_name;
+    
+    if(latestVersion !== pluginVersion){
+        
+        if(app.InIDE() === true && showUpdates === true){
+            console.log("<div style='color:yellow'> " + `An update is available :: Version ${latestVersion} \n 
+            Update Link:: https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`);
+        
+            updateDialog = ui.showDialog('Update Warning !',`This Version Of Material3 is not upto-date.\nLatest Version Is :: ${latestVersion}`,null, 'Ignore', 'Update');
+            updateDialog.setOnAction((boolAnswer)=>{
+                if(boolAnswer){
+                    app.OpenUrl(`https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`)
+                }
+                else{
+                    app.SaveBoolean('showUpdate?',false,'defaultM3Config')
+                }
+            });
+        }
+    }
+}
+
+//Create The Ui Object
 
 const ui = {};
 
@@ -50,8 +79,8 @@ ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
         m3ColorSystem = 'uxDesign/appTheme.json'; 
     } 
     
-    else if(!app.FileExists(defaultThemeDir) || !defaultThemeDir || defaultThemeDir === undefined){
-        defaultThemeDir = _path + 'uxFonts/defaultTheme.json';
+    if(!app.FileExists(defaultThemeDir) || !defaultThemeDir || defaultThemeDir === undefined){
+        m3ColorSystem = _path + 'uxFonts/defaultTheme.json';
     }
     
     else{ 
@@ -103,29 +132,8 @@ ui.isFirstStart = function() {
 */
 
 ui.clearConfiguration = function(){
-    app.ClearData('defaultConfig');
+    app.ClearData('defaultM3Config');
 }
-
-
-function updateCheck() {
-    const apiUrl = `https://api.github.com/repos/oarabiledev/Material3/releases/latest`;
-
-    app.HttpRequest('GET','https://api.github.com','/repos/oarabiledev/Material3/releases/latest',null,handleUpdateReply);
-    
-}
-
-function handleUpdateReply(error,reply){
-    let info = JSON.parse(reply);
-    const latestVersion = info.tag_name;
-    
-    if(latestVersion !== pluginVersion){
-        console.warn("<div style='color:yellow'> " + `An update is available, Version ${latestVersion} \n 
-        Update Link:: https://github.com/oarabiledev/Material3/releases/tag/${latestVersion}`);
-    }
-}
-
-updateCheck()
-
 
 ui.addLayout = function(type, options, width, height, parentLay) { 
     const lay = app.CreateLayout(type, options); 
@@ -1361,6 +1369,7 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction,dlgFunc) {
     dlgA.SetOnCancel(function(){
         try{
             dlgFunc.onCancel();
+            dlgA.Hide();
             }
         catch(err){
             return null;
@@ -1412,8 +1421,8 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction,dlgFunc) {
     yesBtn.SetPadding(8, null, 8, null, "dp");
     
     if(theme === 'light'){
-        noBtn.SetBackColor(md_theme_light_primary)
-        yesBtn.SetBackColor(md_theme_light_primary)
+        noBtn.SetTextColor(md_theme_light_primary)
+        yesBtn.SetTextColor(md_theme_light_primary)
         dlgUi.SetBackColor(md_theme_light_secondaryContainer)
         dlgTitle.SetTextColor(md_theme_light_onSurface)
         dlgText.SetTextColor(md_theme_light_onSurfaceVariant)

@@ -15,6 +15,7 @@
 
 cfg.MUI 
 
+
 const __debug = app.GetAppPath().endsWith('/Material3'); 
 const _path = __debug ? '' : app.GetPrivateFolder('Plugins') + '/material3/' 
 
@@ -31,7 +32,7 @@ var defaultIcons;
 var defaultFont = _path + 'uxFonts/Text/Roboto.ttf'; 
 
 
-var pluginVersion = 'v0.7';
+var pluginVersion = 'v0.79';
 var isUpToDateText = `Material3 Plugin At The Latest Version: ${pluginVersion}`
 let showUpdates = app.LoadBoolean('showUpdate?',true,'defaultM3Config')
 
@@ -60,6 +61,21 @@ function handleUpdateReply(error,reply){
         }
     }
 }
+
+//Formulars For Dp & Px Conversion
+
+const dpToPxConversion = function (dpValue){
+    // Using The Formular 
+    //Pixel = DP * (DPI/160)
+    return dpValue * (app.GetScreenDensity()/160);
+}
+
+const pxToDpConversion = function (pxValue){
+    //Using The Formular
+    //Dp = Pixel / (DPI/160)
+    return pxValue / (app.GetScreenDensity()/160)
+}
+
 
 //Create The Ui Object
 
@@ -105,6 +121,7 @@ ui.InitializeUIKit = function(defaultTheme,defaultIconFill,defaultThemeDir){
     } 
     
     if(m3ColorSystem) setM3BaseColors(m3ColorSystem);
+    
 }
 
 
@@ -255,6 +272,10 @@ ui.addChip = function(type, text, icon, width, height, parentLay){
     return new chipObject(type, text, icon, width, height, parentLay);
 }
 
+ui.addAppBar = function(title, leadingIcon, controlIcons, parentLay){
+    return new appBarObject(title, leadingIcon, controlIcons, parentLay);
+}
+
 //This Function Basically Returns The Appropraite Color For The Correct Theme 
 
 const stateColor = (lightColor,darkColor) => { 
@@ -342,6 +363,68 @@ function setM3BaseColors(colorDir) {
     md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant"); 
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim"); 
 }
+
+
+
+function appBarObject(title, leadingIcon, controlIcons, parentLay){
+    
+    this.setOnTouch = function(onTouch){
+        this.onTouch = onTouch
+    }
+    
+    
+    drawAppBar(title, leadingIcon, controlIcons, parentLay, this)
+}
+
+
+
+function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj){
+    barCardLay = app.AddLayout(parentLay, "Card");
+    barCardLay.SetSize(DW(),dpToPxConversion(64), 'px');
+    
+    barCardLay.SetBackColor(stateColor(md_theme_light_surface,md_theme_dark_surface))
+    barCardLay.SetMargins(0, 0)
+    
+    
+    barUi = app.CreateLayout('Linear','Horizontal,Left');
+    barCardLay.AddChild(barUi);
+    
+    _leftIcon = app.AddText(barUi, leadingIcon, null, null,'Left');
+    _leftIcon.SetMargins(48,24,pxToDpConversion(DW())-190 ,null,'px')
+    _leftIcon.SetPadding(12,12,null,null,'dp')
+    _leftIcon.SetTextSize(24,'dp')
+    _leftIcon.SetSize(48,48,'dp')
+    _leftIcon.SetFontFile(defaultIcons)
+    _leftIcon.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+    _leftIcon.SetOnTouchDown(function(){
+        if(appBarObj.onTouch){
+            appBarObj.onTouch(leadingIcon)
+            }
+        })
+    
+    _title = app.AddText(barUi, title, -1, -1,'Center,Wrap');
+    _title.SetMargins(null,24,null,24,'px')
+    _title.SetTextSize(28,'dp');
+    _title.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+    
+    
+    
+    _rightIcon = app.AddText(barUi,controlIcons, null, null,'Left')
+    _rightIcon.SetMargins(pxToDpConversion(DW())-190,24,30,null,'px')
+    _rightIcon.SetPadding(12,12,null,null,'dp')
+    _rightIcon.SetSize(48,48,'dp')
+    _rightIcon.SetTextSize(24,'dp');
+    _rightIcon.SetFontFile(defaultIcons)
+    _rightIcon.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+    _rightIcon.SetOnTouchDown(function(){
+        if(appBarObj.onTouch){
+            appBarObj.onTouch(controlIcons)
+            }
+        })
+    
+}
+
+
 
 var sliderElem;
 function sliderObject(value, range , width, layout){

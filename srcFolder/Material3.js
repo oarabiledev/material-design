@@ -156,9 +156,11 @@ ui.addLayout = function(type, options, width, height, parentLay) {
     const lay = app.CreateLayout(type, options); 
     if (theme === 'dark') { 
         lay.SetBackColor(md_theme_dark_background); 
+        app.SetStatusBarColor(md_theme_dark_background)
         
     } else { 
         lay.SetBackColor(md_theme_light_background); 
+        app.SetStatusBarColor()
     } 
     layoutInfo = type; 
     layoutTopDistance = lay.GetTop(); 
@@ -595,7 +597,12 @@ function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
     filledButton.SetTextColor(stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary))
     filledButton.SetStyle(stateColor(md_theme_light_primary,md_theme_dark_primary),stateColor(md_theme_light_primary,md_theme_dark_primary), 20, null, null, 0)
     filledButton.SetFontFile(defaultFont);
-    filledButton.SetText(`[fa-${icon}]`+' '+btnName)
+    
+    if (icon === null){
+        filledButton.SetText(btnName);
+    }
+    else filledButton.SetText(`[fa-${icon}]`+' '+btnName);
+    
     filledButton.SetOnTouch(() => {
         if (filledObj.onTouch) {
             //Added To Allow Menus To Position Correct
@@ -621,7 +628,7 @@ var elevatedButton;
 
 function elevatedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    this.onTouch = null;
+    
     this.animate = function (type, callback, time) {
         elevatedButton.Animate(type, callback, time);
     }
@@ -685,8 +692,13 @@ function elevatedButtonObject(btnName, width, height, icon, parentLay) {
 function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
     elevatedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     elevatedButton.SetTextColor(stateColor(md_theme_light_primary,md_theme_dark_primary));
-    elevatedButton.SetFontFile(defaultFont)
-    elevatedButton.SetText(`[fa-${icon}]`+' '+btnName)
+    elevatedButton.SetFontFile(defaultFont);
+    
+    if (icon === null){
+        elevatedButton.SetText(btnName);
+    }
+    else elevatedButton.SetText(`[fa-${icon}]`+' '+btnName);
+    
     elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0.1);
     
     elevatedButton.SetOnTouch(() => {
@@ -775,9 +787,15 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledObj) {
-    filledTonalButton = app.AddButton(parentLay, btnName, width, height, 'Custom,FontAwesome');
+    filledTonalButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     filledTonalButton.SetFontFile(defaultFont)
     filledTonalButton.SetTextColor(stateColor(md_theme_light_onSecondaryContainer, md_theme_dark_onSecondaryContainer));
+    
+    
+    if (icon === null){
+        filledTonalButton.SetText(btnName);
+    }
+    else filledTonalButton.SetText(`[fa-${icon}]`+' '+btnName);
     
     filledTonalButton.SetStyle(stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer), stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer), 20, null, null, 0);
     
@@ -862,7 +880,12 @@ function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
     outlinedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     outlinedButton.SetFontFile(defaultFont)
     outlinedButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
-    outlinedButton.SetText(`[fa-${icon}]`+' '+btnName)
+    
+    if (icon === null){
+        outlinedButton.SetText(btnName);
+    }
+    else outlinedButton.SetText(`[fa-${icon}]`+' '+btnName);
+    
     outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20,strokeClrOutlined(), 1, 0.1);
     
     outlinedButton.SetOnTouch(() => {
@@ -957,7 +980,12 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
     textButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     textButton.SetFontFile(defaultFont)
     textButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
-    textButton.SetText(`[fa-${icon}]`+' '+btnName)
+    
+    if (icon === null){
+        textButton.SetText(btnName);
+    }
+    else textButton.SetText(`[fa-${icon}]`+' '+btnName);
+    
     textButton.SetStyle(backgroundColor(), backgroundColor(), 20, null, null, 0);
     
     textButton.SetOnTouch(() => {
@@ -1428,9 +1456,14 @@ function addRadioUi(list, width, height, parentLay, index) {
     parentLay.AddChild(_radio);
 }
 
-
+var dlgA;
 
 function dlgBarObject(title, text, dlgOptions, noAction, yesAction) {
+    
+    this.hideObj = function(){
+        dlgA.Hide();
+    }
+    
     this.setOnCancel = function(onCancel) {
         this.onCancel = onCancel;
     }
@@ -1526,7 +1559,7 @@ var snackUi, snackContainer;
 function SnackBarObject(text, btnAction, width, alignment) {
     
     this.setRawAlignment = function (top) {
-        snackContainer.SetMargins(null, top)
+       this.top = top;
     }
     
     this.setTimeout = function (timeout) {
@@ -1538,18 +1571,20 @@ function SnackBarObject(text, btnAction, width, alignment) {
     }
     
     this.showObj = function () {
-        drawSnackBarUi(text, btnAction, width, alignment, this.onTouch, this.timeout);
+        drawSnackBarUi(text, btnAction, width, alignment, this.onTouch, this.timeout, this.top);
     }
     
 }
 
-function drawSnackBarUi(text, btnAction, width, alignment, onTouch, timeout) {
+function drawSnackBarUi(text, btnAction, width, alignment, onTouch, timeout, top) {
     
     snackContainer = app.CreateLayout('Linear', alignment + ',FillXY,TouchThrough,Center');
     snackUi = app.CreateLayout('Card', '');
     
     snackContainer.AddChild(snackUi);
-    
+    if(top){
+    snackContainer.SetMargins(null, top);
+    }
     snackUi.SetMargins(0.055, 0.018, 0.055, 0.018);
     snackUi.SetCornerRadius(4);
     snackUi.SetElevation(6);
@@ -1651,45 +1686,40 @@ function drawSeekBar(value, range, width, parentLay, seekObj) {
 
 
 var _bSheet;
+var _sSheet;
 
 function slideSheetObject(sheetLayout, width, options) {
     
     this.dismissSheet = function () {
-        _bSheet.Animate('SlideToRight', function () {
+        _sSheet.Animate('SlideToRight', function () {
             app.DestroyLayout(slideSheetContainer);
         }, 210);
     }
     
     this.showSheet = function () {
-        drawSlideSheet(sheetLayout, width, options);
+        drawSlideSheet(sheetLayout, width, options, this);
     }
 
 }
 
-function drawSlideSheet(sheetLayout, width, options) {
+function drawSlideSheet(sheetLayout, width, options, that) {
     slideSheetContainer = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom,Right');
     slideSheetContainer.SetSize(1, 1);
-    slideSheetContainer.SetOnTouchUp(dismissSlideSheet);
+    slideSheetContainer.SetOnTouchUp(that.dismissSlideSheet);
     
-    _bSheet = app.CreateLayout('Card', 'FillX,VCenter,Right');
-    _bSheet.SetSize(width, 1);
-    _bSheet.SetCornerRadius();
-    _bSheet.Animate('BounceRight', null, 550);
-    _bSheet.AddChild(sheetLayout);
-    slideSheetContainer.AddChild(_bSheet);
+    _sSheet = app.CreateLayout('Card', 'FillX,VCenter,Right');
+    _sSheet.SetSize(width, 1);
+    _sSheet.SetCornerRadius(15);
+    _sSheet.Animate('BounceRight', null, 550);
+    _sSheet.AddChild(sheetLayout);
+    
     slideSheetContainer.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim))
-    _bSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
+    _sSheet.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
     slideSheetContainer.SetBackAlpha(0.33);
-    
+    slideSheetContainer.AddChild(_sSheet);
     app.AddLayout(slideSheetContainer);
     
     
-}
-
-function dismissSlideSheet() {
-    _bSheet.Animate('SlideToRight', function() {
-        app.DestroyLayout(slideSheetContainer);
-    }, 210);
 }
 
 

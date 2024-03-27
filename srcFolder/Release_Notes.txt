@@ -1,0 +1,7 @@
+version 0.80
+------------ Currently Working On -----------------
+
+version 0.79
+
+=> Added FallBack Option For Undefined Or Unproperly referenced appTheme.json file
+=> Fixed cfg.Node and cfg.Fast Issues, due to use of fetch API, now use app.HttpRequest()

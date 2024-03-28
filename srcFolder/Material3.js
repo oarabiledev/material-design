@@ -173,6 +173,9 @@ const ui = {
         return new dlgBarObject(title, text, dlgOptions, noAction, yesAction); 
     },
     
+    showEmptyDialog : function(dialogLayout, width, height, options){
+        return new emptyDlgObject(dialogLayout, width, height, options);
+    },
     
     addSnackBar: function (text, btnAction, width, alignment) {
         return new SnackBarObject(text, btnAction, width, alignment);
@@ -315,6 +318,78 @@ function setM3BaseColors() {
 
 
 //------------------------------------------------------------Actual Components
+
+let emptyDlg;
+
+function emptyDlgObject(dialogLayout, width, height, options){
+    
+    this.Dismiss = function(){
+        
+    }
+    
+    this.Focus = function(){
+        
+    }
+    
+    this.ClearFocus = function(){
+        
+    }
+    
+    this.SetDescription = function(){
+        
+    }
+    
+    this.SetMargins = function(left, top, right, bottom, mode){
+        
+    }
+    
+    this.SetPosition = function( left, top, width, height, options){
+        
+    }
+    
+    this.SetOnCancel = function(){
+        
+    }
+    
+    this.SetOnTouch = function(){
+        
+    }
+    
+    this.Hide = function(){
+        
+    }
+    
+    this.Gone = function(){
+        
+    }
+    
+    this.EnableBackKey = function(){
+        
+    }
+    
+    this.SetOnBack = function(){
+        
+    }
+    
+    drawEmptyDialog(dialogLayout, width, height, options, this)
+}
+
+function drawEmptyDialog(dialogLayout, width, height, options, emptyDlgObj){
+    dlgColor = stateColor(md_theme_light_secondaryContainer,md_theme_dark_secondaryContainer);
+    
+    emptyDlg = app.CreateDialog();
+    emptyDlg.SetSize(width, height);
+    emptyDlg.SetBackColor("#00000000");
+    
+    dlgUi = app.CreateLayout('Card')
+    dlgUi.SetElevation(0)
+    dlgUi.SetSize(width, height) 
+    dlgUi.SetCornerRadius(12)
+    
+    dlgUi.SetBackColor(dlgColor)
+    emptyDlg.AddLayout(dlgUi);
+    emptyDlg.Show();
+}
 
 
 function appBarObject(title, leadingIcon, controlIcons, parentLay) {
@@ -1430,7 +1505,6 @@ function showDialogBar(title, text, dlgOptions, noAction, yesAction, dlgFunc) {
     
     dlgUi = app.CreateLayout('Card')
     dlgA.AddLayout(dlgUi)
-    
     
     dlgUi.SetElevation(0)
     dlgUi.SetSize(width(), null, 'dp')

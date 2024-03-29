@@ -3,9 +3,11 @@
 version 0.80
 ------------ Currently Being Worked On -----------------
 
+//This Update May Break Material Apps
 // What To Expect:
 
 => Major Changes To app.CreateMaterial3() function
+=> Changed Component Methods To Follow Ds Syntax
 => Add All Dialog Types
 => Add List Component
 => Add Tabs Component

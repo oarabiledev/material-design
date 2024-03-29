@@ -33,10 +33,6 @@ let defaultFont = _materialPath + 'Roboto.ttf';
 const warningColor = "<div style='color:#FF7900'>";
 
 
-
-
-
-
 const ui = {
     
     //-----------------------------------------------------------------Top Level
@@ -77,6 +73,9 @@ const ui = {
         return lay;
     },
     
+    switchTheme: () =>{
+        
+    },
     
     //------------------------------------------------------------------App Bars
     addAppBar: function (title, leadingIcon, controlIcons, parentLay) {
@@ -151,7 +150,9 @@ const ui = {
         return new navDrawerObject(drawerLayout, side, width);
     },
     
-    
+    addTabs: function (list, width, height, options){
+        
+    },
     
     
     //---------------------------------------------------------------Addon Comps
@@ -185,8 +186,6 @@ const ui = {
     addSwitch: function (switchType, value, parent_Layout) {
         return new switchObject(switchType, value, parent_Layout);
     },
-    
-    
     
     
     //---------------------------------------------------------------Text Fields
@@ -319,56 +318,58 @@ function setM3BaseColors() {
 
 //------------------------------------------------------------Actual Components
 
+
+
 let emptyDlg;
 
 function emptyDlgObject(dialogLayout, width, height, options){
     
     this.Dismiss = function(){
-        
+        emptyDlg.Dismiss()
     }
     
     this.Focus = function(){
-        
+        emptyDlg.Focus()
     }
     
     this.ClearFocus = function(){
-        
+        emptyDlg.ClearFocus()
     }
     
-    this.SetDescription = function(){
-        
+    this.SetDescription = function(description){
+        emptyDlg.SetDescription(description)
     }
     
     this.SetMargins = function(left, top, right, bottom, mode){
-        
+        emptyDlg.SetMargins(left, top, right, bottom, mode)
     }
     
-    this.SetPosition = function( left, top, width, height, options){
-        
+    this.SetPosition = function(left, top, width, height, options){
+        emptyDlg.SetPosition(left, top, width, height, options)
     }
     
-    this.SetOnCancel = function(){
-        
+    this.SetOnCancel = function(onCancel){
+        emptyDlg.SetOnCancel(onCancel)
     }
     
-    this.SetOnTouch = function(){
-        
+    this.SetOnTouch = function(onTouch){
+        emptyDlg.SetOnTouch(onTouch(evDetails))
     }
     
     this.Hide = function(){
-        
+        emptyDlg.Hide()
     }
     
     this.Gone = function(){
-        
+        emptyDlg.Gone()
     }
     
-    this.EnableBackKey = function(){
-        
+    this.EnableBackKey = function(bool){
+        emptyDlg.EnableBackKey(bool)
     }
     
-    this.SetOnBack = function(){
-        
+    this.SetOnBack = function(onBack){
+        emptyDlg.SetOnBack(onBack)
     }
     
     drawEmptyDialog(dialogLayout, width, height, options, this)
@@ -651,7 +652,7 @@ var elevatedButton;
 function elevatedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
     
-        this.Animate = function (type, callback, time) {
+    this.Animate = function (type, callback, time) {
         elevatedButton.Animate(type, callback, time);
     }
     this.SetScale = function (x, y) {
@@ -721,7 +722,7 @@ function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
         elevatedButton.SetText(btnName);
     } else elevatedButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     
-    elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0.1);
+    elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0);
     
     elevatedButton.SetOnTouch(() => {
         if (elevatedObj.onTouch) {
@@ -747,8 +748,8 @@ var filledTonalButton;
 
 function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    this.onTouch = null;
-        this.Animate = function (type, callback, time) {
+    
+    this.Animate = function (type, callback, time) {
         filledTonalButton.Animate(type, callback, time);
     }
     this.SetScale = function (x, y) {
@@ -809,7 +810,7 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
     drawFilledTonalBtn(btnName, width, height, icon, parentLay, this)
 }
 
-function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledObj) {
+function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledTonalObj) {
     filledTonalButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     filledTonalButton.SetFontFile(defaultFont)
     filledTonalButton.SetTextColor(stateColor(md_theme_light_onSecondaryContainer, md_theme_dark_onSecondaryContainer));
@@ -822,14 +823,14 @@ function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledObj) 
     filledTonalButton.SetStyle(stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer), stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer), 20, null, null, 0);
     
     filledTonalButton.SetOnTouch(() => {
-        if (filledObj.onTouch) {
-            filledObj.onTouch()
+        if (filledTonalObj.onTouch) {
+            filledTonalObj.onTouch();
         }
     });
     
-    filledTonalButton.SetOnTouch(() => {
-        if (filledObj.onLongTouch) {
-            filledObj.onLongTouch();
+    filledTonalButton.SetOnLongTouch(() => {
+        if (filledTonalObj.onLongTouch) {
+            filledTonalObj.onLongTouch();
         }
     });
 }
@@ -908,7 +909,7 @@ function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
         outlinedButton.SetText(btnName);
     } else outlinedButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     
-    outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20, strokeClrOutlined(), 1, 0.1);
+    outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20, strokeClrOutlined(), 1, 0);
     
     outlinedButton.SetOnTouch(() => {
         if (outlineObj.onTouch) {

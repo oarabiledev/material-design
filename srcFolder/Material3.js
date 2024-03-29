@@ -63,7 +63,7 @@ const ui = {
         app.ClearData('M3Config');
     },
     
-    addLayout: function (type, options, width, height, parentLay) {
+    CreateLayout: function (type, options, width, height, parentLay) {
         const lay = app.CreateLayout(type, options);
         if (theme === 'dark') {
             lay.SetBackColor(md_theme_dark_background);
@@ -394,7 +394,7 @@ function drawEmptyDialog(dialogLayout, width, height, options, emptyDlgObj){
 
 function appBarObject(title, leadingIcon, controlIcons, parentLay) {
     
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch
     }
     
@@ -455,11 +455,11 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
 var sliderElem;
 
 function sliderObject(value, range, width, layout) {
-    this.getValue = function () {
+    this.GetValue = function () {
         
     }
     
-    this.setValue = function (value) {
+    this.SetValue = function (value) {
         
     }
     
@@ -522,7 +522,7 @@ function drawChip(type, text, icon, width, height, parentLay) {
 var textEdit;
 
 function textFieldObject(type, width, height, hint, options, labeled, parentLay) {
-    this.setOnEnter = function (onEnter) {
+    this.SetOnEnter = function (onEnter) {
         textEdit.SetOnEnter(onEnter)
     }
     drawTextField(type, width, height, hint, options, labeled, parentLay)
@@ -554,63 +554,63 @@ function drawTextField(type, width, height, hint, options, labeled, parentLay) {
 var filledButton;
 
 function filledButtonObject(btnName, width, height, icon, parentLay) {
-    // Button Methods :::
-    this.onTouch = null;
-    this.animate = function (type, callback, time) {
+    
+        this.Animate = function (type, callback, time) {
         filledButton.Animate(type, callback, time);
     }
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         filledButton.SetScale(x, y);
     }
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         filledButton.SetVisibility(mode);
     }
-    this.setEnabled = function (enableBool) {
+    this.SetEnabled = function (enableBool) {
         filledButton.SetEnabled(enableBool);
     }
-    this.setEllipsize = function (mode) {
+    this.SetEllipsize = function (mode) {
         filledButton.SetEllipsize(mode);
     }
-    this.setDescription = function (desc) {
+    this.SetDescription = function (desc) {
         filledButton.SetDescription(desc);
     }
-    this.setHtml = function (str) {
+    this.SetHtml = function (str) {
         filledButton.SetHtml(str);
     }
-    this.setText = function (text) {
+    this.SetText = function (text) {
         filledButton.SetText(text);
     }
-    this.setTextSize = function (size, mode) {
+    this.SetTextSize = function (size, mode) {
         filledButton.SetTextSize(size, mode);
     }
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         filledButton.SetMargins(left, top, right, bottom, mode);
     }
-    this.setPadding = function (left, top, right, bottom, mode) {
+    this.SetPadding = function (left, top, right, bottom, mode) {
         filledButton.SetPadding(left, top, right, bottom, mode);
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
-    this.setOnLongTouch = function (onLongTouch) {
+    this.SetOnLongTouch = function (onLongTouch) {
         this.onLongTouch = onLongTouch;
     }
-    this.tween = function (target, duration, type, repeat, yoyo, callback) {
+    this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         filledButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
-    this.focus = function () {
+    this.Focus = function () {
         filledButton.Focus();
     }
-    this.gone = function () {
+    this.Gone = function () {
         filledButton.Gone();
     }
-    this.show = function () {
+    this.Show = function () {
         filledButton.Show();
     }
-    this.hide = function () {
+    this.Hide = function () {
         filledButton.Hide();
     }
-    
+
+
     drawFilledButton(btnName, width, height, icon, parentLay, this)
 }
 
@@ -651,60 +651,61 @@ var elevatedButton;
 function elevatedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
     
-    this.animate = function (type, callback, time) {
+        this.Animate = function (type, callback, time) {
         elevatedButton.Animate(type, callback, time);
     }
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         elevatedButton.SetScale(x, y);
     }
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         elevatedButton.SetVisibility(mode);
     }
-    this.setEnabled = function (enableBool) {
+    this.SetEnabled = function (enableBool) {
         elevatedButton.SetEnabled(enableBool);
     }
-    this.setEllipsize = function (mode) {
+    this.SetEllipsize = function (mode) {
         elevatedButton.SetEllipsize(mode);
     }
-    this.setDescription = function (desc) {
+    this.SetDescription = function (desc) {
         elevatedButton.SetDescription(desc);
     }
-    this.setHtml = function (str) {
+    this.SetHtml = function (str) {
         elevatedButton.SetHtml(str);
     }
-    this.setText = function (text) {
+    this.SetText = function (text) {
         elevatedButton.SetText(text);
     }
-    this.setTextSize = function (size, mode) {
+    this.SetTextSize = function (size, mode) {
         elevatedButton.SetTextSize(size, mode);
     }
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         elevatedButton.SetMargins(left, top, right, bottom, mode);
     }
-    this.setPadding = function (left, top, right, bottom, mode) {
+    this.SetPadding = function (left, top, right, bottom, mode) {
         elevatedButton.SetPadding(left, top, right, bottom, mode);
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
-    this.setOnLongTouch = function (onLongTouch) {
+    this.SetOnLongTouch = function (onLongTouch) {
         this.onLongTouch = onLongTouch;
     }
-    this.tween = function (target, duration, type, repeat, yoyo, callback) {
+    this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         elevatedButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
-    this.focus = function () {
+    this.Focus = function () {
         elevatedButton.Focus();
     }
-    this.gone = function () {
+    this.Gone = function () {
         elevatedButton.Gone();
     }
-    this.show = function () {
+    this.Show = function () {
         elevatedButton.Show();
     }
-    this.hide = function () {
+    this.Hide = function () {
         elevatedButton.Hide();
     }
+
     
     //Call It 
     drawElevatedBtn(btnName, width, height, icon, parentLay, this)
@@ -747,60 +748,61 @@ var filledTonalButton;
 function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
     this.onTouch = null;
-    this.animate = function (type, callback, time) {
+        this.Animate = function (type, callback, time) {
         filledTonalButton.Animate(type, callback, time);
     }
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         filledTonalButton.SetScale(x, y);
     }
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         filledTonalButton.SetVisibility(mode);
     }
-    this.setEnabled = function (enableBool) {
+    this.SetEnabled = function (enableBool) {
         filledTonalButton.SetEnabled(enableBool);
     }
-    this.setEllipsize = function (mode) {
+    this.SetEllipsize = function (mode) {
         filledTonalButton.SetEllipsize(mode);
     }
-    this.setDescription = function (desc) {
+    this.SetDescription = function (desc) {
         filledTonalButton.SetDescription(desc);
     }
-    this.setHtml = function (str) {
+    this.SetHtml = function (str) {
         filledTonalButton.SetHtml(str);
     }
-    this.setText = function (text) {
+    this.SetText = function (text) {
         filledTonalButton.SetText(text);
     }
-    this.setTextSize = function (size, mode) {
+    this.SetTextSize = function (size, mode) {
         filledTonalButton.SetTextSize(size, mode);
     }
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         filledTonalButton.SetMargins(left, top, right, bottom, mode);
     }
-    this.setPadding = function (left, top, right, bottom, mode) {
+    this.SetPadding = function (left, top, right, bottom, mode) {
         filledTonalButton.SetPadding(left, top, right, bottom, mode);
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
-    this.setOnLongTouch = function (onLongTouch) {
+    this.SetOnLongTouch = function (onLongTouch) {
         this.onLongTouch = onLongTouch;
     }
-    this.tween = function (target, duration, type, repeat, yoyo, callback) {
+    this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         filledTonalButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
-    this.focus = function () {
+    this.Focus = function () {
         filledTonalButton.Focus();
     }
-    this.gone = function () {
+    this.Gone = function () {
         filledTonalButton.Gone();
     }
-    this.show = function () {
+    this.Show = function () {
         filledTonalButton.Show();
     }
-    this.hide = function () {
+    this.Hide = function () {
         filledTonalButton.Hide();
     }
+
     
     //Call It
     
@@ -837,60 +839,61 @@ var outlinedButton;
 function outlinedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
     
-    this.animate = function (type, callback, time) {
+        this.Animate = function (type, callback, time) {
         outlinedButton.Animate(type, callback, time);
     }
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         outlinedButton.SetScale(x, y);
     }
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         outlinedButton.SetVisibility(mode);
     }
-    this.setEnabled = function (enableBool) {
+    this.SetEnabled = function (enableBool) {
         outlinedButton.SetEnabled(enableBool);
     }
-    this.setEllipsize = function (mode) {
+    this.SetEllipsize = function (mode) {
         outlinedButton.SetEllipsize(mode);
     }
-    this.setDescription = function (desc) {
+    this.SetDescription = function (desc) {
         outlinedButton.SetDescription(desc);
     }
-    this.setHtml = function (str) {
+    this.SetHtml = function (str) {
         outlinedButton.SetHtml(str);
     }
-    this.setText = function (text) {
+    this.SetText = function (text) {
         outlinedButton.SetText(text);
     }
-    this.setTextSize = function (size, mode) {
+    this.SetTextSize = function (size, mode) {
         outlinedButton.SetTextSize(size, mode);
     }
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         outlinedButton.SetMargins(left, top, right, bottom, mode);
     }
-    this.setPadding = function (left, top, right, bottom, mode) {
+    this.SetPadding = function (left, top, right, bottom, mode) {
         outlinedButton.SetPadding(left, top, right, bottom, mode);
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
-    this.setOnLongTouch = function (onLongTouch) {
+    this.SetOnLongTouch = function (onLongTouch) {
         this.onLongTouch = onLongTouch;
     }
-    this.tween = function (target, duration, type, repeat, yoyo, callback) {
+    this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         outlinedButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
-    this.focus = function () {
+    this.Focus = function () {
         outlinedButton.Focus();
     }
-    this.gone = function () {
+    this.Gone = function () {
         outlinedButton.Gone();
     }
-    this.show = function () {
+    this.Show = function () {
         outlinedButton.Show();
     }
-    this.hide = function () {
+    this.Hide = function () {
         outlinedButton.Hide();
     }
+
     
     //Call It 
     drawOutlinedBtn(btnName, width, height, icon, parentLay, this);
@@ -936,60 +939,62 @@ var textButton;
 function textButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
     
-    this.animate = function (type, callback, time) {
+        this.Animate = function (type, callback, time) {
         textButton.Animate(type, callback, time);
     }
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         textButton.SetScale(x, y);
     }
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         textButton.SetVisibility(mode);
     }
-    this.setEnabled = function (enableBool) {
+    this.SetEnabled = function (enableBool) {
         textButton.SetEnabled(enableBool);
     }
-    this.setEllipsize = function (mode) {
+    this.SetEllipsize = function (mode) {
         textButton.SetEllipsize(mode);
     }
-    this.setDescription = function (desc) {
+    this.SetDescription = function (desc) {
         textButton.SetDescription(desc);
     }
-    this.setHtml = function (str) {
+    this.SetHtml = function (str) {
         textButton.SetHtml(str);
     }
-    this.setText = function (text) {
+    this.SetText = function (text) {
         textButton.SetText(text);
     }
-    this.setTextSize = function (size, mode) {
+    this.SetTextSize = function (size, mode) {
         textButton.SetTextSize(size, mode);
     }
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         textButton.SetMargins(left, top, right, bottom, mode);
     }
-    this.setPadding = function (left, top, right, bottom, mode) {
+    this.SetPadding = function (left, top, right, bottom, mode) {
         textButton.SetPadding(left, top, right, bottom, mode);
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
-    this.setOnLongTouch = function (onLongTouch) {
+    this.SetOnLongTouch = function (onLongTouch) {
         this.onLongTouch = onLongTouch;
     }
-    this.tween = function (target, duration, type, repeat, yoyo, callback) {
+    this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         textButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
-    this.focus = function () {
+    this.Focus = function () {
         textButton.Focus();
     }
-    this.gone = function () {
+    this.Gone = function () {
         textButton.Gone();
     }
-    this.show = function () {
+    this.Show = function () {
         textButton.Show();
     }
-    this.hide = function () {
+    
+    this.Hide = function (){
         textButton.Hide();
     }
+    
     // Call It
     drawTextBtn(btnName, width, height, icon, parentLay, this);
     
@@ -1024,17 +1029,16 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
 var fabContainer;
 
 function fabObject(icon, parentLay) {
-    this.setOnTouch = null;
     
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
     
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         fabContainer.SetMargins(left, top, right, bottom, mode);
     }
     
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         fabContainer.SetPosition(left, top, width, height, options);
     }
     
@@ -1074,17 +1078,16 @@ var smallFabContainer;
 
 
 function smallFABObject(icon, parentLay) {
-    this.setOnTouch = null;
     
-    this.setOnTouch = function (onTouch) {
+    this.s=SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
     
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         smallFabContainer.SetMargins(left, top, right, bottom, mode);
     }
     
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         smallFabContainer.SetPosition(left, top, width, height, options);
     }
     
@@ -1125,17 +1128,16 @@ function drawSmallFab(icon, parentLay, fabObj) {
 var largeFabContainer;
 
 function largeFABObject(icon, parentLay) {
-    this.setOnTouch = null;
     
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
     
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         largeFabContainer.SetMargins(left, top, right, bottom, mode);
     }
     
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         largeFabContainer.SetPosition(left, top, width, height, options);
     }
     
@@ -1171,13 +1173,13 @@ function drawLargeFab(icon, parentLay, largefabOBj) {
 }
 
 function switchObject(switchType, value, parent_Layout) {
-    this.getValue = function () {
+    this.GetValue = function () {
         return switchValue;
     }
-    this.setOnToggle = function (onToggle) {
+    this.SetOnToggle = function (onToggle) {
         this.onToggle = onToggle;
     }
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         _switch.SetPosition(left, top, width, height, options)
     }
     /*
@@ -1293,29 +1295,29 @@ var animation, progressContainer, _progressIndicator;
 
 function progressObject(progressType, width, parentLay) {
     
-    this.stopProgress = function () {
+    this.StopProgress = function () {
         progressContainer.Hide();
         progressContainer.Destroy();
         clearInterval(animation);
     }
     
-    this.setValue = function (value) {
+    this.SetValue = function (value) {
         this.value = value;
         _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
     }
     
-    this.hideContainer = function () {
+    this.HideContainer = function () {
         app.DestroyLayout(this.progressContainer);
     }
     
-    this.getValue = function () {
+    this.GetValue = function () {
         return this.value;
     }
     
-    this.setMargins = function (left, top, right, bottom, mode) {
+    this.SetMargins = function (left, top, right, bottom, mode) {
         progressContainer.SetMargins(left, top, right, bottom, mode)
     }
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         progressContainer.SetPosition(left, top, width, height, options)
     }
     
@@ -1362,99 +1364,98 @@ function drawProgressBar(progressType, width, parentLay, progressObj) {
 var _radio;
 
 function radioListObject(list, width, height, parentLay) {
-    
-    this.getCheckedItems = function () {
+        this.GetCheckedItems = function () {
         return _radio.GetCheckItem();
     }
     
-    this.checkItemByIndex = function (checkItem) {
+    this.CheckItemByIndex = function (checkItem) {
         return _radio.CheckItemByIndex(checkItem);
     }
     
-    this.getItem = function (title) {
+    this.GetItem = function (title) {
         return _radio.GetItem(title);
     }
     
-    this.removeAll = function () {
+    this.RemoveAll = function () {
         return _radio.RemoveAll();
     }
     
-    this.removeItem = function (title) {
+    this.RemoveItem = function (title) {
         return _radio.RemoveItem(title);
     }
     
-    this.removeItemByIndex = function (index) {
+    this.RemoveItemByIndex = function (index) {
         return _radio.RemoveItemByIndex(index);
     }
     
-    this.scrollToItem = function (title, body) {
+    this.ScrollToItem = function (title, body) {
         return _radio.ScrollToItem(title, body);
     }
     
-    this.scrollToItemByIndex = function (index) {
+    this.ScrollToItemByIndex = function (index) {
         return _radio.ScrollToItemByIndex(index);
     }
     
-    this.selectItem = function (item) {
+    this.SelectItem = function (item) {
         return _radio.SelectItem(item);
     }
     
-    this.selectItemByIndex = function (index, scroll) {
+    this.SelectItemByIndex = function (index, scroll) {
         _radio.SelectItemByIndex(index, scroll);
     }
     
-    this.setOnSelect = function (onSelect) {
+    this.SetOnSelect = function (onSelect) {
         return _radio.SetOnSelect(onSelect);
     }
     
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
     
-    this.setList = function (list, delim) {
+    this.SetList = function (list, delim) {
         return _radio.SetList(list, delim);
     }
     
-    this.setMargins = function (left, top, right, bottom) {
+    this.SetMargins = function (left, top, right, bottom) {
         _radio.SetMargins(left, top, right, bottom);
     }
     
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         _radio.SetPosition(left, top, width, height, options);
     }
     
-    this.setSize = function (width, height) {
+    this.SetSize = function (width, height) {
         _radio.SetSize(width, height);
     }
     
-    this.setScale = function (x, y) {
+    this.SetScale = function (x, y) {
         _radio.SetScale(x, y);
     }
     
-    this.showContainer = function () {
+    this.ShowContainer = function () {
         _radio.Show();
     }
     
-    this.hideContainer = function () {
+    this.HideContainer = function () {
         _radio.Hide();
     }
     
-    this.getLength = function () {
+    this.GetLength = function () {
         return _radio.GetLength();
     }
     
-    this.insertItem = function (index, title, body, image) {
+    this.InsertItem = function (index, title, body, image) {
         _radio.InsertItem(index, title, body, image);
     }
     
-    this.isVisible = function () {
+    this.IsVisible = function () {
         return _radio.IsVisible();
     }
     
-    this.isEnabled = function () {
+    this.IsEnabled = function () {
         return _radio.IsEnabled();
     }
-    
+
     
     addRadioUi(list, width, height, parentLay)
 }
@@ -1472,14 +1473,14 @@ var dlgA;
 
 function dlgBarObject(title, text, dlgOptions, noAction, yesAction) {
     
-    this.hideObj = function () {
+    this.Hide = function () {
         dlgA.Hide();
     }
     
-    this.setOnCancel = function (onCancel) {
+    this.SetOnCancel = function (onCancel) {
         this.onCancel = onCancel;
     }
-    this.setOnAction = function (onAction) {
+    this.SetOnAction = function (onAction) {
         this.onAction = onAction;
     }
     showDialogBar(title, text, dlgOptions, noAction, yesAction, this)
@@ -1567,19 +1568,19 @@ var snackUi, snackContainer;
 
 function SnackBarObject(text, btnAction, width, alignment) {
     
-    this.setRawAlignment = function (top) {
+    this.SetRawAlignment = function (top) {
         this.top = top;
     }
     
-    this.setTimeout = function (timeout) {
+    this.SetTimeout = function (timeout) {
         this.timeout = timeout;
     }
     
-    this.setOnAction = function (onTouch) {
+    this.SetOnAction = function (onTouch) {
         this.onTouch = onTouch;
     }
     
-    this.showObj = function () {
+    this.Show = function () {
         drawSnackBarUi(text, btnAction, width, alignment, this.onTouch, this.timeout, this.top);
     }
     
@@ -1649,32 +1650,36 @@ var _seekBar;
 
 function seekBarObject(value, range, width, parentLay) {
     
-    this.setVisibility = function (mode) {
+    this.SetVisibility = function (mode) {
         _seekBar.SetVisibility(mode)
     }
     
-    this.setSize = function (width, height, options) {
+    this.SetSize = function (width, height, options) {
         _seekBar.SetSize(width, height, options)
     }
-    this.setPosition = function (left, top, width, height, options) {
+    this.SetPosition = function (left, top, width, height, options) {
         _seekBar.SetPosition(left, top, width, height, options)
     }
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         _seekBar.SetOnTouch(onTouch)
     }
-    this.getValue = function () {
+    
+    this.SetValue = function (value){
+        _seekBar.SetValue(value);
+    }
+    this.GetValue = function () {
         return _seekBar.GetValue();
     }
-    this.isVisible = function () {
+    this.IsVisible = function () {
         return _seekBar.IsVisible();
     }
-    this.animate = function (type, callback, time) {
+    this.Animate = function (type, callback, time) {
         _seekBar.Animate(type, callback, time)
     }
-    this.goneComponent = function () {
+    this.Gone = function () {
         _seekBar.Gone();
     }
-    this.setDecimals = function (decimals) {
+    this.SetDecimals = function (decimals) {
         _seekBar.SetDecimals(decimals)
     }
     
@@ -1699,13 +1704,13 @@ var _sSheet;
 
 function slideSheetObject(sheetLayout, width, options) {
     
-    this.dismissSheet = function () {
+    this.Dismiss = function () {
         _sSheet.Animate('SlideToRight', function () {
             app.DestroyLayout(slideSheetContainer);
         }, 210);
     }
     
-    this.showSheet = function () {
+    this.Show = function () {
         drawSlideSheet(sheetLayout, width, options, this);
     }
     
@@ -1733,10 +1738,10 @@ function drawSlideSheet(sheetLayout, width, options, that) {
 
 
 function bottomSheetObject(sheetLayout, height, options) {
-    this.dismissSheet = function () {
+    this.Dismiss = function () {
         dismissBSheet();
     }
-    this.showSheet = function () {
+    this.Show = function () {
         drawBottomSheet(sheetLayout, height, options);
     }
 }
@@ -1768,7 +1773,7 @@ function dismissBSheet() {
 }
 
 function menuObj(menuType, list, position) {
-    this.setOnTouch = function (onTouch) {
+    this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
     }
     switch (menuType) {
@@ -1877,13 +1882,13 @@ function drawMenuWithIcon(menuType, list, position, menuFunc) {
 
 
 function navDrawerObject(drawerLayout, side, width) {
-    this.openDrawer = function (side) {
+    this.OpenDrawer = function (side) {
         app.OpenDrawer(side)
     }
-    this.closeDrawer = function (side) {
+    this.CloseDrawer = function (side) {
         app.CloseDrawer(side)
     }
-    this.removeDrawer = function (side) {
+    this.RemoveDrawer = function (side) {
         
     }
     drawNavDrawer(drawerLayout, side, width, this)
@@ -1908,11 +1913,11 @@ var bottomBarContainer;
 
 function bottomBarObject(barPropsInjson, parentLay) {
     
-    this.setOnTouch = function (onTouchFunc) {
+    this.SetOnTouch = function (onTouchFunc) {
         this.onTouchFunc = onTouchFunc;
     }
     
-    this.setRawAdjustment = function (distanceFromTop) {
+    this.SetRawAdjustment = function (distanceFromTop) {
         if (layoutInfo.toLowerCase().includes('linear')) {
             bottomBarContainer.SetMargins(0, distanceFromTop);
         } else {

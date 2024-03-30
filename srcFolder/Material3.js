@@ -142,6 +142,9 @@ const ui = {
         return new chipObject(type, text, icon, width, height, parentLay);
     },
     
+    _addIconButton: function (iconName, parentLay) {
+        return new _iconButtonObject(iconName, parentLay)
+    },
     
     
     
@@ -318,6 +321,26 @@ function setM3BaseColors() {
 
 //------------------------------------------------------------Actual Components
 
+// The Icon Code Should Be Used For Help For Creating Other Components
+
+let _iconButton;
+function _iconButtonObject(iconName, parentLay){
+    
+    _drawIconButton(iconName, parentLay, this)
+}
+
+
+function _drawIconButton(iconName, parentLay, iconObj){
+    _iconColor = stateColor(md_theme_light_background,md_theme_dark_background);
+    radius = 50/100 * 120;
+    
+    _iconButton = app.AddButton(parentLay, iconName, null, null, 'Custom,Lego');
+    _iconButton.SetSize(120, 120, 'px')
+    
+    _iconButton.SetStyle(_iconColor,_iconColor,radius,null,null,0);
+    _iconButton.SetFontFile(defaultIcons)
+}
+
 
 
 let emptyDlg;
@@ -403,6 +426,8 @@ function appBarObject(title, leadingIcon, controlIcons, parentLay) {
     drawAppBar(title, leadingIcon, controlIcons, parentLay, this)
 }
 
+//144 w
+//72 ts
 
 
 function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
@@ -416,34 +441,40 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     barUi = app.CreateLayout('Linear', 'Horizontal,Left');
     barCardLay.AddChild(barUi);
     
-    _leftIcon = app.AddText(barUi, leadingIcon, null, null, 'Left');
-    _leftIcon.SetMargins(48, 24, pxToDpConversion(DW()) - 190, null, 'px')
-    _leftIcon.SetPadding(12, 12, null, null, 'dp')
-    _leftIcon.SetTextSize(24, 'dp')
-    _leftIcon.SetSize(48, 48, 'dp')
+    _iconColor = stateColor(md_theme_light_background,md_theme_dark_background);
+    _IconRadius = 50/100 * 120;
+    
+    _leftIcon = app.AddButton(barUi, leadingIcon, null, null, 'Custom, Lego');
+    _leftIcon.SetSize(144, 144, 'px');
+    _leftIcon.SetStyle(_iconColor,_iconColor, _IconRadius, null,null, 0)
+    _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
+    
     _leftIcon.SetFontFile(defaultIcons)
+    _leftIcon.SetTextSize(72, 'px');
     _leftIcon.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
-    _leftIcon.SetOnTouchDown(function () {
+    _leftIcon.SetOnTouch(function () {
         if (appBarObj.onTouch) {
             appBarObj.onTouch(leadingIcon)
         }
     })
     
-    _title = app.AddText(barUi, title, -1, -1, 'Center,Wrap');
+    _title = app.AddText(barUi, title, -1, -1, 'Wrap');
     _title.SetMargins(null, 24, null, 24, 'px')
+
     _title.SetTextSize(28, 'dp');
     _title.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
     
     
     
-    _rightIcon = app.AddText(barUi, controlIcons, null, null, 'Left')
+    _rightIcon = app.AddButton(barUi, controlIcons, null, null, 'Custom, Lego');
     _rightIcon.SetMargins(pxToDpConversion(DW()) - 190, 24, 30, null, 'px')
-    _rightIcon.SetPadding(12, 12, null, null, 'dp')
-    _rightIcon.SetSize(48, 48, 'dp')
-    _rightIcon.SetTextSize(24, 'dp');
+    _rightIcon.SetStyle(_iconColor,_iconColor, _IconRadius, null,null, 0)
+    _rightIcon.SetSize(144, 144, 'px');
+    _rightIcon.SetTextSize(72, 'px');
+    
     _rightIcon.SetFontFile(defaultIcons)
     _rightIcon.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
-    _rightIcon.SetOnTouchDown(function () {
+    _rightIcon.SetOnTouch(function () {
         if (appBarObj.onTouch) {
             appBarObj.onTouch(controlIcons)
         }
@@ -464,7 +495,7 @@ function sliderObject(value, range, width, layout) {
         
     }
     
-    drawSlider(value, range, width, layout)
+    drawSlider(value, range, width, layout);
 }
 
 function drawSlider(value, range, width, layout) {

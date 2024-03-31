@@ -39,10 +39,10 @@ function OnStart(){
 
     app.CreateMaterial3('dark','outline','dflt');
     
-    lay = ui.addLayout('Linear','FillXY')
+    lay = ui.createLayout('Linear','FillXY')
     
     progressLoader = ui.addProgressBar('linear',0.85,lay)
-    progressLoader.setMargins(null,0.4)
+    progressLoader.SetMargins(null,0.4)
     
     app.AddLayout(lay)
 }

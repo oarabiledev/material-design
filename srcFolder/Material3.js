@@ -15,7 +15,7 @@
 
 
 let M3Config = 'M3Config';
-const pluginVersion = 'v0.80';
+const pluginVersion = 'v0.79b1';
 
 let defaultIcons, theme, iconFill;
 
@@ -27,7 +27,7 @@ let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
 const isThisAppFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
 
 const _materialPath = __materialDebug ? '' : app.GetPrivateFolder('Plugins') + '/material3/';
-let defaultFont = _materialPath + 'Roboto.ttf';
+let defaultFont = _materialPath + 'uxFonts/Text/Roboto-Regular.ttf';
 
 
 const warningColor = "<div style='color:#FF7900'>";
@@ -78,9 +78,14 @@ const ui = {
     },
     
     //------------------------------------------------------------------App Bars
-    addAppBar: function (title, leadingIcon, controlIcons, parentLay) {
+    addCenterAlignedAppBar: function (title, leadingIcon, controlIcons, parentLay) {
         return new appBarObject(title, leadingIcon, controlIcons, parentLay);
     },
+    
+    addSmallAppBar: function(title, leadingIcon, controlIcons, parentLay){
+        return new smallAppBarObject(title, leadingIcon, controlIcons, parentLay);
+    },
+    
     addBottomAppBar: function (barPropsInjson, parentLayout) {
         return new bottomBarObject(barPropsInjson, parentLayout);
     },
@@ -320,6 +325,15 @@ function setM3BaseColors() {
 
 
 //------------------------------------------------------------Actual Components
+
+function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
+    drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, this)
+}
+
+function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBarObj){
+    
+    
+}
 
 // The Icon Code Should Be Used For Help For Creating Other Components
 

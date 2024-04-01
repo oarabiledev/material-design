@@ -15,7 +15,7 @@
 
 
 let M3Config = 'M3Config';
-const pluginVersion = 'v0.79b1';
+const pluginVersion = 'v0.80';
 
 let defaultIcons, theme, iconFill;
 
@@ -27,7 +27,7 @@ let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
 const isThisAppFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
 
 const _materialPath = __materialDebug ? '' : app.GetPrivateFolder('Plugins') + '/material3/';
-let defaultFont = _materialPath + 'uxFonts/Text/Roboto-Regular.ttf';
+let defaultFont = _materialPath + 'Roboto.ttf';
 
 
 const warningColor = "<div style='color:#FF7900'>";
@@ -197,6 +197,11 @@ const ui = {
     
     
     //---------------------------------------------------------------Text Fields
+    
+    addText: function(text, width, height, options, parentLay){
+        return new textObject(text, width, height, options, parentLay)
+    },
+    
     addTextField: function (type, width, height, hint, options, labeled, parentLay) {
         return new inputObj(type, width, height, hint, options, labeled, parentLay);
     },
@@ -325,6 +330,199 @@ function setM3BaseColors() {
 
 
 //------------------------------------------------------------Actual Components
+let _text;
+function textObject(text, width, height, options, parentLay){
+    this.Animate = function(type,callback, time){
+        _text.Animate(type,callback, time);
+    }
+    
+    this.Batch = function (props) {
+        _text.Batch(props);
+    }
+    
+    this.ClearFocus = function(){
+        _text.ClearFocus();
+    }
+    this.Focus = function(){
+        _text.Focus();
+    }
+    
+    this.GetHtml = function(){
+        return _text.GetHtml();
+    }
+    
+    this.GetLineCount = function(){
+        return _text.GetLineCount();
+    }
+    
+    this.GetLineStart = function (line){
+        return _text.GetLineStart(line);
+    }
+    
+    this.GetLineTop = function(line){
+        return _text.GetLineTop(line);
+    }
+    
+    this.GetMaxLines = function(){
+        return _text.GetMaxLines();
+    }
+    
+    this.GetText = function(){
+        return _text.GetText();
+    }
+    
+    this.GetTextSize = function(mode){
+        return _text.GetTextSize(mode);
+    }
+    
+    this.GetTop = function(){
+        return _text.GetTop();
+    }
+    
+    this.GetVisibility = function(){
+        return _text.GetVisibility();
+    }
+    
+    this.GetWidth = function(options){
+        return _text.GetWidth(options);
+    }
+    
+    this.Gone = function(){
+        _text.Gone();
+    }
+    
+    this.Hide = function(){
+        _text.Hide();
+    }
+    
+    this.IsEnabled = function(){
+        return _text.IsEnabled();
+    }
+    
+    this.IsOverlap = function(obj, depth){
+        return _text.IsOverlap(obj, depth);
+    }
+    
+    this.Resize = function(){
+        _text.Resize();
+    }
+    
+    this.SetBackAlpha = function(alpha){
+        text.SetBackAlpha(alpha);
+    }
+    
+    this.SetBackColor = function(color){
+        _text.SetBackColor(color);
+    }
+    
+    this.SetBackGradient = function (color1, color2, color3, options){
+        _text.SetBackGradient(color1, color2, color3, options);
+    }
+    
+    this.SetBackGradientRadial = function( x, y, radius, color1, color2, color3, options){
+        _text.SetBackGradientRadial( x, y, radius, color1, color2, color3, options);
+    }
+    
+    
+    this.SetBackground = function(file, options){
+        _text.SetBackground(file, options);
+    }
+    
+    this.SetColorFilter = function(color, mode){
+        _text.SetColorFilter(color, mode);
+    }
+    
+    this.SetDescription = function(desc){
+        _text.SetDescription(desc);
+    }
+    
+    this.SetEllipsize = function(mode){
+        _text.SetEllipsize(mode);
+    }
+    
+    this.SetEnabled = function(bool){
+        _text.SetEnabled(bool);
+    }
+    
+    this.SetHtml = function(html){
+        _text.SetHtml(html);
+    }
+    
+    this.SetLog = function(maxlines){
+        _text.SetLog(maxlines);
+    }
+    
+    this.SetMargins = function(left, top, right, bottom, mode){
+        _text.SetMargins(left, top, right, bottom, mode);
+    }
+    
+    this.SetPosition = function(left, top, width, height, options){
+        _text.SetPosition(left, top, width, height, options);
+    }
+    
+    this.SetPadding = function(left, top, right, bottom, mode){
+        _text.SetPadding(left, top, right, bottom, mode);
+    }
+    this.SetOnTouch = function(onTouch){
+        _text.SetOnTouch(onTouch);
+    }
+    
+    this.SetOnTouchDown = function(onTouchDown){
+        _text.SetOnTouchDown(onTouchDown);
+    }
+    
+    this.SetOnTouchMove = function(onTouchMove){
+        _text.SetOnTouchMove(onTouchMove);
+    }
+    
+    this.SetOnTouchUp = function(onTouchUp){
+        _text.SetOnTouchUp(onTouchUp);
+    }
+    
+    this.SetOnLongTouch = function(onLongTouch){
+        _text.SetOnLongTouch(onLongTouch);
+    }
+    
+    this.SetScale = function(x, y){
+        _text.SetScale(x,y);
+    }
+    
+    this.SetText = function (text){
+        _text.SetText(text);
+    }
+    
+    this.SetTextColor = function(color){
+        _text.SetTextColor(color);
+    }
+    
+    this.SetTextSize = function(size, mode){
+        _text.SetTextSize(size, mode);
+    }
+    
+    this.SetTextShadow = function(radius, dx, dy, color){
+        _text.SetTextShadow(radius, dx, dy, color);
+    }
+    
+    this.SetVisibility = function(mode){
+        _text.SetVisibility(mode);
+    }
+    
+    this.Show = function(){
+        _text.Show();
+    }
+    
+    this.Tween = function( target, duration, type, repeat, yoyo, callback){
+        _text.Tween( target, duration, type, repeat, yoyo, callback)
+    }
+    
+    drawText(text, width, height, options, parentLay, this);
+}
+
+function drawText(text, width, height, options, parentLay, textObj){
+    _text = app.AddText(parentLay, text, width, height, options);
+    _text.SetFontFile(defaultFont);
+}
+
 
 function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
     drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, this)

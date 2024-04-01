@@ -1,36 +1,38 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
 version 0.80
------------- Currently Being Worked On -----------------
+------------ Working Towards v0.80-----------------
 
-//This Update May Break Material Apps
+//This Update (v0.79 - onwards) Will Break Material Apps
 // What To Expect:
 
-=> Major Changes To app.CreateMaterial3() function
-=> Changed Component Methods To Follow Ds Syntax
-=> Add All Dialog Types
-=> Add List Component
-=> Add Tabs Component
 
+=> Add List Component
 => Add Switch Settings
 => Add Radio Settings
 => Add CheckBox Component
 
 => Adding All Top App Bars
-=> Adding All Search Bae Types
 => Adding Extended FAB
 => Adding Extended FAb To Normal FAB Switch On Scroll
 => Adding Bottom Navigation
-
-=> Completing Chips
-=> Complete TextFields
 => Complete Sliders
 
+------------------------------------------------------------------------------------------------------------------------------
+version 0.79b2 [TO Be Released On 7th April]
+
+=> All Dialogs
+=> Tabs Component
+=> Text Components
+=> All TextFiels Components
+=> All SearchBars 
+=> Completed Chips
+=> Empty Menu Type
+=> Chips Complete
 => Faster Load Time
 => Improved Fail Safety
 => Fix BottomAppBar
-=> Iron Out OutStanding Issues
-
+=> Add More Documentation And Samples
 
 --------------------------------------------------------------------------------------------------------------------------------
 version 0.79b1

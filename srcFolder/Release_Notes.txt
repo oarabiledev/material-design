@@ -7,10 +7,17 @@ https://discord.com/channels/985908716060684388/986194816813658132/1225913718731
 //Thanks To Symbroson for the fix.
 
 
+--- FIXED COMPONENTS
+Elevated Button
+Filled Button
+Filled Tonal Button
+Outlined Button                                                                                                          ✅
+Text Button                                                                                                              ✅
+
 ------------------------------------------------------------------------------------------------------------------------------
 version 0.80 [To Be Released Soon]
 
-=> All Dialogs ✅
+=> All Dialogs                                                                                                           ✅
 => Tabs Component
 => Add List Component
 => Add Switch Settings
@@ -24,7 +31,7 @@ version 0.80 [To Be Released Soon]
 => Adding Bottom Navigation
 => Complete Sliders
 => All TextFiels Components
-=> All SearchBars ✅
+=> All SearchBars                                                                                                        ✅
 => Completed Chips
 => Empty Menu Type
 => Chips Complete
@@ -33,7 +40,7 @@ version 0.80 [To Be Released Soon]
 => Add More Documentation And Samples ✅
 
 --------------------------------------------------------------------------------------------------------------------------------
-version 0.79b1
+version 0.79b1                                                                                                 ALL DONE ✅
 
 => Removed Partial FallBack Fix Temporarily
 => Fixed Issue With cfg.Node and cfg.Fast due to fetch Api usage, now using
@@ -49,7 +56,7 @@ default Ds app.HttpRequest() Api.
 => Updated Documentation look.
 
 ------------------------------------------------------------------------------------------------------------------------------------
-version 0.79
+version 0.79                                                                                                   ALL DONE ✅
 
 => Added FallBack Option For Undefined Or Unproperly referenced appTheme.json file
 => Fixed cfg.Node and cfg.Fast Issues, due to use of fetch API, now use app.HttpRequest()

@@ -1,38 +1,36 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
-version 0.80
------------- Working Towards v0.80-----------------
+:: STALLED DEVELOPMENT IMMEDIATE ISSUE TO BE RESOLVED ::
+- Avoiding StackOverFlow Error, every component has to be changed to avoid this issue, by using this fix:
+https://discord.com/channels/985908716060684388/986194816813658132/1225913718731440250
 
-//This Update (v0.79 - onwards) Will Break Material Apps
-// What To Expect:
+//Thanks To Symbroson for the fix.
 
 
+------------------------------------------------------------------------------------------------------------------------------
+version 0.80 [To Be Released Soon]
+
+=> All Dialogs ✅
+=> Tabs Component
 => Add List Component
 => Add Switch Settings
 => Add Radio Settings
 => Add CheckBox Component
-
+=> Text Components
 => Adding All Top App Bars
 => Adding Extended FAB
+
 => Adding Extended FAb To Normal FAB Switch On Scroll
 => Adding Bottom Navigation
 => Complete Sliders
-
-------------------------------------------------------------------------------------------------------------------------------
-version 0.79b2 [TO Be Released On 7th April]
-
-=> All Dialogs
-=> Tabs Component
-=> Text Components
 => All TextFiels Components
-=> All SearchBars 
+=> All SearchBars ✅
 => Completed Chips
 => Empty Menu Type
 => Chips Complete
-=> Faster Load Time
 => Improved Fail Safety
 => Fix BottomAppBar
-=> Add More Documentation And Samples
+=> Add More Documentation And Samples ✅
 
 --------------------------------------------------------------------------------------------------------------------------------
 version 0.79b1

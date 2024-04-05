@@ -33,6 +33,7 @@ let defaultFont = _materialPath + 'Roboto.ttf';
 const warningColor = "<div style='color:#FF7900'>";
 
 
+
 const ui = {
     
     //-----------------------------------------------------------------Top Level
@@ -241,6 +242,10 @@ const stateColor = (x, y) => {
     if (theme === 'light') return x;
     else return y;
 };
+
+const backgroundColor = () =>{
+    return md_theme_dark_background;
+}
 
 
 function setM3BaseColors() {
@@ -1659,43 +1664,41 @@ function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledTonal
     });
 }
 
-var outlinedButton;
-
 function outlinedButtonObject(btnName, width, height, icon, parentLay) {
     // Button Methods :::
-    
-        this.Animate = function (type, callback, time) {
-        outlinedButton.Animate(type, callback, time);
+    let _outlinedButton;
+    this.Animate = function (type, callback, time) {
+        _outlinedButton.Animate(type, callback, time);
     }
     this.SetScale = function (x, y) {
-        outlinedButton.SetScale(x, y);
+        _outlinedButton.SetScale(x, y);
     }
     this.SetVisibility = function (mode) {
-        outlinedButton.SetVisibility(mode);
+        _outlinedButton.SetVisibility(mode);
     }
     this.SetEnabled = function (enableBool) {
-        outlinedButton.SetEnabled(enableBool);
+        _outlinedButton.SetEnabled(enableBool);
     }
     this.SetEllipsize = function (mode) {
-        outlinedButton.SetEllipsize(mode);
+        _outlinedButton.SetEllipsize(mode);
     }
     this.SetDescription = function (desc) {
-        outlinedButton.SetDescription(desc);
+        _outlinedButton.SetDescription(desc);
     }
     this.SetHtml = function (str) {
-        outlinedButton.SetHtml(str);
+        _outlinedButton.SetHtml(str);
     }
     this.SetText = function (text) {
-        outlinedButton.SetText(text);
+        _outlinedButton.SetText(text);
     }
     this.SetTextSize = function (size, mode) {
-        outlinedButton.SetTextSize(size, mode);
+        _outlinedButton.SetTextSize(size, mode);
     }
     this.SetMargins = function (left, top, right, bottom, mode) {
-        outlinedButton.SetMargins(left, top, right, bottom, mode);
+        _outlinedButton.SetMargins(left, top, right, bottom, mode);
     }
     this.SetPadding = function (left, top, right, bottom, mode) {
-        outlinedButton.SetPadding(left, top, right, bottom, mode);
+        _outlinedButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
@@ -1704,49 +1707,49 @@ function outlinedButtonObject(btnName, width, height, icon, parentLay) {
         this.onLongTouch = onLongTouch;
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
-        outlinedButton.Tween(target, duration, type, repeat, yoyo, callback);
+        _outlinedButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
     this.Focus = function () {
-        outlinedButton.Focus();
+        _outlinedButton.Focus();
     }
     this.Gone = function () {
-        outlinedButton.Gone();
+        _outlinedButton.Gone();
     }
     this.Show = function () {
-        outlinedButton.Show();
+        _outlinedButton.Show();
     }
     this.Hide = function () {
-        outlinedButton.Hide();
+        _outlinedButton.Hide();
     }
 
     
     //Call It 
-    drawOutlinedBtn(btnName, width, height, icon, parentLay, this);
+    _outlinedButton = drawOutlinedBtn(btnName, width, height, icon, parentLay, this);
 }
 
 function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
-    outlinedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
-    outlinedButton.SetFontFile(defaultFont)
-    outlinedButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
+    let _outlinedButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
+    _outlinedButton.SetFontFile(defaultFont)
+    _outlinedButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
     
     if (icon === null) {
-        outlinedButton.SetText(btnName);
-    } else outlinedButton.SetText(`[fa-${icon}]` + ' ' + btnName);
+        _outlinedButton.SetText(btnName);
+    } else _outlinedButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     
-    outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20, strokeClrOutlined(), 1, 0);
+    _outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20, strokeClrOutlined(), 1, 0);
     
-    outlinedButton.SetOnTouch(() => {
+    _outlinedButton.SetOnTouch(() => {
         if (outlineObj.onTouch) {
             outlineObj.onTouch()
         }
     });
     
-    outlinedButton.SetOnLongTouch(() => {
-        if (outlineObj.onLongTouch) {
+    _outlinedButton.SetOnLongTouch(() => {
+        if (onLongTouch) {
             outlineObj.onLongTouch();
         }
     });
-    
+    return _outlinedButton;
 }
 
 function clrOutlined() {
@@ -1758,44 +1761,45 @@ function strokeClrOutlined() {
 }
 
 
-var textButton;
-
-
 function textButtonObject(btnName, width, height, icon, parentLay) {
-    // Button Methods :::
     
-        this.Animate = function (type, callback, time) {
-        textButton.Animate(type, callback, time);
+    let _textButton;
+    // Button Methods :::
+    this.SetMargins = function (left, top, right, bottom, mode) {
+        _textButton.SetMargins(left, top, right, bottom, mode);
     }
+        this.Animate = function (type, callback, time) {
+        _textButton.Animate(type, callback, time);
+    }
+    
+    
     this.SetScale = function (x, y) {
-        textButton.SetScale(x, y);
+        _textButton.SetScale(x, y);
     }
     this.SetVisibility = function (mode) {
-        textButton.SetVisibility(mode);
+        _textButton.SetVisibility(mode);
     }
     this.SetEnabled = function (enableBool) {
-        textButton.SetEnabled(enableBool);
+        _textButton.SetEnabled(enableBool);
     }
     this.SetEllipsize = function (mode) {
-        textButton.SetEllipsize(mode);
+        _textButton.SetEllipsize(mode);
     }
     this.SetDescription = function (desc) {
-        textButton.SetDescription(desc);
+        _textButton.SetDescription(desc);
     }
     this.SetHtml = function (str) {
-        textButton.SetHtml(str);
+        _textButton.SetHtml(str);
     }
     this.SetText = function (text) {
-        textButton.SetText(text);
+        _textButton.SetText(text);
     }
     this.SetTextSize = function (size, mode) {
-        textButton.SetTextSize(size, mode);
+        _textButton.SetTextSize(size, mode);
     }
-    this.SetMargins = function (left, top, right, bottom, mode) {
-        textButton.SetMargins(left, top, right, bottom, mode);
-    }
+    
     this.SetPadding = function (left, top, right, bottom, mode) {
-        textButton.SetPadding(left, top, right, bottom, mode);
+        _textButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
         this.onTouch = onTouch;
@@ -1804,49 +1808,51 @@ function textButtonObject(btnName, width, height, icon, parentLay) {
         this.onLongTouch = onLongTouch;
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
-        textButton.Tween(target, duration, type, repeat, yoyo, callback);
+        _textButton.Tween(target, duration, type, repeat, yoyo, callback);
     }
     this.Focus = function () {
-        textButton.Focus();
+        _textButton.Focus();
     }
     this.Gone = function () {
-        textButton.Gone();
+        _textButton.Gone();
     }
     this.Show = function () {
-        textButton.Show();
+        _textButton.Show();
     }
     
     this.Hide = function (){
-        textButton.Hide();
+        _textButton.Hide();
     }
     
     // Call It
-    drawTextBtn(btnName, width, height, icon, parentLay, this);
+    _textButton = drawTextBtn(btnName, width, height, icon, parentLay, this);
     
 }
 
 function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
-    textButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
-    textButton.SetFontFile(defaultFont)
-    textButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
+    let _textButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
+    _textButton.SetFontFile(defaultFont)
+    _textButton.SetTextColor(stateColor(md_theme_light_primary, md_theme_dark_primary));
     
     if (icon === null) {
-        textButton.SetText(btnName);
-    } else textButton.SetText(`[fa-${icon}]` + ' ' + btnName);
+        _textButton.SetText(btnName);
+    } else _textButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     
-    textButton.SetStyle(backgroundColor(), backgroundColor(), 20, null, null, 0);
+    _textButton.SetStyle(backgroundColor(), backgroundColor(), 20, null, null, 0);
     
-    textButton.SetOnTouch(() => {
+    _textButton.SetOnTouch(() => {
         if (textBtnObj.onTouch) {
             textBtnObj.onTouch()
         }
     });
     
-    textButton.SetOnLongTouch(() => {
+    _textButton.SetOnLongTouch(() => {
         if (textBtnObj.onLongTouch) {
             textBtnObj.onLongTouch();
         }
     });
+    
+    return _textButton;
 }
 
 

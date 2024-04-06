@@ -1,19 +1,5 @@
 -------------------------------------------------------------------------------------------------------------------------------
-
-:: STALLED DEVELOPMENT IMMEDIATE ISSUE TO BE RESOLVED ::
-- Avoiding StackOverFlow Error, every component has to be changed to avoid this issue, by using this fix:
-https://discord.com/channels/985908716060684388/986194816813658132/1225913718731440250
-
-//Thanks To Symbroson for the fix.
-
-
---- FIXED COMPONENTS
-Elevated Button
-Filled Button
-Filled Tonal Button
-Outlined Button                                                                                                          ✅
-Text Button                                                                                                              ✅
-
+MATERIAL 3 RELEASE NOTES 
 ------------------------------------------------------------------------------------------------------------------------------
 version 0.80 [To Be Released Soon]
 
@@ -37,7 +23,7 @@ version 0.80 [To Be Released Soon]
 => Chips Complete
 => Improved Fail Safety
 => Fix BottomAppBar
-=> Add More Documentation And Samples ✅
+=> Add More Documentation And Samples                                                                                    ✅
 
 --------------------------------------------------------------------------------------------------------------------------------
 version 0.79b1                                                                                                 ALL DONE ✅

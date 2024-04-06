@@ -439,10 +439,9 @@ function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBa
 //------------------------------------------------------------Actual Components
 
 
-
+let _search, _searchInput;
 
 function searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout){
-    let _search,_searchInput;
     this.Animate = function(type, callback, time){
         _search.Animate(type, callback, time);
     }
@@ -551,7 +550,7 @@ function searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout){
         _search.SetMargins(left, top, right, bottom, mode);
     }
     if (parentLayout){
-        let _search = drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, this);
+    drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, this);
     }
     else warnDeveloper('You didnt add a parent to the search component','Add parent To SearchBar');
 }
@@ -619,7 +618,7 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
     
 
     function drawSearchWithIcon() {
-        let _search,_searchInput;
+        
         let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
@@ -686,12 +685,10 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
                 searchObj.onTouch(trailingIcon);
             }
         });
-        return _search;
-        return _searchInput;
+        
     }
     
     function drawSearchWithAvatar() {
-        let _search,_searchInput;
         let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
@@ -759,12 +756,11 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
                 searchObj.onTouch('avatar');
             }
         });
-        return _search;
-        return _searchInput;
+        
     }
     
     function drawSearchWithTwoIcons(firstTrailingIcon, secondTrailingIcon) {
-        let _search,_searchInput;
+        
         let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
@@ -844,12 +840,11 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
                 searchObj.onTouch(secondTrailingIcon);
             }
         });
-        return _search;
-        return _searchInput;
+        
     }
     
     function drawSearchWithAvatarIcon(firstTrailingIcon, secondTrailingIcon) {
-        let _search,_searchInput;
+        
         let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
         let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
@@ -929,9 +924,9 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
                 searchObj.onTouch('avatar');
             }
         });
+     
     }
-    return _search;
-    return _searchInput;
+    
 }
 
 

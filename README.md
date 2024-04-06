@@ -94,7 +94,7 @@ def OnStart():
     progressLoader.SetValue(79)
     app.AddLayout(lay)
 ```
-
+##
 
 ## TOP CONTRIBUTORS 🏆
 
@@ -116,7 +116,7 @@ __press their links to visit profiles__
 ### 3. Alan H 🥉
 
 
-[Provided Structural Components For Material Components & Advised On Following M3 Rules]()
+[Provided Structural Components For Material Components]()
 
 
 ### 4. CaptainStarBuck 🥉

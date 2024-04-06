@@ -5,32 +5,25 @@
 Here is the implementation of Material Design 3 for Droidscript,
 For those who dont know Droidscript is a JS Framework that allows
 Js developers to easily and speedily release apps for the android
-Os and many other OS's in the future via the react based Hybrid UI
-Enjine
-or Enjine IO.
-Still unclear, remember I am not a part of the official Ds Team.
-This plugin will also have intentions to be exportable as Hybrid 
-is.
+Os.
 
-I would like to give special thanks, this project relies on the 
-following community plugins and codebases:
+You can go ahead and install the plugin by following the releases 
+tab or go to the DroidScript Justins Store::
 
-- DroidScript 
-_[DroidScript Javascript IDE](https://droidscript.org/)_
-_[https://github.com/DroidScript](https://github.com/DroidScript)_
+[Material3 Plugin](https://ds.justplayer.de/uploads/material3)
 
-- Symbroson (Co-Dev at Droidscript)
-_[https://github.com/alex-Symbroson](https://github.com/alex-Symbroson)_
+The release does not favour use of Node and Python, however in the 
+next release both environments will get their fair amount of 
+documentation.
 
 
-- Hamac Jumar (MUI 2 & Hybrid Ui/AKA Enjine IO Dev)
-_[https://github.com/hamacjumar](https://github.com/hamacjumar)_
-
-
+##
 Here Is A Code Snippet For The Impatient::
 
-```javascript
+### Working With Standard Ds && Cfg.Fst
 
+```javascript
+cfg.Fast
 cfg.MUI
 app.LoadPlugin('Material3')
 
@@ -43,21 +36,104 @@ function OnStart(){
     
     progressLoader = ui.addProgressBar('linear',0.85,lay)
     progressLoader.SetMargins(null,0.4)
-    
+    progressLoader.SetValue(79)
+
     app.AddLayout(lay)
 }
 
 ```
 
+### Working With NodeJs Environment
 
-__CONTRIBUTING DETAILS__
+```javascript
+
+//Configure app to use NodeJS as the main scripting engine
+//giving you the full power of Node directly in your app!
+cfg.Node
+
+//Configure for Material UI and light theme.
+cfg.MUI, cfg.Light
+
+//Make sure the required node modules are installed to ide.
+//(This downloads modules from https://www.npmjs.com).
+//ide.AddModule( "moment" )
+
+var ui = require("Material.js")
+//and that
+
+//Called when application is started.
+function OnStart()
+{   
+   
+    app.CreateMaterial3()
+    lay = ui.createLayout('Linear','FillXY',1,1)
+    
+    progressLoader = ui.addProgressBar('linear',0.85,lay)
+    progressLoader.SetMargins(null,0.4)
+    progressLoader.SetValue(79)
+    
+    app.AddLayout(lay)
+}
+```
+
+### Working In A Python Environment
+
+```python
+import javascript
+from native import app
+from browser import window
 
 
-When implementing ui objects refer to components from [Material Design 3](https://m3.material.io/components)
+def OnStart():
+    javascript.import_js('Material.js',alias='ui')
+    app.CreateMaterial3()
+    lay = ui.createLayout('Linear','FillXY')
+    
+    progressLoader = ui.addProgressBar('linear',0.85,lay)
+    progressLoader.SetMargins(None,0.4)
+    progressLoader.SetValue(79)
+    app.AddLayout(lay)
+```
 
-Please remember your code must document itself, and also please be respectful. 👻
 
-__My Contacts__
+## TOP CONTRIBUTORS 🏆
+
+__press their links to visit profiles__
+
+
+### 1. Symbrsom 🥇
+
+
+[Error Fixing, Helped W Making Plugin Docs,Providing Better Way To Write Code](https://github.com/alex-Symbroson)
+
+
+### 2. Hamac Jumar 🥈
+
+
+[Material3 Components Rely On Previous Work On Material2](https://github.com/hamacjumar)
+
+  
+### 3. Alan H 🥉
+
+
+[Provided Structural Components For Material Components & Advised On Following M3 Rules]()
+
+
+### 4. CaptainStarBuck 🥉
+
+
+[Advised On Structural Project Integrity]()
+
+
+### 5. Dave Hurren 👑
+
+
+[Creator Of DroidScript](https://github.com/DroidScript)
+
+##
+
+
+## COTACTING ME 📪
 
 [Email : Proton](oarabilekoore@protonmail.com)
 

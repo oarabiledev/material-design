@@ -13,13 +13,19 @@
    - captainstarbuck
 */
 
+'use-strict'
+_Boost(true)
     
 let M3Config = 'M3Config';
 const pluginVersion = 'v0.80';
 
+
+
 let defaultIcons, theme, iconFill;
 
 let infinity = Number.POSITIVE_INFINITY;
+
+const unpositionalLayout = ["Linear","Frame","Card"];
 
 const __materialDebug = app.GetAppPath().endsWith('/Material3');
 let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
@@ -32,7 +38,13 @@ let defaultFont = _materialPath + 'Roboto.ttf';
 
 const warningColor = "<div style='color:#FF7900'>";
 
+/* Explanation Behind The I() global Function
+   DS tries to be smart and caches callbacks based on their function body
+   so when you re-use callback functions it will use the cached one the second time
 
+   what I() does is prevent that caching method and always use the function as-is
+   ---Symbrsom
+*/
 
 const ui = {
     
@@ -69,8 +81,14 @@ const ui = {
             lay.SetBackColor(md_theme_light_background);
             app.SetStatusBarColor();
         }
-        layoutInfo = type;
-        layoutTopDistance = lay.GetTop();
+        
+        /* These variables will be used
+           by componenets which need a 
+           sticky position (FAB)
+        */
+        layoutType =  type;
+        layoutOptions = options;
+        
         return lay;
     },
     
@@ -676,13 +694,14 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(leadingIcon);
+                I( searchObj.onTouch(leadingIcon))
+        
             }
         });
         
         _trailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(trailingIcon);
+                I( searchObj.onTouch(trailingIcon))
             }
         });
         
@@ -747,13 +766,15 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         }
         b_leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(leadingIcon);
+                I(searchObj.onTouch(leadingIcon))
+                
             }
         });
         
         b_trailingIcon.SetOnTouchDown(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch('avatar');
+                I(searchObj.onTouch('avatar'))
+                //searchObj.onTouch('avatar');
             }
         });
         
@@ -825,19 +846,22 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(leadingIcon);
+                M(null,searchObj.onTouch(leadingIcon))
+                //searchObj.onTouch(leadingIcon);
             }
         });
         
         _firstTrailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(firstTrailingIcon);
+                I(searchObj.onTouch(firstTrailingIcon))
+                //searchObj.onTouch(firstTrailingIcon);
             }
         });
         
          _secondTrailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(secondTrailingIcon);
+                I(searchObj.onTouch(secondTrailingIcon))
+                //searchObj.onTouch(secondTrailingIcon);
             }
         });
         
@@ -908,20 +932,23 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(leadingIcon);
+                I(searchObj.onTouch(leadingIcon))
+                //searchObj.onTouch(leadingIcon);
             }
         });
         
         _trailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch(firstTrailingIcon);
+                I(searchObj.onTouch(firstTrailingIcon))
+                //searchObj.onTouch(firstTrailingIcon);
             }
         });
         
         
         _avatarIcon.SetOnTouchDown(function(){
             if(searchObj.onTouch){
-                searchObj.onTouch('avatar');
+                I(searchObj.onTouch('avatar'))
+                //searchObj.onTouch('avatar');
             }
         });
      
@@ -1434,6 +1461,9 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
     this.SetTextSize = function (size, mode) {
         filledButton.SetTextSize(size, mode);
     }
+    this.SetPosition = function(left,top,width,height,options) {
+        filledButton.SetPosition(left,top,width,height,options)
+    }
     this.SetMargins = function (left, top, right, bottom, mode) {
         filledButton.SetMargins(left, top, right, bottom, mode);
     }
@@ -1441,10 +1471,10 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
         filledButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        filledButton.SetOnTouch(I(onTouch.bind(filledButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
+        filledButton.SetOnLongTouch(I(onLongTouch.bind(filledButton)));
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         filledButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1481,7 +1511,7 @@ function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
     filledButton.SetOnTouch(() => {
         if (filledObj.onTouch) {
             //Added To Allow Menus To Position Correct
-            filledObj.onTouch(filledButton.GetTop());
+            M(filledObj , filledObj.onTouch());
             
         }
     });
@@ -1493,6 +1523,8 @@ function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
             top = filledButton.GetTop();
         }
     });
+    
+    
     
     return filledButton;
 }
@@ -1539,10 +1571,10 @@ function elevatedButtonObject(btnName, width, height, icon, parentLay) {
         elevatedButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        elevatedButton.SetOnTouch(I(onTouch.bind(elevatedButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
+        elevatedButton.SetOnLongTouch(I(onLongTouch.bind(elevatedButton)));
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         elevatedButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1578,17 +1610,6 @@ function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
     
     elevatedButton.SetStyle(clr1(), clr1(), 20, null, null, 0);
     
-    elevatedButton.SetOnTouch(() => {
-        if (elevatedObj.onTouch) {
-            elevatedObj.onTouch()
-        }
-    });
-    
-    elevatedButton.SetOnLongTouch(() => {
-        if (elevatedObj.onLongTouch) {
-            elevatedObj.onLongTouch();
-        }
-    });
     
     return elevatedButton;
 }
@@ -1640,10 +1661,10 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
         filledTonalButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        filledTonalButton.SetOnLongTouch(I(onLongTouch.bind(filledTonalButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
+        filledTonalButton.SetOnLongTouch(I(onLongTouch.bind(filledTonalButton)));
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         filledTonalButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1679,18 +1700,6 @@ function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledTonal
     } else filledTonalButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     
     filledTonalButton.SetStyle(stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer), stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer), 20, null, null, 0);
-    
-    filledTonalButton.SetOnTouch(() => {
-        if (filledTonalObj.onTouch) {
-            filledTonalObj.onTouch();
-        }
-    });
-    
-    filledTonalButton.SetOnLongTouch(() => {
-        if (filledTonalObj.onLongTouch) {
-            filledTonalObj.onLongTouch();
-        }
-    });
     
     return filledTonalButton;
 }
@@ -1732,10 +1741,10 @@ function outlinedButtonObject(btnName, width, height, icon, parentLay) {
         _outlinedButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        _outlinedButton.SetOnTouch(I(onTouch.bind(_outlinedButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
+        _outlinedButton.SetOnLongTouch(I(onLongTouch.bind(_outlinedButton)));
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         _outlinedButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1769,17 +1778,6 @@ function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
     
     _outlinedButton.SetStyle(clrOutlined(), clrOutlined(), 20, strokeClrOutlined(), 1, 0);
     
-    _outlinedButton.SetOnTouch(() => {
-        if (outlineObj.onTouch) {
-            outlineObj.onTouch()
-        }
-    });
-    
-    _outlinedButton.SetOnLongTouch(() => {
-        if (onLongTouch) {
-            outlineObj.onLongTouch();
-        }
-    });
     return _outlinedButton;
 }
 
@@ -1833,10 +1831,10 @@ function textButtonObject(btnName, width, height, icon, parentLay) {
         _textButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        _textButton.SetOnTouch(I(onTouch.bind(_textButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
-        this.onLongTouch = onLongTouch;
+        _textButton.SetOnLongTouch(I(onLongTouch.bind(_textButton)));
     }
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         _textButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1871,71 +1869,53 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
     
     _textButton.SetStyle(backgroundColor(), backgroundColor(), 20, null, null, 0);
     
-    _textButton.SetOnTouch(() => {
-        if (textBtnObj.onTouch) {
-            textBtnObj.onTouch()
-        }
-    });
-    
-    _textButton.SetOnLongTouch(() => {
-        if (textBtnObj.onLongTouch) {
-            textBtnObj.onLongTouch();
-        }
-    });
-    
     return _textButton;
 }
-
-
 
 
 
 function fabObject(icon, parentLay) {
     let fabContainer;
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        fabContainer.SetOnTouch( M( fabContainer, onTouch) )
     }
-    
-    this.SetMargins = function (left, top, right, bottom, mode) {
-        fabContainer.SetMargins(left, top, right, bottom, mode);
+    /* If the unwanted layout is detected warn dev
+       If FillXY isnt being used notify dev
+    */
+   
+    if (unpositionalLayout.includes(layoutType) || !layoutOptions.includes('FillXY')){
+        warnDeveloper('FAB Component Only Used With Absolute Layouts\n With FillXY','Switch To Absolute Layout\nWith FillXY');
     }
-    
-    this.SetPosition = function (left, top, width, height, options) {
-        fabContainer.SetPosition(left, top, width, height, options);
+    else {
+        fabContainer = drawFAB(icon, parentLay, this);
     }
-    
-    
-    fabContainer = drawFAB(icon, parentLay, this);
 }
 
 function drawFAB(icon, parentLay, fabObj) {
-    let fabContainer;
+    let _fab;
+    _fabColor = stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer)
+    _fabIconClr = stateColor(md_theme_light_onPrimaryContainer, md_theme_dark_onPrimaryContainer)
     
-    fabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
-    fabContainer.SetSize(56, 56, 'dp');
+    _fab = app.AddButton(parentLay, icon, null, null, 'Customize,Lego');
+    _fab.SetSize(56,56,'dp');
+    
+    _fab.SetTextSize(24,'dp');
+    _fab.SetTextColor(_fabIconClr);
+    _fab.SetFontFile(defaultIcons);
+    _fab.SetStyle(_fabColor,_fabColor,16,null,null,0);
     
     
-    const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
-    fab.SetSize(56, 56, 'dp');
-    fab.SetElevation(0);
-    fab.SetCornerRadius(16);
+    leftPos = DW()- dpToPxConversion(72);
+    topPos = DH()- dpToPxConversion(56+16);
     
-    const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
-    _fabIcon.SetFontFile(defaultIcons);
-    _fabIcon.SetOnTouchDown(function () {
-        fabObj.onTouch();
-    });
+    _fab.SetPosition(leftPos, topPos, null, null, 'px')
     
-    _fabIcon.SetTextSize(24);
-    fab.AddChild(_fabIcon);
-    fabContainer.AddChild(fab);
-    
-    parentLay.AddChild(fabContainer);
-    
-    fab.SetBackColor(stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer));
-    _fabIcon.SetTextColor(stateColor(md_theme_light_onPrimaryContainer, md_theme_dark_onPrimaryContainer));
-    
-    return fabContainer;
+    if(fabObj.onTouch){ 
+        _fab.SetOnTouch(function(){
+            fabObj.onTouch();
+        });
+    }
+    return _fab;
 }
 
 
@@ -1946,49 +1926,43 @@ function smallFABObject(icon, parentLay) {
     let smallFabContainer;
     
     this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch;
+        smallFabContainer.SetOnTouch( M( null, onTouch) )
     }
     
-    this.SetMargins = function (left, top, right, bottom, mode) {
-        smallFabContainer.SetMargins(left, top, right, bottom, mode);
+    this.SetRawAlignment = function(left, top){
+        smallFabContainer.SetPosition(left, top);
     }
     
-    this.SetPosition = function (left, top, width, height, options) {
-        smallFabContainer.SetPosition(left, top, width, height, options);
+    if (unpositionalLayout.includes(layoutType) || !layoutOptions.includes('FillXY')){
+        warnDeveloper('FAB Component Only Used With Absolute Layouts\n With FillXY','Switch To Absolute Layout\nWith FillXY');
     }
-    
-    smallFabContainer = drawSmallFab(icon, parentLay, this);
+    else {
+        smallFabContainer = drawSmallFab(icon, parentLay, this);
+        
+    } 
 }
 
-function drawSmallFab(icon, parentLay, fabObj) {
-    let smallFabContainer;
-    smallFabContainer = app.CreateLayout('Linear', 'TouchThrough,Spy');
-    smallFabContainer.SetSize(40, 40, 'dp');
+function drawSmallFab(icon, parentLay, j) {
+    let _smallFab;
+    let _smallFabClr = stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer)
+    let _smallFabTxtClr = stateColor(md_theme_light_onPrimaryContainer, md_theme_dark_onPrimaryContainer);
+    
+    _smallFab = app.AddButton(parentLay, icon, null, null, 'Customize,Lego');
+    _smallFab.SetSize(40,40,'dp');
+    
+    _smallFab.SetTextSize(20,'dp');
+    _smallFab.SetTextColor(_smallFabTxtClr);
+    _smallFab.SetFontFile(defaultIcons);
+    _smallFab.SetStyle(_smallFabClr,_smallFabClr,12,null,null,0);
     
     
-    const fab = app.CreateLayout('Card', 'Right,Bottom,FillXY');
-    fab.SetSize(40, 40, 'dp');
-    fab.SetElevation(0);
-    fab.SetCornerRadius(12);
+    leftPos = DW()- dpToPxConversion(72);
+    topPos = DH()- dpToPxConversion(56+16);
     
-    const _fabIcon = app.CreateText(icon, null, null, 'H/VCenter,FillXY');
-    _fabIcon.SetFontFile(defaultIcons);
+    //_smallFab.SetPosition(leftPos, topPos, null, null, 'px')
     
-    _fabIcon.SetOnTouchDown(function () {
-        if (fabObj.onTouch) {
-            fabObj.onTouch()
-        }
-    })
     
-    _fabIcon.SetTextSize(18);
-    fab.AddChild(_fabIcon);
-    smallFabContainer.AddChild(fab);
-    
-    fab.SetBackColor(stateColor(md_theme_light_primaryContainer, md_theme_dark_primaryContainer));
-    _fabIcon.SetTextColor(stateColor(md_theme_light_onPrimaryContainer, md_theme_dark_onPrimaryContainer));
-    
-    parentLay.AddChild(smallFabContainer);
-    return smallFabContainer;
+    return _smallFab;
 }
 
 
@@ -2182,7 +2156,8 @@ function progressObject(progressType, width, parentLay) {
     
     this.SetValue = function (value) {
         this.value = value;
-        _progressIndicator.SetSize(parseFloat(value / 100), 0.05);
+        //
+        _progressIndicator.SetSize(M(progressContainer, parseFloat(value / 100), 0.05));
     }
     
     this.HideContainer = function () {
@@ -2200,7 +2175,12 @@ function progressObject(progressType, width, parentLay) {
         progressContainer.SetPosition(left, top, width, height, options)
     }
     
-    drawProgressBar(progressType, width, parentLay, this)
+    if (!parentLay){
+        warnDeveloper('No Parent For Progress','No Parent For Progress');
+    }
+    else{
+        drawProgressBar(progressType, width, parentLay, this);
+    }
 }
 
 function drawProgressBar(progressType, width, parentLay, progressObj) {
@@ -2806,15 +2786,20 @@ function bottomBarObject(barPropsInjson, parentLay) {
     }
     
     this.SetRawAdjustment = function (distanceFromTop) {
-        if (layoutInfo.toLowerCase().includes('linear')) {
+        if (layoutType.toLowerCase().includes('linear')) {
             bottomBarContainer.SetMargins(0, distanceFromTop);
         } else {
             bottomBarContainer.SetPosition(0, distanceFromTop);
         }
     }
     
-    
-    drawBottomBar(barPropsInjson, parentLay, this);
+    if (layoutType.toLowerCase().includes('linear') || layoutType.toLowerCase().includes('frame') || layoutType.toLowerCase().includes('card')) {
+        warnDeveloper('BottomAppBar Cannot Be Set On A Linear Layout','Change To Absolute Layout');
+        return;
+    }
+    else {
+        drawBottomBar(barPropsInjson, parentLay, this);
+    }
 }
 
 function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
@@ -2828,16 +2813,10 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     const fabIcon = info.fabIcon;
     
     bottomBarContainer = app.CreateLayout("Card", "Horizontal,Bottom,FillXY");
-    
-    bottomBarContainer.SetSize(null, 80, 'dp');
+    bottomBarContainer.SetSize(pxToDpConversion(DW()), 80, 'dp');
     bottomBarContainer.SetElevation(3, 'dp');
+    bottomBarContainer.SetPosition(0, 0.9);
     
-    
-    if (layoutInfo.toLowerCase().includes('linear')) {
-        bottomBarContainer.SetMargins(0, 0.9);
-    } else {
-        bottomBarContainer.SetPosition(0, 0.9);
-    }
     const box = app.CreateLayout('Linear', 'Horizontal');
     bottomBarContainer.AddChild(box);
     box.SetSize(-1, 80, 'dp');
@@ -2846,7 +2825,9 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     _icon1.SetFontFile(defaultIcons);
     _icon1.SetTextSize(24);
     _icon1.SetOnTouchUp(function () {
-        bottomBarObj.onTouchFunc(icon1);
+        if (bottomBarObj.onTouchFunc){
+            bottomBarObj.onTouchFunc(icon1);
+        }
     });
     
     _icon1.SetMargins(8, null, 16, null, 'dp');
@@ -2855,7 +2836,9 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     _icon2.SetFontFile(defaultIcons);
     _icon2.SetTextSize(24);
     _icon2.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
         bottomBarObj.onTouchFunc(icon2);
+        }
     });
     _icon2.SetMargins(8, null, 16, null, 'dp');
     
@@ -2863,7 +2846,9 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     _icon3.SetFontFile(defaultIcons);
     _icon3.SetTextSize(24);
     _icon3.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
         bottomBarObj.onTouchFunc(icon3);
+        }
     });
     _icon3.SetMargins(8, null, 16, null, 'dp');
     
@@ -2871,7 +2856,9 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     _icon4.SetFontFile(defaultIcons);
     _icon4.SetTextSize(24);
     _icon4.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
         bottomBarObj.onTouchFunc(icon4);
+        }
     });
     _icon4.SetMargins(8, null, 16, null, 'dp');
     
@@ -2879,12 +2866,14 @@ function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
     fab.SetSize(56, 56, 'dp');
     fab.SetElevation(0);
     fab.SetCornerRadius(16);
-    fab.SetMargins(125, 12, 16, 12, 'dp');
+    fab.SetMargins(96, 12, 16, 12, 'dp');
     
     const _fabIcon = app.CreateText(fabIcon, null, null, 'H/VCenter,FillXY');
     _fabIcon.SetFontFile(defaultIcons);
     _fabIcon.SetOnTouchDown(function () {
+        if (bottomBarObj.onTouchFunc){
         bottomBarObj.onTouchFunc(fabIcon);
+        }
     });
     
     _fabIcon.SetTextSize(24);

@@ -44,7 +44,7 @@ const warningColor = "<div style='color:#FF7900'>";
 
    what I() does is prevent that caching method and always use the function as-is
    ---Symbrsom
-*/
+*/ 
 
 const ui = {
     
@@ -72,25 +72,31 @@ const ui = {
         app.ClearData('M3Config');
     },
     
-    createLayout: function (type, options, width, height, parentLay) {
-        const lay = app.CreateLayout(type, options);
-        if (theme === 'dark') {
-            lay.SetBackColor(md_theme_dark_background);
-            app.SetStatusBarColor(md_theme_dark_background);
-        } else {
-            lay.SetBackColor(md_theme_light_background);
-            app.SetStatusBarColor();
-        }
+    createLayout: function(type, options, width, height, parentLay) {
+        let lay;
         
-        /* These variables will be used
-           by componenets which need a 
-           sticky position (FAB)
-        */
-        layoutType =  type;
-        layoutOptions = options;
+        if (!parentLay) {
+            lay = app.CreateLayout(type, options);
+            lay.SetBackColor(stateColor(md_theme_light_background, md_theme_dark_background));
+            //app.SetStatusBarColor(md_theme_dark_background);
+
+            /* These variables will be used
+               by componenets which need a 
+               sticky position (FAB)
+            */
+            layoutType = type;
+            layoutOptions = options;
+        } 
+        
+        else {
+            lay = app.AddLayout(parentLay, type, options);
+            lay.SetBackColor(stateColor(md_theme_light_background, md_theme_dark_background));
+            lay.SetSize(width, height);
+        }
         
         return lay;
     },
+    
     
     //------------------------------------------------------------------App Bars
     addCenterAlignedAppBar: function (title, leadingIcon, controlIcons, parentLay) {
@@ -176,10 +182,10 @@ const ui = {
         return new navDrawerObject(drawerLayout, side, width, options);
     },
     
-    addTabs: function (list, width, height, options){
-        
-    },
     
+    addSecondaryTabs: function(listOfTabs,width, height, options, parentLay){
+        return new secTabObject(listOfTabs,width, height, options, parentLay);
+    },
     
     //---------------------------------------------------------------Addon Comps
     addMenu: function (menuType, list, position) {
@@ -253,6 +259,17 @@ const dsUnitsToDp = function(dsUnit, side){
     else {
         let dHeight =  pxToDpConversion(DH());
         return dsUnit * dHeight;
+    }
+}
+
+const dpToDsUnit = function(dpValue, side){
+    if (side == 'width' || side == 'w'){
+        let dWidth = pxToDpConversion(DW());
+        return dpValue/dWidth;
+    }
+    else {
+        let dHeight =  pxToDpConversion(DH());
+        return dpValue/dHeight;
     }
 }
 
@@ -357,6 +374,300 @@ function setM3BaseColors() {
     md_theme_dark_surfaceTint = getColorTextValue(jsonData, "md_theme_dark_surfaceTint");
     md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant");
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim");
+}
+
+function secTabObject(listOfTabs, width, height, options, parentLay) {
+    let _secondaryTab;
+    
+    this.SetMargins = function(left,top,right,bottom,mode){
+        _secondaryTab.SetMargins(left,top,right,bottom,mode)
+    }
+    this.SetPosition = function(left, top, width, height, options){
+        _secondaryTab.SetPosition(left, top, width, height, options);
+    }
+    
+    this.Gone = function(){
+        _secondaryTab.Gone();
+    }
+    
+    this.SetVisibility = function(mode){
+        _secondaryTab.SetVisibility(mode)
+    }
+    if (!parentLay) {
+        warnDeveloper('No Parent To Tab', 'No Parent To Tab');
+    } 
+    else {
+        _secondaryTab = drawSecondaryTabs(listOfTabs, width, height, options, parentLay);
+    }
+}
+
+function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
+    let __secondaryTab;
+    let __activeTab;
+    let __tabCount = 0;
+    
+    let __secTabBkgClr = stateColor(md_theme_light_surface,md_theme_dark_surface);
+    let __secTabBtnClr = stateColor(md_theme_dark_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
+    let __lightBarClr = stateColor(md_theme_light_primary,md_theme_dark_primary)
+    
+    const noOfTabs = (listOfTabs) =>{
+        if(listOfTabs.includes(',')){
+            if(listOfTabs.split(',')[0]) __firstTab = listOfTabs.split(',')[0];
+            if(listOfTabs.split(',')[1]) __secondTab = listOfTabs.split(',')[1], __tabCount = __tabCount + 2;
+            if(listOfTabs.split(',')[2]) __thirdTab = listOfTabs.split(',')[2], __tabCount = __tabCount + 3;
+        }
+        else {
+            warnDeveloper(`You must have 2 or more tabs`,
+            `You must have 2 or more tabs`);
+            return;
+        }
+    }
+    
+    noOfTabs(listOfTabs);
+    
+    __secondaryMain = app.AddLayout(parentLay, 'Linear','Vertical')
+    __secondaryMain.SetSize(width, height);
+    
+    
+    __secondaryTab = app.AddLayout(__secondaryMain, 'Card','Vertical');
+    __secondaryTab.SetMargins(0,0,0,null);
+    __secondaryTab.SetSize(pxToDpConversion(DW()), 48, 'dp');
+    
+    __secTabInnerTab = app.AddLayout(__secondaryTab, 'Absolute','Vertical,Left')
+    __secTabInnerTab.SetSize(pxToDpConversion(DW()), 48, 'dp');
+    __secTabInnerTab.SetBackColor(__secTabBkgClr);
+    
+    __secTabInnerLay = app.AddLayout(__secTabInnerTab, 'Linear','Horizontal');
+    __secTabInnerLay.SetSize(pxToDpConversion(DW()), 46, 'dp');
+    __secTabInnerLay.SetBackColor(__secTabBkgClr);
+    
+    // By default active tab is the first
+    
+    if (__tabCount == 2){
+        if(!__activeTab) {
+            __firstTabActive = true;
+        }
+        
+        __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
+        __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __firstTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __firstTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
+        __firstTabBtn.SetMargins(0,0,0)
+        
+        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, 0.5, -1, 'Custom,NoPad');
+        __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __secondTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __secondTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
+        
+        lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
+        lightStrip.SetSize(pxToDpConversion(DW())/2,2,'dp')
+        lightStrip.SetBackColor(__lightBarClr) 
+        
+        
+        const tweenValues = ()=>{
+            if(__firstTabActive) return { x: 0.0, y: dpToDsUnit(46) };
+            else return { x: 0.5, y: dpToDsUnit(46) };
+        }
+        
+        const lightStripPower = (x) =>{
+            /* If We Booted It Shouldnt Apply An Animation */
+            
+            if(x) lightStrip.SetPosition(0,dpToDsUnit(46),null,null);
+            else{
+                if(__firstTabActive === true && x === undefined) lightStrip.Tween(tweenValues() ,250,'Linear.None',false,null) 
+                else lightStrip.Tween(tweenValues() ,350,'Quadratic.In',false,null) 
+            }
+        }
+        
+        lightStripPower(true);
+        
+        __firstTabBtn.SetOnTouch(()=>{
+            if(!__firstTabActive) {
+                __firstTabActive = true;
+                lightStripPower();
+                activeTabLayoutSwitch();
+            }
+        });
+        
+        __secondTabBtn.SetOnTouch(()=>{
+            if(__firstTabActive) {
+                __firstTabActive = false;
+                lightStripPower();
+                activeTabLayoutSwitch();
+            }
+        })
+        
+        /* Add Tab Specific Layouts */
+        
+        __secondaryLayJacket = app.AddLayout(__secondaryMain, 'Frame', 'Horizontal')
+        
+        __firstTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        
+        __secondTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        
+        
+        /* If firstTabActive first layout shows and vice versa */
+        
+        const activeTabLayoutSwitch = (x) =>{
+            if (x) __firstTabLay.Show() || __secondTabLay.Hide();
+            else{
+            if (__firstTabActive === true && x === undefined){
+                __firstTabLay.Animate('SlideFromLeft',null,350) || __secondTabLay.Hide();
+            }
+            else {
+                __firstTabLay.Hide() || __secondTabLay.Animate('SlideFromRight',null,350);
+                }
+            }
+        }
+        
+        activeTabLayoutSwitch(true);
+        
+        secTabObject.prototype.SetActiveTab = function(index){
+            setTab(index);
+        }
+        
+        const setTab = (index)=>{
+            if(__firstTabActive && index == 0) return;
+            if(index == 0){
+                __firstTabActive = true
+                __secondTabLay.Hide() || __firstTabLay.Animate('SlideFromLeft',null,350) 
+            }
+            if(index == 1){
+                 __firstTabActive = false
+                __firstTabLay.Hide() || __secondTabLay.Animate('SlideFromLeft',null,350)
+            }
+            lightStripPower();
+        }
+        
+    }
+    
+    else {
+        /* We use an almost ternary system */
+        if(!__activeTab) {
+            __firstTabActive = 0;
+        }
+        
+        __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
+        __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __firstTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __firstTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
+        __firstTabBtn.SetMargins(0,0,0)
+        
+        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, null, null, 'Custom,NoPad');
+        __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __secondTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __secondTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
+        
+        __thirdTabBtn = app.AddButton(__secTabInnerLay, __thirdTab, null, null, 'Custom,NoPad');
+        __thirdTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __thirdTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __thirdTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
+        
+        lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
+        lightStrip.SetSize(pxToDpConversion(DW())/3,2,'dp')
+        lightStrip.SetBackColor(__lightBarClr) 
+        
+        
+        const tweenValues = ()=>{
+            if(__firstTabActive == 0) return { x: 0.0, y: dpToDsUnit(46) };
+            if (__firstTabActive == 1) return { x: 0.33, y: dpToDsUnit(46) };
+            else return { x: 0.7, y: dpToDsUnit(46) };
+        }
+        
+        const lightStripPower = (x) =>{
+            /* If We Booted It Shouldnt Apply An Animation */
+            
+            if(x) lightStrip.SetPosition(0,dpToDsUnit(46),null,null);
+            else{
+                if(__firstTabActive === 0 && x === undefined) lightStrip.Tween(tweenValues() ,250,'Quadratic.In',false,null);
+                if(__firstTabActive === 1) lightStrip.Tween(tweenValues() ,250,'Linear.None',false,null);
+                else lightStrip.Tween(tweenValues() ,250,'Quadratic.In',false,null);
+            }
+        }
+        
+        lightStripPower(true);
+        
+        __firstTabBtn.SetOnTouch(()=>{
+            __firstTabActive = 0;
+            lightStripPower();
+            activeTabLayoutSwitch();
+        });
+        
+        __secondTabBtn.SetOnTouch(()=>{
+            
+            __firstTabActive = 1;
+            lightStripPower();
+            activeTabLayoutSwitch();
+        })
+        
+        __thirdTabBtn.SetOnTouch(()=>{
+            __firstTabActive = 2;
+            lightStripPower();
+            activeTabLayoutSwitch();
+        })
+        
+        /* Add Tab Specific Layouts */
+        
+        __secondaryLayJacket = app.AddLayout(__secondaryMain, 'Frame', 'Horizontal')
+        
+        __firstTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        
+        __secondTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        
+        __thirdTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        
+        /* If firstTabActive first layout shows and vice versa */
+        
+        /* All Layouts must be hidden before animating */
+        
+        const activeTabLayoutSwitch = (x) =>{
+            if (x) __firstTabLay.Show() || __secondTabLay.Hide() || __thirdTabLay.Hide();
+            else{
+            if (__firstTabActive === 0 && x === undefined){
+                __secondTabLay.Hide()|| __thirdTabLay.Hide() || __firstTabLay.Animate('SlideFromLeft',null,350) 
+            }
+            if(__firstTabActive === 1){
+               __firstTabLay.Hide()||  __thirdTabLay.Hide() || __secondTabLay.Animate('SlideFromLeft',null,350)
+            }
+            if(__firstTabActive === 2){
+                __firstTabLay.Hide() || __secondTabLay.Hide() || __thirdTabLay.Animate('SlideFromRight',null,350);
+                }
+            }
+        }
+        
+        activeTabLayoutSwitch(true);  
+        
+        secTabObject.prototype.SetActiveTab = function(index){
+            setTab(index);
+        }
+        
+        const setTab = (index)=>{
+            if(index === __firstTabActive) return;
+            if(index == 0){
+                __firstTabActive = 0
+                __secondTabLay.Hide()|| __thirdTabLay.Hide() || __firstTabLay.Animate('SlideFromLeft',null,350) 
+            }
+            if(index == 1){
+                 __firstTabActive = 1
+                __firstTabLay.Hide()||  __thirdTabLay.Hide() || __secondTabLay.Animate('SlideFromLeft',null,350)
+            }
+            if(index == 2){
+                 __firstTabActive = 2
+                __firstTabLay.Hide() || __secondTabLay.Hide() || __thirdTabLay.Animate('SlideFromRight',null,350);
+            }
+            
+            lightStripPower();
+        }
+    }
+    
+    secTabObject.prototype.GetTabLayout = function(tab){
+        if (tab == __firstTab) return __firstTabLay;
+        if (tab == __secondTab) return __secondTabLay;
+        if (tab == __thirdTab) return __thirdTabLay;
+    }
+    
+    
+    return __secondaryTab;
 }
 
 let _smallAppBar;
@@ -1661,7 +1972,7 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
         filledTonalButton.SetPadding(left, top, right, bottom, mode);
     }
     this.SetOnTouch = function (onTouch) {
-        filledTonalButton.SetOnLongTouch(I(onLongTouch.bind(filledTonalButton)));
+        filledTonalButton.SetOnTouch(I(onTouch.bind(filledTonalButton)));
     }
     this.SetOnLongTouch = function (onLongTouch) {
         filledTonalButton.SetOnLongTouch(I(onLongTouch.bind(filledTonalButton)));

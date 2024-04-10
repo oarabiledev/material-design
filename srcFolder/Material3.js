@@ -23,8 +23,6 @@ const pluginVersion = 'v0.80';
 
 let defaultIcons, theme, iconFill;
 
-let infinity = Number.POSITIVE_INFINITY;
-
 const unpositionalLayout = ["Linear","Frame","Card"];
 
 const __materialDebug = app.GetAppPath().endsWith('/Material3');
@@ -78,7 +76,7 @@ const ui = {
         if (!parentLay) {
             lay = app.CreateLayout(type, options);
             lay.SetBackColor(stateColor(md_theme_light_background, md_theme_dark_background));
-            //app.SetStatusBarColor(md_theme_dark_background);
+            app.SetStatusBarColor(stateColor(md_theme_light_surface,md_theme_dark_background));
 
             /* These variables will be used
                by componenets which need a 
@@ -187,6 +185,10 @@ const ui = {
         return new secTabObject(listOfTabs,width, height, options, parentLay);
     },
     
+    addNavigationBar: function(listOfTabs, width, height, options, parentLay){
+        return new navigationBarObject(listOfTabs, width, height, options, parentLay);
+    },
+    
     //---------------------------------------------------------------Addon Comps
     addMenu: function (menuType, list, position) {
         return new menuObj(menuType, list, position);
@@ -230,6 +232,12 @@ const ui = {
         return new inputObj(type, width, height, hint, options, labeled, parentLay);
     },
     
+    //-------------------------------------------------------------------Pickers
+    
+    addDatePicker: function (){
+        
+    }
+    
 };
 
 app.CreateMaterial3 = function () {
@@ -238,8 +246,15 @@ app.CreateMaterial3 = function () {
 
 
 const warnDeveloper = (context,shortContext) => {
-    console.log(warningColor + context);
-    app.ShowPopup(shortContext,'Top, Short')
+    if(context) console.log(warningColor + context);
+    else console.error('No Warning Context.');
+    if (shortContext){
+        app.ShowPopup(shortContext,'Top, Short');
+    }
+    else {
+        app.ShowPopup(context,'Top, Short');
+    }
+    if (context === null && shortContext === null) alert('No Warning Context.');
 }
 
 
@@ -284,6 +299,7 @@ const backgroundColor = () =>{
 
 
 function setM3BaseColors() {
+  
     appTheme = app.ReadFile('baseTheme.json','UTF-8');
     
     jsonData = JSON.parse(appTheme)
@@ -400,6 +416,70 @@ function secTabObject(listOfTabs, width, height, options, parentLay) {
         _secondaryTab = drawSecondaryTabs(listOfTabs, width, height, options, parentLay);
     }
 }
+
+function navigationBarObject(listOfTabs, width, height, options, parentLay){
+    let __bottomNav;
+    
+    if (!parentLay){
+        warnDeveloper('No Parent For Bottom Nav.');
+        return;
+    }
+    else __bottomNav = drawNavigationBar(listOfTabs, width, height, options, parentLay);
+}
+
+function drawNavigationBar(listOfTabs, width, height, options, parentLay){
+    let __tabCount = 0;
+    let __activeTab,__bottomNav;
+    
+    const noOfTabs = (listOfTabs) =>{
+        if(listOfTabs.includes(',')){
+            if(listOfTabs.split(',')[0]) __firstBar = listOfTabs.split(',')[0];
+            if(listOfTabs.split(',')[1]) __secondBar = listOfTabs.split(',')[1]
+            
+            if(listOfTabs.split(',')[2]) __thirdBar = listOfTabs.split(',')[2],
+            __tabCount = 3;
+            if(listOfTabs.split(',')[3]) __fourthBar = listOfTabs.split(',')[3],
+            __tabCount = 4;
+            
+            else {
+                warnDeveloper('You must have 3 or more options')
+                return;
+            }
+        }
+        else {
+            warnDeveloper('You must have 3 or more options')
+            return;
+        }
+    }
+    
+    noOfTabs(listOfTabs);
+    
+    /* For options we will have ::
+    
+    -  Simple it will be the simplest i.e
+       WhatsApp on Android or Google Drive.
+       
+    -  OnTouchSlideUp
+       i.e Skit
+    */ 
+    
+    /* Main layout contains all layouts, bottom to stack the navigation bar 
+       and user defined layouts that switch to respective button.
+    */
+    
+    __bottomMain = app.AddLayout('Linear','Vertical,Bottom');
+    __bottomMain.SetSize(width, height);
+    
+    /* To give the card-ish look */
+    
+    __bottomBar = app.AddLayout(__bottomMain, 'Card');
+    
+    /* To contain out buttons and text labels */
+    
+    __bottomBarInternal = app.AddLayout(__bottomBar, 'Linear','Horizontal')
+    return __bottomNav;
+}
+
 
 function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     let __secondaryTab;
@@ -1005,14 +1085,14 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I( searchObj.onTouch(leadingIcon))
+                M(this, searchObj.onTouch(leadingIcon))
         
             }
         });
         
         _trailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I( searchObj.onTouch(trailingIcon))
+                M(this, searchObj.onTouch(trailingIcon))
             }
         });
         
@@ -1071,21 +1151,19 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         else{
         b_trailingLay = app.AddLayout(b_searchContainer,'Card');
         b_trailingLay.SetCornerRadius(15)
-        b_trailingIcon = app.AddImage(b_trailingLay, trailingIcon, null, null,'Button')
+        b_trailingIcon = app.AddImage(b_trailingLay, trailingIcon, null, null,'async')
         b_trailingIcon.SetSize(30, 30, 'dp');
         b_trailingLay.SetMargins(16,13,16,null,'dp')
         }
         b_leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch(leadingIcon))
-                
-            }
+                M(this, searchObj.onTouch(leadingIcon))
+                }
         });
         
         b_trailingIcon.SetOnTouchDown(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch('avatar'))
-                //searchObj.onTouch('avatar');
+                M(this,searchObj.onTouch('avatar'))
             }
         });
         
@@ -1157,22 +1235,19 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                M(null,searchObj.onTouch(leadingIcon))
-                //searchObj.onTouch(leadingIcon);
+                M(this,searchObj.onTouch(leadingIcon))
             }
         });
         
         _firstTrailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch(firstTrailingIcon))
-                //searchObj.onTouch(firstTrailingIcon);
+                M(this, searchObj.onTouch(firstTrailingIcon))
             }
         });
         
          _secondTrailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch(secondTrailingIcon))
-                //searchObj.onTouch(secondTrailingIcon);
+                M(this,searchObj.onTouch(secondTrailingIcon))
             }
         });
         
@@ -1236,21 +1311,21 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         
         _avatarLay = app.AddLayout(_searchContainer,'Card');
         _avatarLay.SetCornerRadius(15)
-        _avatarIcon = app.AddImage(_avatarLay, secondTrailingIcon, null, null,'Button')
+        _avatarIcon = app.AddImage(_avatarLay, secondTrailingIcon, null, null,'async')
         _avatarIcon.SetSize(30, 30, 'dp');
         _avatarLay.SetMargins(0,13,16,null,'dp')
         
         //SetOnTouch Implementation
         _leadingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch(leadingIcon))
+                M(this, searchObj.onTouch(leadingIcon))
                 //searchObj.onTouch(leadingIcon);
             }
         });
         
         _trailingIcon.SetOnTouch(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch(firstTrailingIcon))
+                M(this, searchObj.onTouch(firstTrailingIcon))
                 //searchObj.onTouch(firstTrailingIcon);
             }
         });
@@ -1258,7 +1333,7 @@ function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, sea
         
         _avatarIcon.SetOnTouchDown(function(){
             if(searchObj.onTouch){
-                I(searchObj.onTouch('avatar'))
+                M(this,searchObj.onTouch('avatar'))
                 //searchObj.onTouch('avatar');
             }
         });

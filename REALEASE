@@ -4,17 +4,17 @@ MATERIAL 3 RELEASE NOTES
 version 0.80 [To Be Released Soon]
 
 => All Dialogs                                                                                                           ✅
-=> Tabs Component
+=> Tabs Component                                                                                                        ✅
 => Add List Component
 => Add Switch Settings
 => Add Radio Settings
 => Add CheckBox Component
-=> Text Components
+=> Text Components                                                                                                       ✅
 => Adding All Top App Bars
 => Adding Extended FAB
 
 => Adding Extended FAb To Normal FAB Switch On Scroll
-=> Adding Bottom Navigation
+=> Adding Bottom Navigation                                                                                              ✅
 => Complete Sliders
 => All TextFiels Components
 => All SearchBars                                                                                                        ✅

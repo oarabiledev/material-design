@@ -75,8 +75,8 @@ const ui = {
         
         if (!parentLay) {
             lay = app.CreateLayout(type, options);
-            lay.SetBackColor(stateColor(md_theme_light_background, md_theme_dark_background));
-            app.SetStatusBarColor(stateColor(md_theme_light_surface,md_theme_dark_background));
+            lay.SetBackColor(stateColor(md_theme_light_surface, md_theme_dark_surface));
+            //app.SetStatusBarColor(stateColor(md_theme_light_surface,md_theme_dark_background));
 
             /* These variables will be used
                by componenets which need a 
@@ -185,8 +185,9 @@ const ui = {
         return new secTabObject(listOfTabs,width, height, options, parentLay);
     },
     
-    addNavigationBar: function(listOfTabs, width, height, options, parentLay){
-        return new navigationBarObject(listOfTabs, width, height, options, parentLay);
+    addNavigationBar: function(listOfTabs, labels, options, parentLay){
+        return new navigationBarObject(listOfTabs, labels, options, parentLay);
+        //alert(listOfTabs, labels, height, options, parentLay)
     },
     
     //---------------------------------------------------------------Addon Comps
@@ -417,19 +418,23 @@ function secTabObject(listOfTabs, width, height, options, parentLay) {
     }
 }
 
-function navigationBarObject(listOfTabs, width, height, options, parentLay){
+function navigationBarObject(listOfTabs, labels, options, parentLay){
     let __bottomNav;
     
     if (!parentLay){
         warnDeveloper('No Parent For Bottom Nav.');
         return;
     }
-    else __bottomNav = drawNavigationBar(listOfTabs, width, height, options, parentLay);
+    else __bottomNav = drawNavigationBar(listOfTabs, labels, options, parentLay);
 }
 
-function drawNavigationBar(listOfTabs, width, height, options, parentLay){
-    let __tabCount = 0;
-    let __activeTab,__bottomNav;
+function drawNavigationBar(listOfTabs, labels, options, parentLay){
+    let __tabCount,__labelCount = 0;
+    let __bottomNav;
+    let __bottomBarClr = stateColor(md_theme_light_inverseOnSurface,md_theme_dark_inverseOnSurface);
+    
+    let __firstBar,__secondBar,__thirdBar,__fourthBar;
+    let __firstLabel,__secondLabel,__thirdLabel,__fourthLabel;
     
     const noOfTabs = (listOfTabs) =>{
         if(listOfTabs.includes(',')){
@@ -441,8 +446,8 @@ function drawNavigationBar(listOfTabs, width, height, options, parentLay){
             if(listOfTabs.split(',')[3]) __fourthBar = listOfTabs.split(',')[3],
             __tabCount = 4;
             
-            else {
-                warnDeveloper('You must have 3 or more options')
+            if (__tabCount < 3 || __tabCount > 4) {
+                warnDeveloper('The number of tabs must be between 3 and 4');
                 return;
             }
         }
@@ -452,34 +457,194 @@ function drawNavigationBar(listOfTabs, width, height, options, parentLay){
         }
     }
     
+    const sortNavLabels = (labels) =>{
+        if(labels){
+        if(labels.includes(',')){
+            if(labels.split(',')[0]) __firstLabel = labels.split(',')[0];
+            if(listOfTabs.split(',')[1]) __secondLabel = labels.split(',')[1]
+            
+            if(labels.split(',')[2]) __thirdLabel = labels.split(',')[2],
+            __labelCount = 3;
+            if(labels.split(',')[3]) __fourthLabel = labels.split(',')[3],
+            __labelCount = 4;
+            
+            if (__labelCount < 3 || __labelCount > 4) {
+                warnDeveloper('The number of labels must be between 3 and 4');
+                return;
+            }
+        }
+        }
+        else {
+            warnDeveloper('You must have 3 or more labels')
+            return;
+        }
+    }
+    
+    
     noOfTabs(listOfTabs);
+    sortNavLabels(labels);
+    
+    
+    sortedTabNames = {
+        __firstBar,
+        __secondBar,
+        __thirdBar,
+        __fourthBar
+    }
+    
+    sortedLabels = {
+        __firstLabel,
+        __secondLabel,
+        __thirdLabel,
+        __fourthLabel
+    }
+    
     
     /* For options we will have ::
-    
     -  Simple it will be the simplest i.e
-       WhatsApp on Android or Google Drive.
+       WhatsApp on Android or Google Drive
        
-    -  OnTouchSlideUp
-       i.e Skit
+    -   OnTouchSlideUp i.e Skit
     */ 
     
     /* Main layout contains all layouts, bottom to stack the navigation bar 
        and user defined layouts that switch to respective button.
     */
     
-    __bottomMain = app.AddLayout('Linear','Vertical,Bottom');
-    __bottomMain.SetSize(width, height);
+    
+    __bottomMain = app.AddLayout(parentLay,'Linear','Vertical,Bottom');
+    __bottomMain.SetSize(DW(),DH(),'px');
+    
+    
+    //__bottomMain.SetBackColor('green')
     
     /* To give the card-ish look */
     
-    __bottomBar = app.AddLayout(__bottomMain, 'Card');
+    __bottomBar = app.AddLayout(__bottomMain, 'Linear','Horizontal');
+    __bottomBar.SetSize(pxToDpConversion(DW()), 44, 'dp')
+    __bottomBar.SetBackColor(__bottomBarClr);
     
-    /* To contain out buttons and text labels */
+    __labelLayout = app.AddLayout(__bottomMain, 'Linear','Horizontal,Left')
+    __labelLayout.SetSize(pxToDpConversion(DW()), 36, 'dp')
+    __labelLayout.SetBackColor(__bottomBarClr);
     
-    __bottomBarInternal = app.AddLayout(__bottomBar, 'Linear','Horizontal')
+    /* To contain out buttons and text labels 
+       It will call repective functions which will return needed
+       components.
+    */
+    
+    
+    
+    
+    if (__tabCount == 3) {
+        __bottomBarInternals = drawNavBarWith3(sortedTabNames, sortedLabels, options, __bottomBar);
+    }
+    else {
+        __bottomBarInternals = drawNavBarWith4(sortedTabNames, sortedLabels, options, __bottomBar);
+    }
+    
     return __bottomNav;
 }
 
+function drawNavBarWith3(sortedTabNames, sortedLabels, options, ly){
+    
+    let __activeTab;
+    let clearClr = "#00000000";
+    let activeShade = stateColor(md_theme_light_secondaryContainer,md_theme_dark_secondaryContainer)
+    // By default active tab is first icon
+    
+    const setActiveTab = (index) =>{
+        /* Using Index Based System:: 0,1,2*/
+        if(index == 0) __firstIcon.SetBackColor(activeShade);
+        if(index == 1) __secondIcon.SetBackColor(activeShade);
+        if(index == 2) __thirdIcon.SetBackColor(activeShade);
+        return __activeTab = index;   
+    }
+    
+    
+    __firstBar = JSON.parse(JSON.stringify(sortedTabNames)).__firstBar;
+    __secondBar = JSON.parse(JSON.stringify(sortedTabNames)).__secondBar;
+    __thirdBar = JSON.parse(JSON.stringify(sortedTabNames)).__thirdBar;
+    
+    
+    __firstLabel = JSON.parse(JSON.stringify(sortedLabels)).__firstLabel;
+    __secondLabel = JSON.parse(JSON.stringify(sortedLabels)).__secondLabel;
+    __thirdLabel = JSON.parse(JSON.stringify(sortedLabels)).__thirdLabel;
+    __fourthLabel = JSON.parse(JSON.stringify(sortedLabels)).__fourthLabel;
+    
+    if(options){
+        if(options.toLowerCase().includes('Simple')) complexity = 'Simple';
+        else complexity = 'OnTouchSlideUp';
+    }
+    else complexity = 'Simple';
+    
+    
+    __firstIcon = app.AddButton(__bottomBar,__firstBar, null, null,'Custom');
+    __firstIcon.SetStyle(clearClr, clearClr, 16,null,null,0)
+    __firstIcon.SetMargins(16,12,16,0,'dp')
+    __firstIcon.SetFontFile(defaultIcons)
+    __firstIcon.SetSize(64,32,'dp');
+    __firstIcon.SetBackColor('blue')
+    __firstIcon.SetTextSize(24,'dp')
+   
+    
+// Now textWidth contains the width of the text "Home" when rendered with the specified text size
+
+
+    __secondIcon = app.AddButton(__bottomBar,__secondBar, null, null,'Custom');
+    __secondIcon.SetStyle(clearClr, clearClr, 16,null,null,0)
+    __secondIcon.SetMargins(52,12,16,0,'dp')
+    __secondIcon.SetFontFile(defaultIcons)
+    __secondIcon.SetSize(64,32,'dp');
+    __secondIcon.SetTextSize(24,'dp')
+    
+    
+    __thirdIcon = app.AddButton(__bottomBar,__thirdBar, null, null,'Custom');
+    __thirdIcon.SetStyle(clearClr, clearClr, 16,null,null,0)
+    __thirdIcon.SetMargins(48,12,16,0,'dp')
+    __thirdIcon.SetFontFile(defaultIcons)
+    __thirdIcon.SetSize(64,32,'dp');
+    __thirdIcon.SetTextSize(24,'dp')
+    
+    
+    __firstIconLabel = app.AddText(__labelLayout,__firstLabel, -1,-1)
+    __firstIconLabel.SetMargins(37,4,16,0,'dp')
+    __firstIconLabel.SetTextSize(14,'sp')
+    __firstIconLabel.SetBackColor('blue')
+    //alert(__firstIconLabel.GetTextSize('sp'))
+    //alert(__firstIconLabel.GetAbsWidth('sp'))
+    __secondIconLabel = app.AddText(__labelLayout,__secondLabel )
+    __secondIconLabel.SetMargins(52,4,16,0,'dp')
+    
+    __thirdIconLabel = app.AddText(__labelLayout,__thirdLabel )
+    __thirdIconLabel.SetMargins(48,0,16,0,'dp')
+    
+    setActiveTab(0);
+    
+    try{
+        __firstIcon.SetOnTouch(function(){
+            alert('A')
+        })
+    }
+    catch(e){
+        alert(e);
+    }
+    
+    
+    return {
+        __firstIcon
+    }
+    
+}
+function a (){
+    alert('A');
+}
+function drawNavBarWith4(sortedTabNames, labels, __bottomBarInternal){
+    let __bottomBarInternals;
+    
+    
+    return __bottomBarInternals;
+}
 
 function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     let __secondaryTab;
@@ -493,8 +658,9 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     const noOfTabs = (listOfTabs) =>{
         if(listOfTabs.includes(',')){
             if(listOfTabs.split(',')[0]) __firstTab = listOfTabs.split(',')[0];
-            if(listOfTabs.split(',')[1]) __secondTab = listOfTabs.split(',')[1], __tabCount = __tabCount + 2;
-            if(listOfTabs.split(',')[2]) __thirdTab = listOfTabs.split(',')[2], __tabCount = __tabCount + 3;
+            if(listOfTabs.split(',')[1]) __secondTab = listOfTabs.split(',')[1], 
+            __tabCount = __tabCount + 2;
+            if(listOfTabs.split(',')[2]) __thirdTab = listOfTabs.split(',')[2],e__tabCount = __tabCount + 3;
         }
         else {
             warnDeveloper(`You must have 2 or more tabs`,
@@ -506,7 +672,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     noOfTabs(listOfTabs);
     
     __secondaryMain = app.AddLayout(parentLay, 'Linear','Vertical')
-    __secondaryMain.SetSize(width, height);
+    __seecondaryMain.SetSize(width, height);
     
     
     __secondaryTab = app.AddLayout(__secondaryMain, 'Card','Vertical');
@@ -1619,7 +1785,7 @@ function emptyDlgObject(dialogLayout, width, height, options){
     emptyDlg = drawEmptyDialog(dialogLayout, width, height, options, this)
 }
 
-function drawEmptyDialog(dialogLayout, width, height, options, emptyDlgObj){
+function drawEmptyDialog(dialogLayout, width, height, options, empty__thirdIconObj){
     let emptyDlg;
     dlgColor = stateColor(md_theme_light_secondaryContainer,md_theme_dark_secondaryContainer);
     

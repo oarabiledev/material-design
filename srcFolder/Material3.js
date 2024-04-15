@@ -1,16 +1,9 @@
-/* Material 3 For DroidScript
-   This Project Is Licensed
-   Under The MIT License.
-
-   This Project Was Ported 
-   By Oarabile Koore.
-   The Following Contributers 
-   Helped:
-   - David Hurren
-   - Symbrosom
-   - Alan H
-   - Hamac Jumar
-   - captainstarbuck
+/* Material 3 For DroidScript                               *********       
+                                                              /\  /\  
+                                                              \ \/ /
+   This Project Is Licensed                                    \  /
+   Under The MIT License.                                       \/
+   @2024                                                    *********
 */
 
 'use-strict'
@@ -222,6 +215,9 @@ const ui = {
         return new switchObject(switchType, value, parent_Layout);
     },
     
+    addSwitchSettings: function(listOfSettings, switchValues, width, height, parentLay){
+        return new switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
+    },
     
     //---------------------------------------------------------------Text Fields
     
@@ -392,6 +388,57 @@ function setM3BaseColors() {
     md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant");
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim");
 }
+
+
+function switchSettingsObject(listOfSettings, switchValues, width, height, parentLay){
+    let _SwitchSettings;
+    if(!parentLay){
+        warnDeveloper('No Parent To Swicth Settings.')
+    }
+    else _SwitchSettings = drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay);
+}
+
+function drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay){
+    /* Get No Of Switch Settings */
+    if(!listOfSettings.includes(',')){
+        warnDeveloper('It seems like you didnt give a list.');
+        return;
+    }
+    
+    noOfSettings = listOfSettings.split(',').length;
+    
+    __SwicthListContainer = app.AddLayout(parentLay,'Linear','Vertical')
+    
+    /* Create A Template For A Single Setting */
+    
+    let __SwitchTemplate = function (headerValue, descriptionValue, boolSwitchValue){
+        /* TODO */
+    }
+    
+    
+    /* Get Any Description Values */
+    
+    for (let i = 0; i < noOfSettings; i++){
+        if (listOfSettings.split(',')[i].includes('[')){
+            
+            posOfBracket = listOfSettings.split(',')[i].indexOf('[');
+            posOfLastBracket = listOfSettings.split(',')[i].indexOf(']');
+            
+            headerValue = listOfSettings.split(',')[i].slice(0, posOfBracket).trim()
+            
+            descriptionValue = listOfSettings.split(',')[i].substring(posOfBracket +1,posOfLastBracket)
+        
+            __SwitchTemplate(headerValue,descriptionValue)
+        }
+        
+        else {
+            headerValue = listOfSettings.split(',')[i].trim()
+            
+            __SwitchTemplate(headerValue,null)
+        }
+    }
+}
+
 
 function secTabObject(listOfTabs, width, height, options, parentLay) {
     let _secondaryTab;

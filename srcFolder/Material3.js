@@ -419,6 +419,7 @@ function switchSettingsObject(listOfSettings, switchValues, width, height, paren
 }
 
 function drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay){
+    
     /* Get No Of Switch Settings */
     if(!listOfSettings.includes(',')){
         warnDeveloper('It seems like you didnt give a list.');
@@ -455,7 +456,7 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
         __headerText.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
         __headerText.SetTextSize(15)
         }
-         
+        
         __switch = ui.addSwitch('noIcon',true,__layout);
         __switch.SetMargins(dsUnitsToDp(width,'w') - dsUnitsToDp(0.7,'w')-42,8,12,8,'dp')
         /* TODO */
@@ -2702,7 +2703,7 @@ function switchObject(switchType, value, parent_Layout) {
 
 function drawSwitchNoIcon(value, parent_Layout, objFunc) {
     let _switch;
-    
+    let handle,handle2;
     switchValue = value;
     
     _switch = app.CreateLayout('Card')
@@ -2744,7 +2745,7 @@ function drawSwitchNoIcon(value, parent_Layout, objFunc) {
         }
     }
     
-    handle.SetOnTouchUp(function () {
+    handle.SetOnTouchUp(M(this,function () {
         handle.Hide()
         handle2.Show()
         switchValue = true;
@@ -2761,9 +2762,9 @@ function drawSwitchNoIcon(value, parent_Layout, objFunc) {
             return null;
         }
         
-    })
+    }))
     
-    handle2.SetOnTouchUp(function () {
+    handle2.SetOnTouchUp(M(this,function () {
         handle2.Hide()
         handle.Show()
         switchValue = false;
@@ -2781,7 +2782,7 @@ function drawSwitchNoIcon(value, parent_Layout, objFunc) {
         } catch (err) {
             return null;
         }
-    })
+    }))
     
     parent_Layout.AddChild(_switch);
     _switch.AddChild(handle)

@@ -6,7 +6,7 @@ version 0.80 [To Be Released Soon]
 => All Dialogs                                                                                                           ✅
 => Tabs Component                                                                                                        ✅
 => Add List Component
-=> Add Switch Settings
+=> Add Switch Settings                                                                                                   ✅
 => Add Radio Settings
 => Add CheckBox Component
 => Text Components                                                                                                       ✅
@@ -21,8 +21,8 @@ version 0.80 [To Be Released Soon]
 => Completed Chips
 => Empty Menu Type
 => Chips Complete
-=> Improved Fail Safety
-=> Fix BottomAppBar
+=> Improved Fail Safety                                                                                                  ✅
+=> Fix BottomAppBar                                                                                                      ✅
 => Add More Documentation And Samples                                                                                    ✅
 
 --------------------------------------------------------------------------------------------------------------------------------

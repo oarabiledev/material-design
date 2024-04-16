@@ -25,7 +25,8 @@ const isThisAppFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
 
 const _materialPath = __materialDebug ? '' : app.GetPrivateFolder('Plugins') + '/material3/';
 let defaultFont = _materialPath + 'Roboto.ttf';
-
+let mediumFont = _materialPath + 'Roboto-Medium.ttf';
+let boldFont = _materialPath + 'Roboto-Bold.ttf';
 
 const warningColor = "<div style='color:#FF7900'>";
 
@@ -88,6 +89,25 @@ const ui = {
         return lay;
     },
     
+    addVirtualDocument: function(script, callBackFunc, parentLay){
+        
+        __virtualView = app.CreateWebView(0.1,0.1,'IgnoreErrors')
+        
+        __virtualHTML = `
+        <html>
+        <body>
+        <script>
+        
+        </script>
+        </body>
+        </html>`;
+        
+        __virtualView.LoadHtml(__virtualHTML, "file:///Sys/");
+        
+        __virtualView.Execute(script, callBackFunc);
+        parentLay.AddChild(__virtualView)
+        return __virtualView;
+    },
     
     //------------------------------------------------------------------App Bars
     addCenterAlignedAppBar: function (title, leadingIcon, controlIcons, parentLay) {
@@ -408,11 +428,38 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
     noOfSettings = listOfSettings.split(',').length;
     
     __SwicthListContainer = app.AddLayout(parentLay,'Linear','Vertical')
+    __SwicthListContainer.SetSize(width,height);
+    
     
     /* Create A Template For A Single Setting */
     
     let __SwitchTemplate = function (headerValue, descriptionValue, boolSwitchValue){
+        __layout = ui.createLayout('Linear','Left,Horizontal',-1,-1,__SwicthListContainer)
+        __layout.SetSize(dsUnitsToDp(width,'w'),64,'dp');
+        __layout.SetMargins(null, 0.01)
+        
+        if(descriptionValue){
+            __headerText = app.AddText(__layout,null,0.6,-1,'Left,Multiline')
+            __headerText.SetHtml(`<b>${headerValue}</b><br>${descriptionValue}`)
+            __headerText.SetEllipsize( "end" );
+            __headerText.SetMargins(8,4,null,null,'dp');
+            __headerText.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+            __headerText.SetFontFile(boldFont)
+            __headerText.SetTextSize(15)
+        }
+        else {
+        __headerText = app.AddText(__layout, headerValue,0.6,-1,'Left,Bold')
+        __headerText.SetMargins(8,4,null,null,'dp');
+        __headerText.SetEllipsize( "end" );
+        __headerText.SetFontFile(boldFont)
+        __headerText.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __headerText.SetTextSize(15)
+        }
+         
+        __switch = ui.addSwitch('noIcon',true,__layout);
+        __switch.SetMargins(dsUnitsToDp(width,'w') - dsUnitsToDp(0.7,'w')-42,8,12,8,'dp')
         /* TODO */
+        
     }
     
     
@@ -2629,6 +2676,10 @@ function switchObject(switchType, value, parent_Layout) {
     }
     this.SetPosition = function (left, top, width, height, options) {
         _switch.SetPosition(left, top, width, height, options)
+    }
+    
+    this.SetMargins = function(left,top,right,bottom,mode){
+        _switch.SetMargins(left,top,right,bottom,mode)
     }
     /*
     switch(switchType){

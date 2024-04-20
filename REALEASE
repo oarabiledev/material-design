@@ -3,6 +3,8 @@ MATERIAL 3 RELEASE NOTES
 ------------------------------------------------------------------------------------------------------------------------------
 version 0.80 [To Be Released Soon]
 
+=> Move Away Completly From Material 2 
+   (Means You Wont Need To Use Cfg.MUI)
 => All Dialogs                                                                                                           ✅
 => Tabs Component                                                                                                        ✅
 => Add List Component
@@ -23,7 +25,7 @@ version 0.80 [To Be Released Soon]
 => Chips Complete
 => Improved Fail Safety                                                                                                  ✅
 => Fix BottomAppBar                                                                                                      ✅
-=> Add More Documentation And Samples                                                                                    ✅
+=> Add More Documentation And Samples                                                                                    
 
 --------------------------------------------------------------------------------------------------------------------------------
 version 0.79b1                                                                                                 ALL DONE ✅

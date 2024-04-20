@@ -1,12 +1,11 @@
-/* Material 3 For DroidScript                               *********       
-                                                              /\  /\  
-                                                              \ \/ /
-   This Project Is Licensed                                    \  /
-   Under The MIT License.                                       \/
-   @2024                                                    *********
+/* Material 3 For DroidScript                        
+
+   This Project Is Licensed                                 
+   Under The MIT License.                                       
+   @2024                                                    
 */
 
-'use-strict'
+
 _Boost(true)
     
 let M3Config = 'M3Config';
@@ -14,34 +13,29 @@ const pluginVersion = 'v0.80';
 
 let defaultIcons, theme, iconFill;
 
-const unpositionalLayout = ["Linear","Frame","Card"];
+let unpositionalLayout = ["Linear","Frame","Card"];
 
-const __materialDebug = app.GetAppPath().endsWith('/Material3');
+let _mDebug = app.GetAppPath().endsWith('/Material3');
 let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
 
-const isThisAppFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
+let isFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
 
-const _materialPath = __materialDebug ? '' : app.GetPrivateFolder('Plugins') + '/material3/';
-let defaultFont = _materialPath + 'Roboto.ttf';
-let mediumFont = _materialPath + 'Roboto-Medium.ttf';
-let boldFont = _materialPath + 'Roboto-Bold.ttf';
+let privateFolder = app.GetPrivateFolder('Plugins') + '/material3/';
+let _m3Path = _mDebug ? '' : privateFolder;
 
-const warningColor = "<div style='color:#FF7900'>";
+let defaultFont = _m3Path + 'Roboto.ttf';
+let mediumFont = _m3Path + 'Roboto-Medium.ttf';
+let boldFont = _m3Path + 'Roboto-Bold.ttf';
 
-/* Explanation Behind The I() global Function
-   DS tries to be smart and caches callbacks based on their function body
-   so when you re-use callback functions it will use the cached one the second time
+let warningColor = "<div style='color:#FF7900'>";
 
-   what I() does is prevent that caching method and always use the function as-is
-   ---Symbrsom
-*/ 
 
 const ui = {
     
     //-----------------------------------------------------------------Top Level
     
     InitializeUIKit: () => {
-        if (isThisAppFirstRun) app.SaveBoolean('isFirstRun?', false, 'M3Config');
+        if (isFirstRun) app.SaveBoolean('isFirstRun?', false, 'M3Config');
         
         if (!app.FileExists('baseTheme.json')) {
             warnDeveloper('baseTheme File Not Found In Directory');
@@ -54,7 +48,7 @@ const ui = {
     },
     
     isFirstStart: () => {
-        return isThisAppFirstRun;
+        return isFirstRun;
     },
     
     
@@ -241,15 +235,14 @@ app.CreateMaterial3 = function () {
 
 
 const warnDeveloper = (context,shortContext) => {
-    if(context) console.log(warningColor + context);
-    else console.error('No Warning Context.');
-    if (shortContext){
+    if(context || shortContext) {
+        console.log(warningColor + context);
         app.ShowPopup(shortContext,'Top, Short');
     }
+    
     else {
-        app.ShowPopup(context,'Top, Short');
+        alert('No Warning Context.');
     }
-    if (context === null && shortContext === null) alert('No Warning Context.');
 }
 
 
@@ -295,25 +288,25 @@ const backgroundColor = () =>{
 
 function setM3BaseColors() {
   
-    appTheme = app.ReadFile('baseTheme.json','UTF-8');
+    let appTheme = app.ReadFile('baseTheme.json','UTF-8');
     
-    jsonData = JSON.parse(appTheme)
+    let jsonData = JSON.parse(appTheme)
     
     theme = jsonData.baseTheme;
     iconFill = jsonData.baseIcons;
     
     switch (iconFill) {
     case 'outlined':
-        defaultIcons = _materialPath + 'uxFonts/Icons/Outlined-Regular.otf';
+        defaultIcons = _m3Path + 'uxFonts/Icons/Outlined-Regular.otf';
         break;
     case 'sharp':
-        defaultIcons = _materialPath + 'uxFonts/Icons/Sharp-Regular.otf';
+        defaultIcons = _m3Path + 'uxFonts/Icons/Sharp-Regular.otf';
         break;
     case 'two-tone':
-        defaultIcons = _materialPath + 'uxFonts/Icons/TwoTone-Regular.otf';
+        defaultIcons = _m3Path + 'uxFonts/Icons/TwoTone-Regular.otf';
         break;
     case 'round':
-        defaultIcons = _materialPath + 'uxFonts/Icons/Round-Regular.otf'
+        defaultIcons = _m3Path + 'uxFonts/Icons/Round-Regular.otf'
     }
     
     
@@ -640,25 +633,25 @@ function drawNavBar(sortedTabNames, sortedLabels, options, parentLay){
 function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     let __secondaryTab;
     let __activeTab;
-    let __tabCount = 0;
     
-    let __secTabBkgClr = stateColor(md_theme_light_surface,md_theme_dark_surface)
-    
-    let __secTabBtnClr = stateColor(md_theme_dark_onSurfaceVariant,
+    let backColor = stateColor(md_theme_light_surface,md_theme_dark_surface)
+    let buttonColor = stateColor(md_theme_dark_onSurfaceVariant,
     md_theme_dark_onSurfaceVariant);
     
-    let __lightBarClr = stateColor(md_theme_light_primary,md_theme_dark_primary)
+    let lightBarClr = stateColor(md_theme_light_primary,md_theme_dark_primary)
+    
+    let qaudTween = 'Quadratic.In';
+    let linTween = 'Linear.None'
+    let __tabCount = listOfTabs.split(',').length;
     
     const noOfTabs = (listOfTabs) =>{
-        if(listOfTabs.includes(',')){
-            if(listOfTabs.split(',')[0]) __firstTab = listOfTabs.split(',')[0];
-            if(listOfTabs.split(',')[1]) __secondTab = listOfTabs.split(',')[1], 
-            __tabCount = __tabCount + 2;
-            if(listOfTabs.split(',')[2]) __thirdTab = listOfTabs.split(',')[2],e__tabCount = __tabCount + 3;
+        if(__tabCount >= 1 && __tabCount <= 3){
+           __firstTab = listOfTabs.split(',')[0];
+           __secondTab = listOfTabs.split(',')[1], 
+           __thirdTab = listOfTabs.split(',')[2]
         }
         else {
-            warnDeveloper(`You must have 2 or more tabs`,
-            `You must have 2 or more tabs`);
+            warnDeveloper(`You must have 2 or more tabs`);
             return;
         }
     }
@@ -675,11 +668,11 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     
     __secTabInnerTab = app.AddLayout(__secondaryTab, 'Absolute','Vertical,Left')
     __secTabInnerTab.SetSize(pxToDpConversion(DW()), 48, 'dp');
-    __secTabInnerTab.SetBackColor(__secTabBkgClr);
+    __secTabInnerTab.SetbackColorkColor(backColor);
     
     __secTabInnerLay = app.AddLayout(__secTabInnerTab, 'Linear','Horizontal');
     __secTabInnerLay.SetSize(pxToDpConversion(DW()), 46, 'dp');
-    __secTabInnerLay.SetBackColor(__secTabBkgClr);
+    __secTabInnerLay.SetBackColor(backColor);
     
     // By default active tab is the first
     
@@ -690,18 +683,18 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         
         __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
         __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __firstTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __firstTabBtn.SetStyle(backColor,backColor,0,null,null,0)
         __firstTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
         __firstTabBtn.SetMargins(0,0,0)
         
         __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, 0.5, -1, 'Custom,NoPad');
         __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __secondTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __secondTabBtn.SetStyle(backColor,backColor,0,null,null,0)
         __secondTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
         
         lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
         lightStrip.SetSize(pxToDpConversion(DW())/2,2,'dp')
-        lightStrip.SetBackColor(__lightBarClr) 
+        lightStrip.SetBackColor(lightBarClr) 
         
         
         const tweenValues = ()=>{
@@ -714,8 +707,8 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             
             if(x) lightStrip.SetPosition(0,dpToDsUnit(46),null,null);
             else{
-                if(__firstTabActive === true && x === undefined) lightStrip.Tween(tweenValues() ,250,'Linear.None',false,null) 
-                else lightStrip.Tween(tweenValues() ,350,'Quadratic.In',false,null) 
+                if(__firstTabActive === true && x === undefined) lightStrip.Tween(tweenValues() ,250,linTween,false,null) 
+                else lightStrip.Tween(tweenValues() ,350,qaudTween,false,null) 
             }
         }
         
@@ -741,9 +734,11 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         
         __secondaryLayJacket = app.AddLayout(__secondaryMain, 'Frame', 'Horizontal')
         
-        __firstTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        __firstTabLay = ui.createLayout(layoutType, options, width, 
+        height - dpToDsUnit(48,'h'), __secondaryLayJacket)
         
-        __secondTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        __secondTabLay = ui.createLayout(layoutType, options, width,
+        height - dpToDsUnit(48,'h'), __secondaryLayJacket)
         
         
         /* If firstTabActive first layout shows and vice versa */
@@ -789,23 +784,23 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         
         __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
         __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __firstTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __firstTabBtn.SetStyle(backColor,backColor,0,null,null,0)
         __firstTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         __firstTabBtn.SetMargins(0,0,0)
         
         __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, null, null, 'Custom,NoPad');
         __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __secondTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __secondTabBtn.SetStyle(backColor,backColor,0,null,null,0)
         __secondTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         
         __thirdTabBtn = app.AddButton(__secTabInnerLay, __thirdTab, null, null, 'Custom,NoPad');
         __thirdTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __thirdTabBtn.SetStyle(__secTabBkgClr,__secTabBkgClr,0,null,null,0)
+        __thirdTabBtn.SetStyle(backColor,backColor,0,null,null,0)
         __thirdTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         
         lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
         lightStrip.SetSize(pxToDpConversion(DW())/3,2,'dp')
-        lightStrip.SetBackColor(__lightBarClr) 
+        lightStrip.SetBackColor(lightBarClr) 
         
         
         const tweenValues = ()=>{
@@ -815,13 +810,20 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         }
         
         const lightStripPower = (x) =>{
-            /* If We Booted It Shouldnt Apply An Animation */
             
+            /* If We Booted It Shouldnt Apply An Animation */
+            //'Quadratic.In'
             if(x) lightStrip.SetPosition(0,dpToDsUnit(46),null,null);
+            
             else{
-                if(__firstTabActive === 0 && x === undefined) lightStrip.Tween(tweenValues() ,250,'Quadratic.In',false,null);
-                if(__firstTabActive === 1) lightStrip.Tween(tweenValues() ,250,'Linear.None',false,null);
-                else lightStrip.Tween(tweenValues() ,250,'Quadratic.In',false,null);
+                if(__firstTabActive === 0 && x === undefined){
+                    lightStrip.Tween(tweenValues() ,250,qaudTween,false,null);
+                }
+                if(__firstTabActive === 1) {
+                    lightStrip.Tween(tweenValues() ,250,linTween,false,null);
+                }
+                
+                else lightStrip.Tween(tweenValues() ,250,qaudTween,false,null);
             }
         }
         

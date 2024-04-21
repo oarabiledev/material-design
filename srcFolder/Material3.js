@@ -20,7 +20,9 @@ let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
 
 let isFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
 
-let privateFolder = app.GetPrivateFolder('Plugins') + '/material3/';
+let privateFolder = 
+app.GetPrivateFolder('Plugins') + '/material3/';
+
 let _m3Path = _mDebug ? '' : privateFolder;
 
 let defaultFont = _m3Path + 'Roboto.ttf';
@@ -58,23 +60,27 @@ const ui = {
     
     createLayout: function(type, options, width, height, parentLay) {
         let lay;
-        
+        let backColor = stateColor(md_theme_light_background, md_theme_dark_background)
+       
         if (!parentLay) {
             lay = app.CreateLayout(type, options);
-            lay.SetBackColor(stateColor(md_theme_light_surface, md_theme_dark_surface));
-            //app.SetStatusBarColor(stateColor(md_theme_light_surface,md_theme_dark_background));
+            lay.SetBackColor(backColor);
+            
+            app.SetStatusBarColor(stateColor(md_theme_light_surface
+            ,md_theme_dark_background));
 
             /* These variables will be used
                by componenets which need a 
                sticky position (FAB)
             */
+            
             layoutType = type;
             layoutOptions = options;
         } 
         
         else {
             lay = app.AddLayout(parentLay, type, options);
-            lay.SetBackColor(stateColor(md_theme_light_background, md_theme_dark_background));
+            lay.SetBackColor(backColor);
             lay.SetSize(width, height);
         }
         
@@ -225,6 +231,10 @@ const ui = {
     
     addDatePicker: function (){
         
+    },
+    
+    addTimeInput: function (hour, minute, options){
+        return new timeInputObject(hour, minute, options);
     }
     
 };
@@ -380,6 +390,67 @@ function setM3BaseColors() {
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim");
 }
 
+function timeInputObject(hour, minute, options){
+    let _timeInput;
+    
+    _timeInput = drawTimeInput(hour, minute, options);
+}
+
+function drawTimeInput(hour, minute, options){
+    let __timeInput,__container,__subContainer;
+    
+    let textColor = stateColor(md_theme_light_onSurfaceVariant,
+    md_theme_dark_onSurfaceVariant);
+    
+    let containeClr = stateColor(md_theme_light_surface,
+    md_theme_dark_surface);
+    
+    let hrcolor = stateColor(md_theme_light_primary,
+    md_theme_dark_primary);
+    
+    let hrBorderClr = stateColor(md_theme_light_onSurfaceVariant,
+    md_theme_dark_onSurfaceVariant)
+    let width = function () {
+        if (app.IsTablet()) return 560;
+        else return 280;
+    }
+    
+    let margin = dpToPxConversion(24)
+    __timeInput = app.CreateDialog();
+    __timeInput.SetBackColor("#00000000");
+    
+    __container = app.CreateLayout('Card');
+    __container.SetCornerRadius(28);
+    __container.SetElevation(0);
+    __container.SetSize(width(), -1, 'dp');
+    __container.SetBackColor(containeClr);
+    
+    __subContainer = app.AddLayout(__container, 'Absolute')
+    
+
+    __enterTime = app.AddText(__subContainer, 'Enter time', -1, -1, 'Bold');
+    __enterTime.SetTextColor(textColor)
+    __enterTime.SetPosition(dpToPxConversion(24),
+    dpToPxConversion(24),null,null,'px');
+    
+    __hrContainer = app.AddButton(__subContainer,'',null,null,'Custom');
+    __hrContainer.SetSize(96,80,'dp')
+    __hrContainer.SetPosition(dpToPxConversion(24),
+    dpToPxConversion(62),null,null,'px');
+    
+    __hrContainer.SetStyle("#00000000","#00000000",14,hrBorderClr,2,0);
+    
+    __minContainer = app.AddButton(__subContainer,'',null,null,'Custom');
+    __minContainer.SetSize(96,80,'dp')
+    __minContainer.SetPosition(dpToPxConversion(134),
+    dpToPxConversion(62),null,null,'px');
+    
+    __minContainer.SetStyle("#00000000","#00000000",14,hrBorderClr,2,0);
+    
+    __timeInput.AddLayout(__container);
+    __timeInput.Show();
+    return __timeInput;
+}
 
 function switchSettingsObject(listOfSettings, switchValues, width, height, parentLay){
     let _SwitchSettings;
@@ -852,28 +923,46 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         
         __secondaryLayJacket = app.AddLayout(__secondaryMain, 'Frame', 'Horizontal')
         
-        __firstTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        __firstTabLay = ui.createLayout(layoutType, options, width, 
+        height - dpToDsUnit(48,'h'), __secondaryLayJacket)
         
-        __secondTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        __secondTabLay = ui.createLayout(layoutType, options, width,
+        height - dpToDsUnit(48,'h'), __secondaryLayJacket)
         
-        __thirdTabLay = ui.createLayout(layoutType, options, width, height - dpToDsUnit(48,'h'), __secondaryLayJacket)
+        __thirdTabLay = ui.createLayout(layoutType, options, width,
+        height - dpToDsUnit(48,'h'), __secondaryLayJacket)
         
         /* If firstTabActive first layout shows and vice versa */
         
         /* All Layouts must be hidden before animating */
         
         const activeTabLayoutSwitch = (x) =>{
-            if (x) __firstTabLay.Show() || __secondTabLay.Hide() || __thirdTabLay.Hide();
+            
+            if (x){
+                __firstTabLay.Show()
+                __secondTabLay.Hide()
+                __thirdTabLay.Hide();
+            }
+            
             else{
+                
             if (__firstTabActive === 0 && x === undefined){
-                __secondTabLay.Hide()|| __thirdTabLay.Hide() || __firstTabLay.Animate('SlideFromLeft',null,350) 
+                __secondTabLay.Hide()
+                __thirdTabLay.Hide() 
+                __firstTabLay.Animate('SlideFromLeft',null,350) 
             }
+            
             if(__firstTabActive === 1){
-               __firstTabLay.Hide()||  __thirdTabLay.Hide() || __secondTabLay.Animate('SlideFromLeft',null,350)
+               __firstTabLay.Hide()
+               __thirdTabLay.Hide()
+               __secondTabLay.Animate('SlideFromLeft',null,350)
             }
+            
             if(__firstTabActive === 2){
-                __firstTabLay.Hide() || __secondTabLay.Hide() || __thirdTabLay.Animate('SlideFromRight',null,350);
-                }
+                __firstTabLay.Hide()
+                __secondTabLay.Hide()
+                __thirdTabLay.Animate('SlideFromRight',null,350);
+            }
             }
         }
         
@@ -887,15 +976,23 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             if(index === __firstTabActive) return;
             if(index == 0){
                 __firstTabActive = 0
-                __secondTabLay.Hide()|| __thirdTabLay.Hide() || __firstTabLay.Animate('SlideFromLeft',null,350) 
+                __secondTabLay.Hide()
+                __thirdTabLay.Hide()
+                __firstTabLay.Animate('SlideFromLeft',null,350) 
             }
+            
             if(index == 1){
                  __firstTabActive = 1
-                __firstTabLay.Hide()||  __thirdTabLay.Hide() || __secondTabLay.Animate('SlideFromLeft',null,350)
+                __firstTabLay.Hide()
+                __thirdTabLay.Hide()
+                __secondTabLay.Animate('SlideFromLeft',null,350)
             }
+            
             if(index == 2){
                  __firstTabActive = 2
-                __firstTabLay.Hide() || __secondTabLay.Hide() || __thirdTabLay.Animate('SlideFromRight',null,350);
+                __firstTabLay.Hide()
+                __secondTabLay.Hide()
+                __thirdTabLay.Animate('SlideFromRight',null,350);
             }
             
             lightStripPower();
@@ -913,29 +1010,24 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
 }
 
 let _smallAppBar;
+
 function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
     drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, this)
 }
 
 function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBarObj){
-    let noOfControlsIco;
+    let noOfControlsIco = controlIcons.split(',').length; 
     let firstControlIcon,secondControlIcon,thirdControlIcon;
     
-    mobileWarning = 'You Can Only Have Upto 3 Icons For AppBar';
+    let warning = 'You Can Only Have Upto 3 Icons For AppBar';
     
-    if (controlIcons.includes(',')){
+    if (noOfControlsIco == 3){
         firstControlIcon = controlIcons.split(',')[0];
-        if (controlIcons.split(',')[1]){
-            secondControlIcon = controlIcons.split(',')[1];
-            noOfControlsIco = 2;
-        }
-        if(controlIcons.split(',')[2]){
-            thirdControlIcon = controlIcons.split(',')[2];
-            noOfControlsIco = 3;
-        }
+        secondControlIcon = controlIcons.split(',')[1];
+        thirdControlIcon = controlIcons.split(',')[2];
     }
     else {
-        noOfControlsIco = 1;
+        warnDeveloper(warning)
     }
     
     if (parentLay){
@@ -981,7 +1073,7 @@ function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBa
             smallApBrightIcon2.SetFontFile(defaultIcons);
             smallApBrightIcon2.SetTextSize(26);
         }
-        else {
+        else if(noOfControlsIco == 3){
             smallApBrightIcon = app.AddButton(smallAppBarLay, firstControlIcon,null,null,'Custom,Lego' );
             smallApBrightIcon.SetSize(40, 40, 'dp')
             smallApBrightIcon.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
@@ -1004,10 +1096,6 @@ function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBa
     }
     else warnDeveloper('No Parent For AppBar','No Parent For AppBar');
 }
-
-
-
-//------------------------------------------------------------Actual Components
 
 
 let _search, _searchInput;

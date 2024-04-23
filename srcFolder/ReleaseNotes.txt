@@ -1,0 +1,50 @@
+-------------------------------------------------------------------------------------------------------------------------------
+MATERIAL 3 RELEASE NOTES 
+------------------------------------------------------------------------------------------------------------------------------
+version 0.80 [To Be Released Soon]
+
+=> Move Away Completly From Material 2 
+   (Means You Wont Need To Use Cfg.MUI)
+=> All Dialogs                                                                                                           ✅
+=> Tabs Component                                                                                                        ✅
+=> Add List Component
+=> Add Switch Settings                                                                                                   ✅
+=> Add Radio Settings
+=> Add CheckBox Component
+=> Text Components                                                                                                       ✅
+=> Adding All Top App Bars
+=> Adding Extended FAB
+
+=> Adding Extended FAb To Normal FAB Switch On Scroll
+=> Adding Bottom Navigation                                                                                              ✅
+=> Complete Sliders
+=> All TextFiels Components
+=> All SearchBars                                                                                                        ✅
+=> Completed Chips
+=> Empty Menu Type
+=> Chips Complete
+=> Improved Fail Safety                                                                                                  ✅
+=> Fix BottomAppBar                                                                                                      ✅
+=> Add More Documentation And Samples                                                                                    
+
+--------------------------------------------------------------------------------------------------------------------------------
+version 0.79b1                                                                                                 ALL DONE ✅
+
+=> Removed Partial FallBack Fix Temporarily
+=> Fixed Issue With cfg.Node and cfg.Fast due to fetch Api usage, now using
+default Ds app.HttpRequest() Api.
+=> Fixed Dialog Bar Colouring Issue
+=> Fixed FilledTonalButton SetOnTouch Issue
+=> Fixed fa-null button text when icon is null
+=> Added Empty Dialog bar (undocumented)
+=>Added Console and Dialog Update Warning
+=>Added Standard AppBar
+=> Added Real Buttons To AppBar (discarded button emulation via text)
+=> Changed Methods To Ds Syntax Look (from setOnTouch to SetOnTouch)
+=> Updated Documentation look.
+
+------------------------------------------------------------------------------------------------------------------------------------
+version 0.79                                                                                                   ALL DONE ✅
+
+=> Added FallBack Option For Undefined Or Unproperly referenced appTheme.json file
+=> Fixed cfg.Node and cfg.Fast Issues, due to use of fetch API, now use app.HttpRequest()

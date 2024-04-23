@@ -1,4 +1,4 @@
-![](https://drive.google.com/thumbnail?id=1JO00Je5CGrtDUP)
+<img src="https://drive.google.com/thumbnail?id=1JO00Je5CGrtDUP_WqEDuHQqdNfp09Mf1" style="display: block; margin-top: 80px; max-width: 100%; height: auto;"/>
 # Material3 For Droidscript:
 
 

@@ -6,59 +6,15 @@
 */
 
 
-function createSignal(defaultValue){
-    let __InnerValue = defaultValue;
-    let subscribers = [];
-    
-    function notify(){
-        for (let subscriber of subscribers) {
-            subscriber(__InnerValue);
-        }
-    }
-    return {
-        get value (){
-            return __InnerValue;
-        },
-        
-        set value (newVariable){
-            __InnerValue = newVariable;
-            notify();
-        },
-        subscribe: (subscriber) => {
-            subscribers.push(subscriber);
-        }
-    }
-}
-
 _Boost(true)
-    
+
 let M3Config = 'M3Config';
 const pluginVersion = 'v0.80';
-
-let defaultIcons, theme, iconFill;
-
-let unpositionalLayout = ["Linear","Frame","Card"];
-
-let _mDebug = app.GetAppPath().endsWith('/Material3');
-let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
-
-let isFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
-
-let privateFolder = 
-app.GetPrivateFolder('Plugins') + '/material3/';
-
-let _m3Path = _mDebug ? '' : privateFolder;
-
-let defaultFont = _m3Path + 'Roboto.ttf';
-let mediumFont = _m3Path + 'Roboto-Medium.ttf';
-let boldFont = _m3Path + 'Roboto-Bold.ttf';
-
-let warningColor = "<div style='color:#FF7900'>";
+app.Script('MaterialStore.js')
 
 
 const ui = {
     
-    //-----------------------------------------------------------------Top Level
     
     InitializeUIKit: () => {
         if (isFirstRun) app.SaveBoolean('isFirstRun?', false, 'M3Config');
@@ -66,6 +22,20 @@ const ui = {
         if (!app.FileExists('baseTheme.json')) {
             warnDeveloper('baseTheme File Not Found In Directory');
         } else setM3BaseColors();
+    },
+    
+    setTheme: (mode) =>{
+        if (mode == undefined){
+            let baseTheme = jsonData.baseTheme;
+            if (theme == 'light'){
+                theme = 'dark';
+            }
+            else theme = 'light';
+            setM3BaseColors();
+        }
+        
+        else theme = mode;
+        setM3BaseColors();
     },
     
     changeThemeKit: (themeFile) =>{
@@ -76,8 +46,6 @@ const ui = {
             warnDeveloper('Incorrect File Path/Name Given')
         }
     },
-    
-    
     
     getVersion: () => {
         return pluginVersion;
@@ -94,38 +62,29 @@ const ui = {
     
     createLayout: function(type, options, width, height, parentLay) {
         let lay;
-        let stateColor = (x, y) => {
-                if (theme === 'light') return x;
-                else return y;
-            };
-        let backColor = stateColor(md_theme_light_background, md_theme_dark_background)
-       
+        backgroundClr.subscribe((value)=>{
+            lay.SetBackColor(value);
+            //app.SetStatusBarColor(value);
+        })
+        
         if (!parentLay) {
+            
             lay = app.CreateLayout(type, options);
-            lay.SetBackColor(backColor);
-            
-            app.SetStatusBarColor(stateColor(md_theme_light_surface
-            ,md_theme_dark_background));
-
-            /* These variables will be used
-               by componenets which need a 
-               sticky position (FAB)
-            */
-            
+    
             layoutType = type;
             layoutOptions = options;
         } 
         
         else {
             lay = app.AddLayout(parentLay, type, options);
-            lay.SetBackColor(backColor);
             lay.SetSize(width, height);
         }
-        
+        backgroundClr.value = stateColor(md_theme_light_background,
+        md_theme_dark_background);
         return lay;
     },
  
-    //------------------------------------------------------------------App Bars
+    
     addCenterAlignedAppBar: function (title, leadingIcon, controlIcons, parentLay) {
         return new appBarObject(title, leadingIcon, controlIcons, parentLay);
     },
@@ -143,8 +102,6 @@ const ui = {
     },
     
     
-    
-    //----------------------------------------------Additional Layouts Container
     addBottomSheet: function (sheetLayout, height, options) {
         return new bottomSheetObject(sheetLayout, height, options);
     },
@@ -153,10 +110,8 @@ const ui = {
         return new slideSheetObject(sheetLayout, width, options);
     },
     
-    
-    
-    
-    //-------------------------------------------------------------------Buttons
+
+
     addElevatedButton: function (btnName, width, height, icon, parentLay) {
         return new elevatedButtonObject(btnName, width, height, icon, parentLay);
     },
@@ -204,7 +159,6 @@ const ui = {
     
     
     
-    //----------------------------------------------------------------Navigation 
     addDrawer: function (drawerLayout, side, width, options) {
         return new navDrawerObject(drawerLayout, side, width, options);
     },
@@ -216,10 +170,9 @@ const ui = {
     
     addNavigationBar: function(listOfTabs, labels, options, parentLay){
         return new navigationBarObject(listOfTabs, labels, options, parentLay);
-        //alert(listOfTabs, labels, height, options, parentLay)
     },
     
-    //---------------------------------------------------------------Addon Comps
+   
     addMenu: function (menuType, list, position) {
         return new menuObj(menuType, list, position);
     },
@@ -255,7 +208,7 @@ const ui = {
         return new switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
     },
     
-    //---------------------------------------------------------------Text Fields
+    
     
     addText: function(text, width, height, options, parentLay){
         return new textObject(text, width, height, options, parentLay)
@@ -265,7 +218,7 @@ const ui = {
         return new inputObj(type, width, height, hint, options, labeled, parentLay);
     },
     
-    //-------------------------------------------------------------------Pickers
+    
     
     addDatePicker: function (){
         
@@ -323,135 +276,24 @@ const dpToDsUnit = function(dpValue, side){
     }
 }
 
-let stateColor = (x, y, id) => {
-    if (theme.value === 'light') return x;
-    else return y;
+const stateColor = (lightValue, darkValue) => {
+    /* At start theme is undefined.
+       We make opportunity out of 
+       bug/
+       Default theme is always dark
+       and can be changed w,
+       setTheme method.
+    */
     
-    
-};
-
-const backgroundColor = () =>{
-    return md_theme_dark_background;
-}
-
-
-function setM3BaseColors(isChangeTheming,file) {
-    let appTheme;
-    
-    if(isChangeTheming !== undefined) {
-        appTheme = app.ReadFile(file,'UTF-8');
-    }
-    else appTheme = app.ReadFile('baseTheme.json','UTF-8');
-    
-    jsonData = JSON.parse(appTheme)
-    
-    ui.setTheme = (mode) =>{
-        theme = createSignal();
-        
-        if(mode) {
-            theme.value = mode
-            setM3BaseColors();
-        }
-        else theme.value = jsonData.baseTheme;
-        
-        
+    if (theme === 'light') {
+        return lightValue;
     }
     
-    ui.setTheme();
-    
-    
-    iconFill = jsonData.baseIcons;
-    
-    switch (iconFill) {
-    case 'outlined':
-        defaultIcons = _m3Path + 'uxFonts/Icons/Outlined-Regular.otf';
-        break;
-    case 'sharp':
-        defaultIcons = _m3Path + 'uxFonts/Icons/Sharp-Regular.otf';
-        break;
-    case 'two-tone':
-        defaultIcons = _m3Path + 'uxFonts/Icons/TwoTone-Regular.otf';
-        break;
-    case 'round':
-        defaultIcons = _m3Path + 'uxFonts/Icons/Round-Regular.otf'
-    }
-    
-    
-    // Function to get the text value based on the color name 
-    const getColorTextValue = (jsonData, colorName) => {
-        const colorObject = jsonData.resources.color.find(color => color._name === colorName);
-        return colorObject ? colorObject.__text : null;
-    };
-    
-    // Get the text value for "md_theme_dark_scrim" 
-    seed = getColorTextValue(jsonData, "seed");
-    md_theme_light_primary = getColorTextValue(jsonData, "md_theme_light_primary")
-    md_theme_light_onPrimary = getColorTextValue(jsonData, "md_theme_light_onPrimary");
-    md_theme_light_primaryContainer = getColorTextValue(jsonData, "md_theme_light_primaryContainer");
-    md_theme_light_onPrimaryContainer = getColorTextValue(jsonData, "md_theme_light_onPrimaryContainer");
-    md_theme_light_secondary = getColorTextValue(jsonData, "md_theme_light_secondary");
-    md_theme_light_onSecondary = getColorTextValue(jsonData, "md_theme_light_onSecondary");
-    md_theme_light_secondaryContainer = getColorTextValue(jsonData, "md_theme_light_secondaryContainer");
-    md_theme_light_onSecondaryContainer = getColorTextValue(jsonData, "md_theme_light_onSecondaryContainer");
-    md_theme_light_tertiary = getColorTextValue(jsonData, "md_theme_light_tertiary");
-    md_theme_light_onTertiary = getColorTextValue(jsonData, "md_theme_light_onTertiary");
-    md_theme_light_tertiaryContainer = getColorTextValue(jsonData, "md_theme_light_tertiaryContainer");
-    md_theme_light_onTertiaryContainer = getColorTextValue(jsonData, "md_theme_light_onTertiaryContainer");
-    md_theme_light_error = getColorTextValue(jsonData, "md_theme_light_error");
-    md_theme_light_onError = getColorTextValue(jsonData, "md_theme_light_onError");
-    md_theme_light_errorContainer = getColorTextValue(jsonData, "md_theme_light_errorContainer");
-    md_theme_light_onErrorContainer = getColorTextValue(jsonData, "md_theme_light_onErrorContainer");
-    md_theme_light_outline = getColorTextValue(jsonData, "md_theme_light_outline");
-    md_theme_light_background = getColorTextValue(jsonData, "md_theme_light_background");
-    md_theme_light_onBackground = getColorTextValue(jsonData, "md_theme_light_onBackground");
-    md_theme_light_surface = getColorTextValue(jsonData, "md_theme_light_surface");
-    md_theme_light_onSurface = getColorTextValue(jsonData, "md_theme_light_onSurface");
-    md_theme_light_surfaceVariant = getColorTextValue(jsonData, "md_theme_light_surfaceVariant");
-    md_theme_light_onSurfaceVariant = getColorTextValue(jsonData, "md_theme_light_onSurfaceVariant");
-    md_theme_light_inverseSurface = getColorTextValue(jsonData, "md_theme_light_inverseSurface");
-    md_theme_light_inverseOnSurface = getColorTextValue(jsonData, "md_theme_light_inverseOnSurface");
-    md_theme_light_inversePrimary = getColorTextValue(jsonData, "md_theme_light_inversePrimary");
-    md_theme_light_shadow = getColorTextValue(jsonData, "md_theme_light_shadow");
-    md_theme_light_surfaceTint = getColorTextValue(jsonData, "md_theme_light_surfaceTint");
-    md_theme_light_outlineVariant = getColorTextValue(jsonData, "md_theme_light_outlineVariant");
-    md_theme_light_scrim = getColorTextValue(jsonData, "md_theme_light_scrim");
-    md_theme_dark_primary = getColorTextValue(jsonData, "md_theme_dark_primary");
-    md_theme_dark_onPrimary = getColorTextValue(jsonData, "md_theme_dark_onPrimary");
-    md_theme_dark_primaryContainer = getColorTextValue(jsonData, "md_theme_dark_primaryContainer");
-    md_theme_dark_onPrimaryContainer = getColorTextValue(jsonData, "md_theme_dark_onPrimaryContainer");
-    md_theme_dark_secondary = getColorTextValue(jsonData, "md_theme_dark_secondary");
-    md_theme_dark_onSecondary = getColorTextValue(jsonData, "md_theme_dark_onSecondary");
-    md_theme_dark_secondaryContainer = getColorTextValue(jsonData, "md_theme_dark_secondaryContainer");
-    md_theme_dark_onSecondaryContainer = getColorTextValue(jsonData, "md_theme_dark_onSecondaryContainer");
-    md_theme_dark_tertiary = getColorTextValue(jsonData, "md_theme_dark_tertiary");
-    md_theme_dark_onTertiary = getColorTextValue(jsonData, "md_theme_dark_onTertiary");
-    md_theme_dark_tertiaryContainer = getColorTextValue(jsonData, "md_theme_dark_tertiaryContainer");
-    md_theme_dark_onTertiaryContainer = getColorTextValue(jsonData, "md_theme_dark_onTertiaryContainer");
-    md_theme_dark_error = getColorTextValue(jsonData, "md_theme_dark_error");
-    md_theme_dark_onError = getColorTextValue(jsonData, "md_theme_dark_onError");
-    md_theme_dark_errorContainer = getColorTextValue(jsonData, "md_theme_dark_errorContainer");
-    md_theme_dark_onErrorContainer = getColorTextValue(jsonData, "md_theme_dark_onErrorContainer");
-    md_theme_dark_outline = getColorTextValue(jsonData, "md_theme_dark_outline");
-    md_theme_dark_background = getColorTextValue(jsonData, "md_theme_dark_background");
-    md_theme_dark_onBackground = getColorTextValue(jsonData, "md_theme_dark_onBackground");
-    md_theme_dark_surface = getColorTextValue(jsonData, "md_theme_dark_surface");
-    md_theme_dark_onSurface = getColorTextValue(jsonData, "md_theme_dark_onSurface");
-    md_theme_dark_surfaceVariant = getColorTextValue(jsonData, "md_theme_dark_surfaceVariant");
-    md_theme_dark_onSurfaceVariant = getColorTextValue(jsonData, "md_theme_dark_onSurfaceVariant");
-    md_theme_dark_inverseSurface = getColorTextValue(jsonData, "md_theme_dark_inverseSurface");
-    md_theme_dark_inverseOnSurface = getColorTextValue(jsonData, "md_theme_dark_inverseOnSurface");
-    md_theme_dark_inversePrimary = getColorTextValue(jsonData, "md_theme_dark_inversePrimary");
-    md_theme_dark_shadow = getColorTextValue(jsonData, "md_theme_dark_shadow");
-    md_theme_dark_surfaceTint = getColorTextValue(jsonData, "md_theme_dark_surfaceTint");
-    md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant");
-    md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim");
-    
-    try{
-    color.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
-    }
-    catch(e){
+    else {
+        return darkValue;
     }
 }
+
 
 function timeInputObject(hour, minute, options){
     let _timeInput;
@@ -2198,22 +2040,26 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
 function drawFilledButton(btnName, width, height, icon, parentLay) {
     let filledButton;
     
-    color = createSignal();
-    color.subscribe((value)=>{
+    filledBtnClr.subscribe((value)=>{
         filledButton.SetStyle(value, value, 20, null, null, 0)
+    })
+    
+    filledBtnTxtClr.subscribe((value)=>{
+        filledButton.SetTextColor(value)
     })
     
     filledButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     
-    filledButton.SetTextColor(stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary))
-    
-    filledButton.SetFontFile(defaultFont);
-    
-    color.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
-     
     if (icon === null) {
         filledButton.SetText(btnName);
-    } else filledButton.SetText(`[fa-${icon}]` + ' ' + btnName);
+    } else {
+        filledButton.SetText(`[fa-${icon}]` + ' ' + btnName);
+    }
+
+    filledButton.SetFontFile(defaultFont);
+    
+    filledBtnClr.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
+    filledBtnTxtClr.value = stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary);
     
     return filledButton;
 }
@@ -2306,10 +2152,6 @@ function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
 function clr1() {
     return stateColor(md_theme_light_secondaryContainer, md_theme_dark_secondaryContainer);
 }
-
-
-
-
 
 
 function filledTonalButtonObject(btnName, width, height, icon, parentLay) {

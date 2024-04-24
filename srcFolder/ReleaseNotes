@@ -3,28 +3,33 @@ MATERIAL 3 RELEASE NOTES
 ------------------------------------------------------------------------------------------------------------------------------
 version 0.80 [To Be Released Soon]
 
+=> Add Light/Dark Mode
+=> Add ChangeKit Method
+=> Implement Signals on every component to
+color adjust when theme/kit switching
+(May Delay Project)
 => Move Away Completly From Material 2 
    (Means You Wont Need To Use Cfg.MUI)
-=> All Dialogs                                                                                                           ✅
-=> Tabs Component                                                                                                        ✅
+=> All Dialogs                                                                                                           
+=> Tabs Component                                                                                                        
 => Add List Component
-=> Add Switch Settings                                                                                                   ✅
+=> Add Switch Settings                                                                                                   
 => Add Radio Settings
 => Add CheckBox Component
-=> Text Components                                                                                                       ✅
+=> Text Components                                                                                                       
 => Adding All Top App Bars
 => Adding Extended FAB
 
 => Adding Extended FAb To Normal FAB Switch On Scroll
-=> Adding Bottom Navigation                                                                                              ✅
+=> Adding Bottom Navigation                                                                                              
 => Complete Sliders
 => All TextFiels Components
-=> All SearchBars                                                                                                        ✅
+=> All SearchBars                                                                                                        
 => Completed Chips
 => Empty Menu Type
 => Chips Complete
-=> Improved Fail Safety                                                                                                  ✅
-=> Fix BottomAppBar                                                                                                      ✅
+=> Improved Fail Safety                                                                                                  
+=> Fix BottomAppBar                                                                                                      
 => Add More Documentation And Samples                                                                                    
 
 --------------------------------------------------------------------------------------------------------------------------------

@@ -1,13 +1,11 @@
 
-# Material 2 To Material 3 Porter
-
+# 1. portToM3
 __portToM3__ will either use a regex engine to search for alternatives to
 the _MUI_ Object with the _ui_ Object and replace them.
 
 A json file will contain the one to one mapping of each object in this structure
 
-'''json
-
+```json
 {
     "app.InitializeUIKit":"app.CreateMaterial3",
     "MUI.CreateLayout":"ui.createLayout",
@@ -18,8 +16,7 @@ A json file will contain the one to one mapping of each object in this structure
 
     "MUI.CreateTabFixed":"ui.addSecondaryTabs"
 }
-
-'''
+```
 
 
 Now since parameter are different its either we implement a sort of type of
@@ -28,7 +25,7 @@ that maps all components.
 
 To Implement this in material3 will be easy add code that looks like this:
 
-'''javascript
+```javascript
     
     /* IMO Is Declared Globaly */
     
@@ -44,19 +41,17 @@ To Implement this in material3 will be easy add code that looks like this:
     IMO.push({"CompType":lay.GetType(),"CompParent":parentLay,
     "CompParams":params,
     "CompEffects":defaultAppliedMethods,"CompMethods":methods});
-
-'''
+```
 
 To Solve this we must first be able to convert an M3 Project To An M2 Project.
 
 Normally the IMO when logged should be something like this.
 
-'''json
+```json
 
 {"CompType":"Layout","CompParams":{"type":"Linear","options":"VCenter,FillXY"},
 "CompEffects":[{"SetBackColor":"#1C1B1F"}]}
-
-'''
+```
 
 ## How can i use IMO and Source Code To Change Project Down The Ladder ?
 
@@ -70,5 +65,5 @@ i.e. Material 3 To Material 4
 
 Also to Migrate Material 2 Projects To Material 3.
 
-## Using Signals To Change Component Colors Adaptivley 
+# 2. Using Signals To Change Component Colors Adaptivley 
 Implementation may help in avoiding having to restart an application to change themes.

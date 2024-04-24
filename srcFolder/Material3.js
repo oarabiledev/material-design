@@ -6,6 +6,30 @@
 */
 
 
+function createSignal(defaultValue){
+    let __InnerValue = defaultValue;
+    let subscribers = [];
+    
+    function notify(){
+        for (let subscriber of subscribers) {
+            subscriber(__InnerValue);
+        }
+    }
+    return {
+        get value (){
+            return __InnerValue;
+        },
+        
+        set value (newVariable){
+            __InnerValue = newVariable;
+            notify();
+        },
+        subscribe: (subscriber) => {
+            subscribers.push(subscriber);
+        }
+    }
+}
+
 _Boost(true)
     
 let M3Config = 'M3Config';
@@ -44,6 +68,16 @@ const ui = {
         } else setM3BaseColors();
     },
     
+    changeThemeKit: (themeFile) =>{
+        if(app.FileExists(themeFile)){
+            setM3BaseColors(true,themeFile)
+        }
+        else {
+            warnDeveloper('Incorrect File Path/Name Given')
+        }
+    },
+    
+    
     
     getVersion: () => {
         return pluginVersion;
@@ -60,6 +94,10 @@ const ui = {
     
     createLayout: function(type, options, width, height, parentLay) {
         let lay;
+        let stateColor = (x, y) => {
+                if (theme === 'light') return x;
+                else return y;
+            };
         let backColor = stateColor(md_theme_light_background, md_theme_dark_background)
        
         if (!parentLay) {
@@ -239,9 +277,8 @@ const ui = {
     
 };
 
-app.CreateMaterial3 = function () {
-    ui.InitializeUIKit();
-}
+
+app.CreateMaterial3 = () => ui.InitializeUIKit();
 
 
 const warnDeveloper = (context,shortContext) => {
@@ -286,9 +323,11 @@ const dpToDsUnit = function(dpValue, side){
     }
 }
 
-const stateColor = (x, y) => {
-    if (theme === 'light') return x;
+let stateColor = (x, y, id) => {
+    if (theme.value === 'light') return x;
     else return y;
+    
+    
 };
 
 const backgroundColor = () =>{
@@ -296,13 +335,31 @@ const backgroundColor = () =>{
 }
 
 
-function setM3BaseColors() {
-  
-    let appTheme = app.ReadFile('baseTheme.json','UTF-8');
+function setM3BaseColors(isChangeTheming,file) {
+    let appTheme;
     
-    let jsonData = JSON.parse(appTheme)
+    if(isChangeTheming !== undefined) {
+        appTheme = app.ReadFile(file,'UTF-8');
+    }
+    else appTheme = app.ReadFile('baseTheme.json','UTF-8');
     
-    theme = jsonData.baseTheme;
+    jsonData = JSON.parse(appTheme)
+    
+    ui.setTheme = (mode) =>{
+        theme = createSignal();
+        
+        if(mode) {
+            theme.value = mode
+            setM3BaseColors();
+        }
+        else theme.value = jsonData.baseTheme;
+        
+        
+    }
+    
+    ui.setTheme();
+    
+    
     iconFill = jsonData.baseIcons;
     
     switch (iconFill) {
@@ -388,6 +445,12 @@ function setM3BaseColors() {
     md_theme_dark_surfaceTint = getColorTextValue(jsonData, "md_theme_dark_surfaceTint");
     md_theme_dark_outlineVariant = getColorTextValue(jsonData, "md_theme_dark_outlineVariant");
     md_theme_dark_scrim = getColorTextValue(jsonData, "md_theme_dark_scrim");
+    
+    try{
+    color.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
+    }
+    catch(e){
+    }
 }
 
 function timeInputObject(hour, minute, options){
@@ -2129,38 +2192,28 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
     }
 
 
-    filledButton = drawFilledButton(btnName, width, height, icon, parentLay, this)
+    filledButton = drawFilledButton(btnName, width, height, icon, parentLay)
 }
 
-function drawFilledButton(btnName, width, height, icon, parentLay, filledObj) {
+function drawFilledButton(btnName, width, height, icon, parentLay) {
     let filledButton;
+    
+    color = createSignal();
+    color.subscribe((value)=>{
+        filledButton.SetStyle(value, value, 20, null, null, 0)
+    })
+    
     filledButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
     
     filledButton.SetTextColor(stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary))
-    filledButton.SetStyle(stateColor(md_theme_light_primary, md_theme_dark_primary), stateColor(md_theme_light_primary, md_theme_dark_primary), 20, null, null, 0)
+    
     filledButton.SetFontFile(defaultFont);
     
+    color.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
+     
     if (icon === null) {
         filledButton.SetText(btnName);
     } else filledButton.SetText(`[fa-${icon}]` + ' ' + btnName);
-    
-    filledButton.SetOnTouch(() => {
-        if (filledObj.onTouch) {
-            //Added To Allow Menus To Position Correct
-            M(filledObj , filledObj.onTouch());
-            
-        }
-    });
-    
-    filledButton.SetOnLongTouch(() => {
-        if (filledObj.onTouch) {
-            filledObj.onLongTouch();
-            //Added To Allow Menus To Position Correct
-            top = filledButton.GetTop();
-        }
-    });
-    
-    
     
     return filledButton;
 }

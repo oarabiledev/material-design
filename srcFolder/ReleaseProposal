@@ -70,3 +70,5 @@ i.e. Material 3 To Material 4
 
 Also to Migrate Material 2 Projects To Material 3.
 
+## Using Signals To Change Component Colors Adaptivley 
+Implementation may help in avoiding having to restart an application to change themes.

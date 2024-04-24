@@ -99,23 +99,13 @@ def OnStart():
 __press their links to visit profiles__
 
 
-### 1. Symbrsom 🥇
+### 1. Symbrsom 
 
+### 2. Alan H 
 
-[Error Fixing, Helped W Making Plugin Docs,Providing Better Way To Write Code](https://github.com/alex-Symbroson)
+### 4. Cemal
 
-
-### 2. Alan H 🥈
-
-
-[Provided Structural Components For Material Components]()
-
-
-### 3. CaptainStarBuck 🥉
-
-
-[Advised On Structural Project Integrity]()
-
+### 5. CaptainStarBuck 
 
 ##
 

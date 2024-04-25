@@ -6,6 +6,37 @@ let activeShade = createSignal();
 let secondaryTabClr = createSignal();
 let lightBarClr = createSignal();
 let secondaryTabTxtClr = createSignal();
+let appBarColor = createSignal();
+let appBarIconColor = createSignal();
+let appBarTextsClr = createSignal();
+let bottomBarAppClr = createSignal();
+let bottomBarAppTxtClr = createSignal()
+let bottomAppBarFAB = createSignal();
+
+searchBarClr = createSignal();
+searchBarIconClr = createSignal();
+searchBarTextClr = createSignal();
+searchBarInputTextClr = createSignal();
+
+let defaultIcons, theme, iconFill;
+
+let unpositionalLayout = ["Linear", "Frame", "Card"];
+
+let _mDebug = app.GetAppPath().endsWith('/Material3');
+let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
+
+let isFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
+
+let privateFolder =
+  app.GetPrivateFolder('Plugins') + '/material3/';
+
+let _m3Path = _mDebug ? '' : privateFolder;
+
+let defaultFont = _m3Path + 'Roboto.ttf';
+let mediumFont = _m3Path + 'Roboto-Medium.ttf';
+let boldFont = _m3Path + 'Roboto-Bold.ttf';
+
+let warningColor = "<div style='color:#FF7900'>";
 
 
 function setM3BaseColors(isChangeTheming, file) {
@@ -123,6 +154,22 @@ function setM3BaseColors(isChangeTheming, file) {
   
   secondaryTabTxtClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface)
   
+  appBarColor.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
+  
+  appBarIconColor.value = stateColor(md_theme_light_background,md_theme_dark_background);
+  
+  appBarTextsClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface);
+  
+  bottomBarAppClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant)
+  
+  bottomBarAppTxtClr.value = stateColor(md_theme_light_onPrimaryContainer,md_theme_dark_onPrimaryContainer)
+  
+  bottomAppBarFAB.value = stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer)
+    
+  searchBarClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  searchBarIconClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  searchBarTextClr.value = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
+  searchBarInputTextClr.value = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
 }
 
 function createSignal(defaultValue) {
@@ -139,6 +186,7 @@ function createSignal(defaultValue) {
       return __InnerValue;
     },
     
+    
     set value(newVariable) {
       __InnerValue = newVariable;
       notify();
@@ -148,24 +196,3 @@ function createSignal(defaultValue) {
     }
   }
 }
-
-
-let defaultIcons, theme, iconFill;
-
-let unpositionalLayout = ["Linear", "Frame", "Card"];
-
-let _mDebug = app.GetAppPath().endsWith('/Material3');
-let showUpdates = app.LoadBoolean('showUpdate?', true, M3Config);
-
-let isFirstRun = app.LoadBoolean('isFirstRun?', true, M3Config);
-
-let privateFolder =
-  app.GetPrivateFolder('Plugins') + '/material3/';
-
-let _m3Path = _mDebug ? '' : privateFolder;
-
-let defaultFont = _m3Path + 'Roboto.ttf';
-let mediumFont = _m3Path + 'Roboto-Medium.ttf';
-let boldFont = _m3Path + 'Roboto-Bold.ttf';
-
-let warningColor = "<div style='color:#FF7900'>";

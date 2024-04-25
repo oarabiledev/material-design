@@ -18,6 +18,10 @@ The release does not favour use of Node and Python, however in the
 next release (0.80) both environments will get their fair amount of 
 documentation.
 
+I really need contribution, even if its not adding components but 
+code refactoring, maintaining certain components to use newer better methods.
+Please Help If You Can.
+
 
 ##
 Here Is A Code Snippet For The Impatient::

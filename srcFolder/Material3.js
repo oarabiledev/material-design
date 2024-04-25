@@ -84,19 +84,19 @@ const ui = {
         return lay;
     },
  
-    
+    /*DONE*/
     addCenterAlignedAppBar: function (title, leadingIcon, controlIcons, parentLay) {
-        return new appBarObject(title, leadingIcon, controlIcons, parentLay);
+        return new centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay);
     },
     
     addSmallAppBar: function(title, leadingIcon, controlIcons, parentLay){
         return new smallAppBarObject(title, leadingIcon, controlIcons, parentLay);
     },
-    
+    /*DONE*/
     addBottomAppBar: function (barPropsInjson, parentLayout) {
         return new bottomBarObject(barPropsInjson, parentLayout);
     },
-    
+    /*DONE*/
     addSearchBar: function(leadingIcon, trailingIcon, hint, width, parentLayout){
         return new searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout);
     },
@@ -119,7 +119,7 @@ const ui = {
     addExtendedFAB: function (btnName, icon, parentLay) {
         return new extendedFABObject(btnName, icon, parentLay);
     },
-    
+    /*DONE*/
     addFilledButton: function (btnName, width, height, icon, parentLay) {
         return new filledButtonObject(btnName, width, height, icon, parentLay);
     },
@@ -296,6 +296,693 @@ const stateColor = (lightValue, darkValue) => {
 }
 
 
+
+
+function searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout){
+    this.Animate = function(type, callback, time){
+        _search.Animate(type, callback, time);
+    }
+    
+    
+    this.ClearFocus = function(){
+        _searchInput.ClearFocus();
+    }
+    
+    this.GetCursorLine = function(){
+        return _searchInput.GetCursorLine();
+    }
+    
+    this.GetCursorPos = function(){
+        return _searchInput.GetCursorPos();
+    }
+    
+    this.GetHtml = function(){
+        return _searchInput.GetHtml();
+    }
+    
+    this.GetSelectedText = function(){
+        return _searchInput.GetSelectedText();
+    }
+    
+    this.GetSelectionEnd = function(){
+        return _searchInput.GetSelectionEnd();
+    }
+    
+    this.GetSelectionStart = function(){
+        return _searchInput.GetSelectionStart();
+    }
+    
+    this.GetText = function(){
+        _searchInput.GetText();
+    }
+    
+    this.GetVisibility = function(){
+        return _search.GetVisibility();
+    }
+    
+    this.GetType = function(){
+        return 'SearchBar';
+    }
+    
+    this.Gone = function(){
+        _search.Gone();
+    }
+    
+    this.Hide = function(){
+        _search.Hide();
+    }
+    
+    this.InsertText = function(text, start){
+        _searchInput.InsertItem(text, start);
+    }
+    
+    this.IsOverlap = function(){
+        return _search.IsOverlap();
+    }
+    
+    this.SetEnabled = function(bool){
+        _search.SetEnabled(bool);
+    }
+    
+    this.SetHtml = function(html){
+        _searchInput.SetHtml(html);
+    }
+    
+    this.SetOnChange = function(onChange){
+        _searchInput.SetOnChange(onChange)
+    }
+    
+    this.SetOnEnter = function(onEnter){
+        _searchInput.SetOnEnter(onEnter);
+    }
+    
+    this.SetOnFocus = function(onFocus){
+        _searchInput.SetOnFocus(onFocus);
+    }
+    
+    this.SetOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    
+    this.SetText = function(text){
+        _searchInput.SetText(text);
+    }
+    
+    this.SetVisibility = function(mode){
+        _search.SetVisibility(mode);
+    }
+    
+    this.Show = function(){
+        _search.Show();
+    }
+    
+    this.Tween = function(target, duration, type, repeat, yoyo, callback){
+        _search.Tween(target, duration, type, repeat, yoyo, callback);
+    }
+    
+    this.SetMargins = function(left, top, right, bottom, mode){
+        //.SetMargins(left, top, right, bottom, mode);
+    }
+    if (parentLayout){
+        drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, this);
+    }
+    else warnDeveloper('You didnt add a parent to the search component',
+    'Add parent To SearchBar');
+}
+
+function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, searchObj) {
+    const imageFileTypes = ['jpg','png','jpeg','ico','tiff']
+    
+    const searchBarType = (trailingIcon) => {
+        if (trailingIcon.includes(',')) {
+            const firstTrailingIcon = trailingIcon.split(',')[0];
+            const secondTrailingIcon = trailingIcon.split(',')[1];
+            
+            if (imageFileTypes.includes(secondTrailingIcon)) {
+                return {
+                    firstTrailingIcon,
+                    secondTrailingIcon,
+                    barType: 'WithAvatar&Icon'
+                };
+            } else {
+                return {
+                    firstTrailingIcon,
+                    secondTrailingIcon,
+                    barType: 'WithTwoIcons'
+                };
+            }
+        }else {
+            /* If TrailingIcon doesn't have a comma test if it's either:
+            WithAvatar
+            WithIcon
+            */
+            
+            if (imageFileTypes.includes(trailingIcon)) {
+                return {
+                    trailingIcon,
+                    barType: 'WithAvatar'
+                };
+            }
+            else {
+                return {
+                    barType: 'WithIcon'
+                };
+            }
+        }
+    }
+
+    const searchType = searchBarType(trailingIcon); 
+
+    switch (searchType.barType) {
+        case 'WithIcon':
+            drawSearchWithIcon();
+            break;
+        case 'WithAvatar':
+            drawSearchWithAvatar();
+            break;
+        case 'WithTwoIcons':
+            drawSearchWithTwoIcons(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
+            break;
+        case 'WithAvatar&Icon':
+            drawSearchWithAvatarIcon(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
+            break; 
+    }
+    
+    
+    function drawSearchWithIcon() {
+        let _search, _searchContainer, _leadingIcon, _searchInput, _trailingIcon;
+        
+        let _iconRadius = 50/100 * 34;
+        let _searchBarWidth = function(){
+            if (dsUnitsToDp(width,'w') < 144){
+                warnDeveloper(`SearchBar Width Cant Be Less Than \n
+                0.4 dsUnits or 144 dp.\n
+                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
+                return 144;
+            }
+            else {
+                return dsUnitsToDp(width,'w');
+            }
+        }
+        let _searchInputWidth = function(){
+            return dsUnitsToDp(width,'w') - 128;
+        }
+        _search = app.AddLayout(parentLayout, 'Card');
+        _search.SetCornerRadius(36)
+        _search.SetSize(_searchBarWidth(), 56, 'dp')
+        _search.SetBackColor(searchBarClr.value);
+        
+        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
+        _leadingIcon.SetSize(34, 34, 'dp');
+        _leadingIcon.SetTextSize(24)
+        _leadingIcon.SetTextColor(searchBarTextClr.value)
+        _leadingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _leadingIcon.SetFontFile(defaultIcons)
+        _leadingIcon.SetMargins(16,13,16,null,'dp')
+        
+        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
+        _searchInput.SetBackColor(searchBarClr.value)
+        _searchInput.SetMargins(null,8,null,null,'dp')
+        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
+        _searchInput.SetTextColor(searchBarInputTextClr.value);
+        
+        
+        
+        if(hint !== null){
+            _searchInput.SetHint(hint);
+        }
+        
+        
+        _trailingIcon = app.AddButton(_searchContainer, trailingIcon, null, null, 'Custom,Lego');
+        _trailingIcon.SetSize(34, 34, 'dp');
+        _trailingIcon.SetTextSize(24)
+        _trailingIcon.SetTextColor(searchBarTextClr.value)
+        _trailingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _trailingIcon.SetFontFile(defaultIcons)
+        _trailingIcon.SetMargins(16,13,16,null,'dp')
+        
+        //SetOnTouch Implementation
+        _leadingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(leadingIcon))
+        
+            }
+        });
+        
+        _trailingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(trailingIcon))
+            }
+        });
+        
+        searchBarClr.subscribe((value)=>{
+            _search.SetBackColor(value);
+            _searchInput.SetBackColor(value)
+        })
+        
+        searchBarIconClr.subscribe((value)=>{
+            _leadingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _trailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+        })
+        
+        searchBarTextClr.subscribe((value)=>{
+            _leadingIcon.SetTextColor(value);
+            _trailingIcon.SetTextColor(value)
+        })
+        
+        searchBarInputTextClr.subscribe((value)=>{
+            _searchInput.SetTextColor(value);
+        })
+        
+    }
+    
+    function drawSearchWithAvatar() {
+        let _search, _searchContainer, _leadingIcon, _searchInput, _trailingIcon, _trailingLay;
+        
+        let _iconRadius = 50/100 * 34;
+        let _searchBarWidth = function(){
+            if (dsUnitsToDp(width,'w') < 144){
+                warnDeveloper(`SearchBar Width Cant Be Less Than \n
+                0.4 dsUnits or 144 dp.\n
+                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
+                return 144;
+            }
+            else {
+                return dsUnitsToDp(width,'w');
+            }
+        }
+        let _searchInputWidth = function(){
+            return dsUnitsToDp(width,'w') - 128;
+        }
+        _search = app.AddLayout(parentLayout, 'Card');
+        _search.SetCornerRadius(36)
+        _search.SetSize(_searchBarWidth(), 56, 'dp')
+        _search.SetBackColor(searchBarClr.value);
+        
+        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
+        _leadingIcon.SetSize(34, 34, 'dp');
+        _leadingIcon.SetTextSize(24)
+        _leadingIcon.SetTextColor(searchBarTextClr.value)
+        _leadingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _leadingIcon.SetFontFile(defaultIcons)
+        _leadingIcon.SetMargins(16,13,16,null,'dp')
+        
+        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
+        _searchInput.SetBackColor(searchBarClr.value)
+        _searchInput.SetMargins(null,8,null,null,'dp')
+        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
+        _searchInput.SetTextColor(searchBarInputTextClr.value);
+        
+        if(hint !== null){
+            _searchInput.SetHint(hint);
+        }
+        
+        //Check If Image File Exists And If Not Dont Procced
+        if (!app.FileExists(trailingIcon)){
+            warnDeveloper(`The Avatar ${trailingIcon}, Does Not Exist`,'Search Avatar Not Found');
+            return
+        }
+        
+        else{
+        _trailingLay = app.AddLayout(_searchContainer,'Card');
+        _trailingLay.SetCornerRadius(15)
+        _trailingIcon = app.AddImage(_trailingLay, trailingIcon, null, null,'async')
+        _trailingIcon.SetSize(30, 30, 'dp');
+        _trailingLay.SetMargins(16,13,16,null,'dp')
+        }
+        _leadingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(leadingIcon))
+                }
+        });
+        
+        _trailingIcon.SetOnTouchDown(function(){
+            if(searchObj.onTouch){
+                M(this,searchObj.onTouch('avatar'))
+            }
+        });
+        searchBarClr.subscribe((value)=>{
+            _search.SetBackColor(value);
+            _searchInput.SetBackColor(value)
+        })
+        
+        searchBarIconClr.subscribe((value)=>{
+            _leadingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _trailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+        })
+        
+        searchBarTextClr.subscribe((value)=>{
+            _leadingIcon.SetTextColor(value);
+            _trailingIcon.SetTextColor(value)
+        })
+        
+        searchBarInputTextClr.subscribe((value)=>{
+            _searchInput.SetTextColor(value);
+        })
+    }
+    
+    function drawSearchWithTwoIcons(firstTrailingIcon, secondTrailingIcon) {
+        let _search, _searchContainer, _leadingIcon, _searchInput, _firstTrailingIcon,
+        _secondTrailingIcon;
+        let _iconRadius = 50/100 * 34;
+        let _searchBarWidth = function(){
+            if (dsUnitsToDp(width,'w') < 144){
+                warnDeveloper(`SearchBar Width Cant Be Less Than \n
+                0.4 dsUnits or 144 dp.\n
+                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
+                return 144;
+            }
+            else {
+                return dsUnitsToDp(width,'w');
+            }
+        }
+        let _searchInputWidth = function(){
+            return dsUnitsToDp(width,'w') - 176;
+        }
+        
+        _search = app.AddLayout(parentLayout, 'Card');
+        _search.SetCornerRadius(36)
+        _search.SetSize(_searchBarWidth(), 56, 'dp')
+        _search.SetBackColor(searchBarClr.value);
+        
+        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
+        _leadingIcon.SetSize(34, 34, 'dp');
+        _leadingIcon.SetTextSize(24)
+        _leadingIcon.SetTextColor(searchBarTextClr.value)
+        _leadingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _leadingIcon.SetFontFile(defaultIcons)
+        _leadingIcon.SetMargins(16,13,16,null,'dp')
+        
+        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
+        _searchInput.SetBackColor(searchBarClr.value)
+        _searchInput.SetMargins(null,8,null,null,'dp')
+        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
+        _searchInput.SetTextColor(searchBarInputTextClr.value);
+        
+        if(hint !== null){
+            _searchInput.SetHint(hint);
+        }
+        
+        
+        _firstTrailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, 'Custom,Lego');
+        _firstTrailingIcon.SetSize(34, 34, 'dp');
+        _firstTrailingIcon.SetTextSize(24)
+        _firstTrailingIcon.SetTextColor(searchBarTextClr.value)
+        _firstTrailingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _firstTrailingIcon.SetFontFile(defaultIcons)
+        _firstTrailingIcon.SetMargins(16,13,8,null,'dp')
+        
+        _secondTrailingIcon = app.AddButton(_searchContainer, secondTrailingIcon, null, null, 'Custom,Lego');
+        _secondTrailingIcon.SetSize(34, 34, 'dp');
+        _secondTrailingIcon.SetTextSize(24)
+        _secondTrailingIcon.SetTextColor(searchBarTextClr.value)
+        _secondTrailingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _secondTrailingIcon.SetFontFile(defaultIcons)
+        _secondTrailingIcon.SetMargins(null,13,16,null,'dp')
+        
+        //SetOnTouch Implementation
+        _leadingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this,searchObj.onTouch(leadingIcon))
+            }
+        });
+        
+        _firstTrailingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(firstTrailingIcon))
+            }
+        });
+        
+         _secondTrailingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this,searchObj.onTouch(secondTrailingIcon))
+            }
+        });
+        
+        searchBarClr.subscribe((value)=>{
+            _search.SetBackColor(value);
+            _searchInput.SetBackColor(value)
+        })
+        
+        searchBarIconClr.subscribe((value)=>{
+            _leadingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _firstTrailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _secondTrailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+        })
+        
+        searchBarTextClr.subscribe((value)=>{
+            _leadingIcon.SetTextColor(value);
+            _firstTrailingIcon.SetTextColor(value)
+             _secondTrailingIcon.SetTextColor(value)
+        })
+        
+        searchBarInputTextClr.subscribe((value)=>{
+            _searchInput.SetTextColor(value);
+        })
+        
+    }
+    
+    function drawSearchWithAvatarIcon(firstTrailingIcon, secondTrailingIcon) {
+        
+    
+        let _iconRadius = 50/100 * 34;
+        let _searchBarWidth = function(){
+            if (dsUnitsToDp(width,'w') < 144){
+                warnDeveloper(`SearchBar Width Cant Be Less Than \n
+                0.4 dsUnits or 144 dp.\n
+                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
+                return 144;
+            }
+            else {
+                return dsUnitsToDp(width,'w');
+            }
+        }
+        let _searchInputWidth = function(){
+            return dsUnitsToDp(width,'w') - 178;
+        }
+        
+        
+        
+        _search = app.AddLayout(parentLayout, 'Card');
+        _search.SetCornerRadius(36)
+        _search.SetSize(_searchBarWidth(), 56, 'dp')
+        _search.SetBackColor(searchBarClr.value);
+        
+        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
+        _leadingIcon.SetSize(34, 34, 'dp');
+        _leadingIcon.SetTextSize(24)
+        _leadingIcon.SetTextColor(searchBarTextClr.value)
+        _leadingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _leadingIcon.SetFontFile(defaultIcons)
+        _leadingIcon.SetMargins(16,13,16,null,'dp')
+        
+        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
+        _searchInput.SetBackColor(searchBarClr.value)
+        _searchInput.SetMargins(null,8,null,null,'dp')
+        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
+        _searchInput.SetTextColor(searchBarInputTextClr.value);
+        
+        if(hint !== null){
+            _searchInput.SetHint(hint);
+        }
+        
+        _trailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, 'Custom,Lego');
+        _trailingIcon.SetSize(34, 34, 'dp');
+        _trailingIcon.SetTextSize(24)
+        _trailingIcon.SetTextColor(searchBarTextClr.value)
+        _trailingIcon.SetStyle(searchBarIconClr.value,searchBarIconClr.value,_iconRadius,null,null,0);
+        _trailingIcon.SetFontFile(defaultIcons)
+        _trailingIcon.SetMargins(16,13,8,null,'dp')
+        
+        _avatarLay = app.AddLayout(_searchContainer,'Card');
+        _avatarLay.SetCornerRadius(15)
+        _avatarIcon = app.AddImage(_avatarLay, secondTrailingIcon, null, null,'async')
+        _avatarIcon.SetSize(30, 30, 'dp');
+        _avatarLay.SetMargins(0,13,16,null,'dp')
+        
+        //SetOnTouch Implementation
+        _leadingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(leadingIcon))
+                //searchObj.onTouch(leadingIcon);
+            }
+        });
+        
+        _trailingIcon.SetOnTouch(function(){
+            if(searchObj.onTouch){
+                M(this, searchObj.onTouch(firstTrailingIcon))
+                //searchObj.onTouch(firstTrailingIcon);
+            }
+        });
+        
+        
+        _avatarIcon.SetOnTouchDown(function(){
+            if(searchObj.onTouch){
+                M(this,searchObj.onTouch('avatar'))
+                //searchObj.onTouch('avatar');
+            }
+        });
+    searchBarClr.subscribe((value)=>{
+            _search.SetBackColor(value);
+            _searchInput.SetBackColor(value)
+        })
+        
+        searchBarIconClr.subscribe((value)=>{
+            _leadingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _firstTrailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+            _secondTrailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+        })
+        
+        searchBarTextClr.subscribe((value)=>{
+            _leadingIcon.SetTextColor(value);
+            _firstTrailingIcon.SetTextColor(value)
+             _secondTrailingIcon.SetStyle(value,value,_iconRadius,null,null,0);
+        })
+        
+        searchBarInputTextClr.subscribe((value)=>{
+            _searchInput.SetTextColor(value);
+        })
+    }
+    
+    
+}
+
+
+function bottomBarObject(barPropsInjson, parentLay) {
+    let bottomBarContainer;
+    
+    this.SetOnTouch = function (onTouchFunc) {
+        this.onTouchFunc = onTouchFunc;
+    }
+    
+    this.SetRawAdjustment = function (distanceFromTop) {
+        bottomBarContainer.SetMargins(0, distanceFromTop);
+    }
+    
+    if (unpositionalLayout.includes(layoutType)) {
+        warnDeveloper('BottomAppBar Cannot Be Set On A Linear Layout',
+        'Change To Absolute Layout');
+        return;
+    }
+    else {
+        bottomBarContainer = drawBottomBar(barPropsInjson, parentLay, this);
+    }
+}
+
+function drawBottomBar(barPropsInjson, parentLay, bottomBarObj) {
+    let bottomBarContainer;
+    let props = JSON.stringify(barPropsInjson);
+    let info = JSON.parse(props);
+    let icon1 = info.firstIcon;
+    let icon2 = info.secondIcon;
+    let icon3 = info.thirdIcon;
+    let icon4 = info.fourthIcon;
+    let fabIcon = info.fabIcon;
+    
+    bottomBarContainer = app.CreateLayout("Card", "Horizontal,Bottom,FillXY");
+    bottomBarContainer.SetSize(pxToDpConversion(DW()), 80, 'dp');
+    bottomBarContainer.SetElevation(3, 'dp');
+    bottomBarContainer.SetPosition(0, 0.9);
+    
+    const box = app.CreateLayout('Linear', 'Horizontal');
+    bottomBarContainer.AddChild(box);
+    box.SetSize(-1, 80, 'dp');
+    
+    const _icon1 = app.CreateText(icon1, null, null, 'H/VCenter,FillXY');
+    _icon1.SetFontFile(defaultIcons);
+    _icon1.SetTextSize(24);
+    _icon1.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
+            bottomBarObj.onTouchFunc(icon1);
+        }
+    });
+    
+    _icon1.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon2 = app.CreateText(icon2, null, null, 'H/VCenter,FillXY');
+    _icon2.SetFontFile(defaultIcons);
+    _icon2.SetTextSize(24);
+    _icon2.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
+        bottomBarObj.onTouchFunc(icon2);
+        }
+    });
+    _icon2.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon3 = app.CreateText(icon3, null, null, 'H/VCenter,FillXY');
+    _icon3.SetFontFile(defaultIcons);
+    _icon3.SetTextSize(24);
+    _icon3.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
+        bottomBarObj.onTouchFunc(icon3);
+        }
+    });
+    _icon3.SetMargins(8, null, 16, null, 'dp');
+    
+    const _icon4 = app.CreateText(icon4, null, null, 'H/Vcenter,FillXY');
+    _icon4.SetFontFile(defaultIcons);
+    _icon4.SetTextSize(24);
+    _icon4.SetOnTouchUp(function () {
+        if (bottomBarObj.onTouchFunc){
+        bottomBarObj.onTouchFunc(icon4);
+        }
+    });
+    _icon4.SetMargins(8, null, 16, null, 'dp');
+    
+    const fab = app.CreateLayout('Card', 'Right,FillXY');
+    fab.SetSize(56, 56, 'dp');
+    fab.SetElevation(0);
+    fab.SetCornerRadius(16);
+    fab.SetMargins(96, 12, 16, 12, 'dp');
+    
+    const _fabIcon = app.CreateText(fabIcon, null, null, 'H/VCenter,FillXY');
+    _fabIcon.SetFontFile(defaultIcons);
+    _fabIcon.SetOnTouchDown(function () {
+        if (bottomBarObj.onTouchFunc){
+        bottomBarObj.onTouchFunc(fabIcon);
+        }
+    });
+    
+    _fabIcon.SetTextSize(24);
+    fab.AddChild(_fabIcon);
+    
+    box.AddChild(_icon1);
+    box.AddChild(_icon2);
+    box.AddChild(_icon3);
+    box.AddChild(_icon4);
+    box.AddChild(fab);
+    
+    bottomBarContainer.SetBackColor(bottomBarAppClr.value);
+    _icon1.SetTextColor(bottomBarAppTxtClr.value);
+    _icon2.SetTextColor(bottomBarAppTxtClr.value);
+    _icon3.SetTextColor(bottomBarAppTxtClr.value);
+    _icon4.SetTextColor(bottomBarAppTxtClr.value);
+    _fabIcon.SetTextColor(bottomBarAppTxtClr.value);
+    fab.SetBackColor(bottomAppBarFAB.value);
+    
+    bottomBarAppClr.subscribe((value)=>{
+        bottomBarContainer.SetBackColor(value)
+    })
+    
+    bottomAppBarFAB.subscribe((value)=>{
+        fab.SetBackColor(value)
+    })
+    bottomBarAppTxtClr.subscribe((value)=>{
+        _icon1.SetTextColor(value);
+        _icon2.SetTextColor(value);
+        _icon3.SetTextColor(value);
+        _icon4.SetTextColor(value);
+        _fabIcon.SetTextColor(bottomBarAppTxtClr.value);
+    })
+    parentLay.AddChild(bottomBarContainer);
+    return bottomBarContainer;
+}
+
+
 function timeInputObject(hour, minute, options){
     let _timeInput;
     
@@ -435,6 +1122,88 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
     }
 }
 
+
+function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
+    let barCardLay;
+    
+    this.SetOnTouch = function (onTouch) {
+        this.onTouch = onTouch
+    }
+    
+    if(!parentLay){
+        warnDeveloper('No Parent For App Bar.')
+    }
+    else{
+        barCardLay = drawAppBar(title, leadingIcon, controlIcons, parentLay,this)
+    }
+}
+
+function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
+    barCardLay = app.AddLayout(parentLay, "Card");
+    barCardLay.SetSize(DW(), dpToPxConversion(64), 'px');
+    
+    barCardLay.SetBackColor(appBarColor.value)
+    barCardLay.SetMargins(0, 0)
+    
+    
+    barUi = app.CreateLayout('Linear', 'Horizontal,Left');
+    barCardLay.AddChild(barUi);
+    
+    
+    _IconRadius = 50/100 * 120;
+    
+    _leftIcon = app.AddButton(barUi, leadingIcon, null, null, 'Custom, Lego');
+    _leftIcon.SetSize(144, 144, 'px');
+    _leftIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
+    
+    _leftIcon.SetFontFile(defaultIcons)
+    _leftIcon.SetTextSize(72, 'px');
+    _leftIcon.SetTextColor(appBarTextsClr.value )
+    _leftIcon.SetOnTouch(function () {
+        if (appBarObj.onTouch) {
+            M(this,appBarObj.onTouch(leadingIcon));
+        }
+    })
+    
+    _title = app.AddText(barUi, title, -1, -1, 'Wrap');
+    _title.SetMargins(null, 24, null, 24, 'px')
+
+    _title.SetTextSize(28, 'dp');
+    _title.SetTextColor(appBarTextsClr.value)
+    
+    
+    
+    _rightIcon = app.AddButton(barUi, controlIcons, null, null, 'Custom, Lego');
+    _rightIcon.SetMargins(pxToDpConversion(DW()) - 190, 24, 30, null, 'px')
+    _rightIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _rightIcon.SetSize(144, 144, 'px');
+    _rightIcon.SetTextSize(72, 'px');
+    
+    _rightIcon.SetFontFile(defaultIcons)
+    _rightIcon.SetTextColor(appBarTextsClr.value )
+    _rightIcon.SetOnTouch(function () {
+        if (appBarObj.onTouch) {
+            M(this,appBarObj.onTouch(controlIcons))
+        }
+    })
+    
+    appBarColor.subscribe((value)=>{
+        barCardLay.SetBackColor(value)
+    })
+    
+    appBarIconColor.subscribe((value)=>{
+        _leftIcon.SetStyle(value,value, _IconRadius, null,null, 0)
+        _rightIcon.SetStyle(value,value, _IconRadius, null,null, 0)
+    })
+    
+    appBarTextsClr.subscribe((value)=>{
+        _title.SetTextColor(value);
+        _leftIcon.SetTextColor(value )
+        _rightIcon.SetTextColor(value )
+    })
+    return barCardLay;
+}
 
 function secTabObject(listOfTabs, width, height, options, parentLay) {
     let _secondaryTab;
@@ -906,11 +1675,6 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             
             lightStripPower();
         }
-        secondaryTabClr.subscribe((value)=>{
-        __secTabInnerLay.SetBackColor(value);
-        __firstTabBtn.SetBackColor(value)
-        __secondTabBtn.SetBackColor(value)
-    }) 
     }
     
     
@@ -932,588 +1696,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     return __secondaryTab;
 }
 
-let _smallAppBar;
 
-function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
-    drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, this)
-}
-
-function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAppBarObj){
-    let noOfControlsIco = controlIcons.split(',').length; 
-    let firstControlIcon,secondControlIcon,thirdControlIcon;
-    
-    let warning = 'You Can Only Have Upto 3 Icons For AppBar';
-    
-    if (noOfControlsIco == 3){
-        firstControlIcon = controlIcons.split(',')[0];
-        secondControlIcon = controlIcons.split(',')[1];
-        thirdControlIcon = controlIcons.split(',')[2];
-    }
-    else {
-        warnDeveloper(warning)
-    }
-    
-    if (parentLay){
-        _smallAppBarIconRadius = 50/100 * 40;
-        __smallAppBarClr = stateColor(md_theme_light_surface,md_theme_dark_surface)
-        _smallApBIcoClr = stateColor(md_theme_light_background,md_theme_dark_background);
-        
-        _smallAppBar = app.AddLayout(parentLay, 'Card');
-        _smallAppBar.SetMargins(null,0);
-        _smallAppBar.SetSize(pxToDpConversion(DW()),64,'dp');
-        _smallAppBar.SetCornerRadius(0)
-        _smallAppBar.SetBackColor(__smallAppBarClr);
-        
-        smallAppBarLay = app.AddLayout(_smallAppBar, 'Linear','Horizontal');
-        
-        smallAppBarIcon = app.AddButton(smallAppBarLay, leadingIcon,null,null,'Custom,Lego' );
-        smallAppBarIcon.SetSize(40, 40, 'dp')
-        smallAppBarIcon.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-        smallAppBarIcon.SetFontFile(defaultIcons);
-        smallAppBarIcon.SetMargins(16, 13,16, null, 'dp')
-        smallAppBarIcon.SetTextSize(26);
-        
-        smallAppBarTitle = app.AddText(smallAppBarLay, title, null, null);
-        
-        if(noOfControlsIco == 1){
-            smallApBrightIcon = app.AddButton(smallAppBarLay, leadingIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon.SetSize(40, 40, 'dp')
-            smallApBrightIcon.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon.SetFontFile(defaultIcons);
-            smallApBrightIcon.SetTextSize(26);
-            
-        }
-        else if (noOfControlsIco == 2){
-            smallApBrightIcon = app.AddButton(smallAppBarLay, firstControlIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon.SetSize(40, 40, 'dp')
-            smallApBrightIcon.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon.SetFontFile(defaultIcons);
-            smallApBrightIcon.SetTextSize(26);
-            
-            smallApBrightIcon2 = app.AddButton(smallAppBarLay, secondControlIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon2.SetSize(40, 40, 'dp')
-            smallApBrightIcon2.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon2.SetFontFile(defaultIcons);
-            smallApBrightIcon2.SetTextSize(26);
-        }
-        else if(noOfControlsIco == 3){
-            smallApBrightIcon = app.AddButton(smallAppBarLay, firstControlIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon.SetSize(40, 40, 'dp')
-            smallApBrightIcon.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon.SetFontFile(defaultIcons);
-            smallApBrightIcon.SetTextSize(26);
-            
-            smallApBrightIcon2 = app.AddButton(smallAppBarLay, secondControlIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon2.SetSize(40, 40, 'dp')
-            smallApBrightIcon2.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon2.SetFontFile(defaultIcons);
-            smallApBrightIcon2.SetTextSize(26);
-            
-            smallApBrightIcon3 = app.AddButton(smallAppBarLay, thirdControlIcon,null,null,'Custom,Lego' );
-            smallApBrightIcon3.SetSize(40, 40, 'dp')
-            smallApBrightIcon3.SetStyle(_smallApBIcoClr,_smallApBIcoClr,_smallAppBarIconRadius,null,null,0);
-            smallApBrightIcon3.SetFontFile(defaultIcons);
-            smallApBrightIcon3.SetTextSize(26);
-        }
-        
-    }
-    else warnDeveloper('No Parent For AppBar','No Parent For AppBar');
-}
-
-
-let _search, _searchInput;
-
-function searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout){
-    this.Animate = function(type, callback, time){
-        _search.Animate(type, callback, time);
-    }
-    
-    this.Batch = function(props){
-        _search.Batch(props);
-    }
-    
-    this.ClearFocus = function(){
-        _searchInput.ClearFocus();
-    }
-    
-    this.GetCursorLine = function(){
-        return _searchInput.GetCursorLine();
-    }
-    
-    this.GetCursorPos = function(){
-        return _searchInput.GetCursorPos();
-    }
-    
-    this.GetHtml = function(){
-        return _searchInput.GetHtml();
-    }
-    
-    this.GetSelectedText = function(){
-        return _searchInput.GetSelectedText();
-    }
-    
-    this.GetSelectionEnd = function(){
-        return _searchInput.GetSelectionEnd();
-    }
-    
-    this.GetSelectionStart = function(){
-        return _searchInput.GetSelectionStart();
-    }
-    
-    this.GetText = function(){
-        _searchInput.GetText();
-    }
-    
-    this.GetVisibility = function(){
-        return _search.GetVisibility();
-    }
-    
-    this.GetType = function(){
-        return 'SearchBar';
-    }
-    
-    this.Gone = function(){
-        _search.Gone();
-    }
-    
-    this.Hide = function(){
-        _search.Hide();
-    }
-    
-    this.InsertText = function(text, start){
-        _searchInput.InsertItem(text, start);
-    }
-    
-    this.IsOverlap = function(){
-        return _search.IsOverlap();
-    }
-    
-    this.SetEnabled = function(bool){
-        _search.SetEnabled(bool);
-    }
-    
-    this.SetHtml = function(html){
-        _searchInput.SetHtml(html);
-    }
-    
-    this.SetOnChange = function(onChange){
-        _searchInput.SetOnChange(onChange)
-    }
-    
-    this.SetOnEnter = function(onEnter){
-        _searchInput.SetOnEnter(onEnter);
-    }
-    
-    this.SetOnFocus = function(onFocus){
-        _searchInput.SetOnFocus(onFocus);
-    }
-    
-    this.SetOnTouch = function(onTouch){
-        this.onTouch = onTouch;
-    }
-    
-    this.SetText = function(text){
-        _searchInput.SetText(text);
-    }
-    
-    this.SetVisibility = function(mode){
-        _search.SetVisibility(mode);
-    }
-    
-    this.Show = function(){
-        _search.Show();
-    }
-    
-    this.Tween = function(target, duration, type, repeat, yoyo, callback){
-        _search.Tween(target, duration, type, repeat, yoyo, callback);
-    }
-    
-    this.SetMargins = function(left, top, right, bottom, mode){
-        _search.SetMargins(left, top, right, bottom, mode);
-    }
-    if (parentLayout){
-    drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, this);
-    }
-    else warnDeveloper('You didnt add a parent to the search component','Add parent To SearchBar');
-}
-
-function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, searchObj) {
-    const searchBarType = (trailingIcon) => {
-        if (trailingIcon.includes(',')) {
-            // Now Get The Individual Icons
-            const firstTrailingIcon = trailingIcon.split(',')[0];
-            const secondTrailingIcon = trailingIcon.split(',')[1];
-            
-            // Test If It's An Avatar Type Bar
-            if (secondTrailingIcon.includes('.png') || secondTrailingIcon.includes('.jpg') || secondTrailingIcon.includes('.jpeg')) {
-                return {
-                    firstTrailingIcon,
-                    secondTrailingIcon,
-                    searchBarType: 'WithAvatar&Icon'
-                };
-            }
-            // If It's Not then It's with two icons
-            else {
-                return {
-                    firstTrailingIcon,
-                    secondTrailingIcon,
-                    searchBarType: 'WithTwoIcons'
-                };
-            }
-        }
-        else {
-            /* If TrailingIcon doesn't have a comma test if it's either:
-            WithAvatar
-            WithIcon
-            */
-            
-            if (trailingIcon.includes('.png') || trailingIcon.includes('.jpg') || trailingIcon.includes('.jpeg')) {
-                return {
-                    trailingIcon,
-                    searchBarType: 'WithAvatar'
-                };
-            }
-            else {
-                return {
-                    searchBarType: 'WithIcon'
-                };
-            }
-        }
-    }
-
-    const searchType = searchBarType(trailingIcon); 
-
-    switch (searchType.searchBarType) {
-        case 'WithIcon':
-            drawSearchWithIcon();
-            break;
-        case 'WithAvatar':
-            drawSearchWithAvatar();
-            break;
-        case 'WithTwoIcons':
-            drawSearchWithTwoIcons(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
-            break;
-        case 'WithAvatar&Icon':
-            drawSearchWithAvatarIcon(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
-            break; 
-    }
-    
-
-    function drawSearchWithIcon() {
-        
-        let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
-        let _searchInputTextColor = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
-        let _iconRadius = 50/100 * 34;
-        let _searchBarWidth = function(){
-            if (dsUnitsToDp(width,'w') < 144){
-                warnDeveloper(`SearchBar Width Cant Be Less Than \n
-                0.4 dsUnits or 144 dp.\n
-                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
-                return 144;
-            }
-            else {
-                return dsUnitsToDp(width,'w');
-            }
-        }
-        let _searchInputWidth = function(){
-            return dsUnitsToDp(width,'w') - 128;
-        }
-        _search = app.AddLayout(parentLayout, 'Card');
-        _search.SetCornerRadius(36)
-        _search.SetSize(_searchBarWidth(), 56, 'dp')
-        _search.SetBackColor(searchColor);
-        
-        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
-        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
-        _leadingIcon.SetSize(34, 34, 'dp');
-        _leadingIcon.SetTextSize(24)
-        _leadingIcon.SetTextColor(_iconTextColor)
-        _leadingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _leadingIcon.SetFontFile(defaultIcons)
-        _leadingIcon.SetMargins(16,13,16,null,'dp')
-        
-        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
-        _searchInput.SetBackColor(searchColor)
-        _searchInput.SetMargins(null,8,null,null,'dp')
-        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
-        _searchInput.SetTextColor(_searchInputTextColor);
-        
-        
-        
-        if(hint !== null){
-            _searchInput.SetHint(hint);
-        }
-        
-        
-        _trailingIcon = app.AddButton(_searchContainer, trailingIcon, null, null, 'Custom,Lego');
-        _trailingIcon.SetSize(34, 34, 'dp');
-        _trailingIcon.SetTextSize(24)
-        _trailingIcon.SetTextColor(_iconTextColor)
-        _trailingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _trailingIcon.SetFontFile(defaultIcons)
-        _trailingIcon.SetMargins(16,13,16,null,'dp')
-        
-        //SetOnTouch Implementation
-        _leadingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(leadingIcon))
-        
-            }
-        });
-        
-        _trailingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(trailingIcon))
-            }
-        });
-        
-    }
-    
-    function drawSearchWithAvatar() {
-        let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
-        let _searchInputTextColor = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
-        let _iconRadius = 50/100 * 34;
-        let _searchBarWidth = function(){
-            if (dsUnitsToDp(width,'w') < 144){
-                warnDeveloper(`SearchBar Width Cant Be Less Than \n
-                0.4 dsUnits or 144 dp.\n
-                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
-                return 144;
-            }
-            else {
-                return dsUnitsToDp(width,'w');
-            }
-        }
-        let _searchInputWidth = function(){
-            return dsUnitsToDp(width,'w') - 128;
-        }
-        _search = app.AddLayout(parentLayout, 'Card');
-        _search.SetCornerRadius(36)
-        _search.SetSize(_searchBarWidth(), 56, 'dp')
-        _search.SetBackColor(searchColor);
-        
-        b_searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
-        b_leadingIcon = app.AddButton(b_searchContainer, leadingIcon, null, null, 'Custom,Lego');
-        b_leadingIcon.SetSize(34, 34, 'dp');
-        b_leadingIcon.SetTextSize(24)
-        b_leadingIcon.SetTextColor(_iconTextColor)
-        b_leadingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        b_leadingIcon.SetFontFile(defaultIcons)
-        b_leadingIcon.SetMargins(16,13,16,null,'dp')
-        
-        _searchInput = app.AddTextEdit(b_searchContainer, '', null,null,'Singleline,Left')
-        _searchInput.SetBackColor(searchColor)
-        _searchInput.SetMargins(null,8,null,null,'dp')
-        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
-        _searchInput.SetTextColor(_searchInputTextColor);
-        
-        if(hint !== null){
-            _searchInput.SetHint(hint);
-        }
-        
-        //Check If Image File Exists And If Not Dont Procced
-        if (!app.FileExists(trailingIcon)){
-            warnDeveloper(`The Avatar ${trailingIcon}, Does Not Exist`,'Search Avatar Not Found');
-            return
-        }
-        
-        else{
-        b_trailingLay = app.AddLayout(b_searchContainer,'Card');
-        b_trailingLay.SetCornerRadius(15)
-        b_trailingIcon = app.AddImage(b_trailingLay, trailingIcon, null, null,'async')
-        b_trailingIcon.SetSize(30, 30, 'dp');
-        b_trailingLay.SetMargins(16,13,16,null,'dp')
-        }
-        b_leadingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(leadingIcon))
-                }
-        });
-        
-        b_trailingIcon.SetOnTouchDown(function(){
-            if(searchObj.onTouch){
-                M(this,searchObj.onTouch('avatar'))
-            }
-        });
-        
-    }
-    
-    function drawSearchWithTwoIcons(firstTrailingIcon, secondTrailingIcon) {
-        
-        let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
-        let _searchInputTextColor = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
-        let _iconRadius = 50/100 * 34;
-        let _searchBarWidth = function(){
-            if (dsUnitsToDp(width,'w') < 144){
-                warnDeveloper(`SearchBar Width Cant Be Less Than \n
-                0.4 dsUnits or 144 dp.\n
-                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
-                return 144;
-            }
-            else {
-                return dsUnitsToDp(width,'w');
-            }
-        }
-        let _searchInputWidth = function(){
-            return dsUnitsToDp(width,'w') - 176;
-        }
-        
-        _search = app.AddLayout(parentLayout, 'Card');
-        _search.SetCornerRadius(36)
-        _search.SetSize(_searchBarWidth(), 56, 'dp')
-        _search.SetBackColor(searchColor);
-        
-        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
-        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
-        _leadingIcon.SetSize(34, 34, 'dp');
-        _leadingIcon.SetTextSize(24)
-        _leadingIcon.SetTextColor(_iconTextColor)
-        _leadingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _leadingIcon.SetFontFile(defaultIcons)
-        _leadingIcon.SetMargins(16,13,16,null,'dp')
-        
-        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
-        _searchInput.SetBackColor(searchColor)
-        _searchInput.SetMargins(null,8,null,null,'dp')
-        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
-        _searchInput.SetTextColor(_searchInputTextColor);
-        
-        if(hint !== null){
-            _searchInput.SetHint(hint);
-        }
-        
-        
-        _firstTrailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, 'Custom,Lego');
-        _firstTrailingIcon.SetSize(34, 34, 'dp');
-        _firstTrailingIcon.SetTextSize(24)
-        _firstTrailingIcon.SetTextColor(_iconTextColor)
-        _firstTrailingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _firstTrailingIcon.SetFontFile(defaultIcons)
-        _firstTrailingIcon.SetMargins(16,13,8,null,'dp')
-        
-        _secondTrailingIcon = app.AddButton(_searchContainer, secondTrailingIcon, null, null, 'Custom,Lego');
-        _secondTrailingIcon.SetSize(34, 34, 'dp');
-        _secondTrailingIcon.SetTextSize(24)
-        _secondTrailingIcon.SetTextColor(_iconTextColor)
-        _secondTrailingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _secondTrailingIcon.SetFontFile(defaultIcons)
-        _secondTrailingIcon.SetMargins(null,13,16,null,'dp')
-        
-        //SetOnTouch Implementation
-        _leadingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this,searchObj.onTouch(leadingIcon))
-            }
-        });
-        
-        _firstTrailingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(firstTrailingIcon))
-            }
-        });
-        
-         _secondTrailingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this,searchObj.onTouch(secondTrailingIcon))
-            }
-        });
-        
-    }
-    
-    function drawSearchWithAvatarIcon(firstTrailingIcon, secondTrailingIcon) {
-        
-        let searchColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconColor = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
-        let _iconTextColor = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
-        let _searchInputTextColor = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
-        let _iconRadius = 50/100 * 34;
-        let _searchBarWidth = function(){
-            if (dsUnitsToDp(width,'w') < 144){
-                warnDeveloper(`SearchBar Width Cant Be Less Than \n
-                0.4 dsUnits or 144 dp.\n
-                So Have Been Set To 0.4 !`,'SearchBar Width Cant Be Less Than 0.4. Check Debug Log');
-                return 144;
-            }
-            else {
-                return dsUnitsToDp(width,'w');
-            }
-        }
-        let _searchInputWidth = function(){
-            return dsUnitsToDp(width,'w') - 178;
-        }
-        
-        
-        
-        _search = app.AddLayout(parentLayout, 'Card');
-        _search.SetCornerRadius(36)
-        _search.SetSize(_searchBarWidth(), 56, 'dp')
-        _search.SetBackColor(searchColor);
-        
-        _searchContainer = app.AddLayout(_search, 'Linear','Horizontal,Left')
-        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, 'Custom,Lego');
-        _leadingIcon.SetSize(34, 34, 'dp');
-        _leadingIcon.SetTextSize(24)
-        _leadingIcon.SetTextColor(_iconTextColor)
-        _leadingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _leadingIcon.SetFontFile(defaultIcons)
-        _leadingIcon.SetMargins(16,13,16,null,'dp')
-        
-        _searchInput = app.AddTextEdit(_searchContainer, '', null,null,'Singleline,Left')
-        _searchInput.SetBackColor(searchColor)
-        _searchInput.SetMargins(null,8,null,null,'dp')
-        _searchInput.SetSize(_searchInputWidth(), -1, 'dp');
-        _searchInput.SetTextColor(_searchInputTextColor);
-        
-        if(hint !== null){
-            _searchInput.SetHint(hint);
-        }
-        
-        _trailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, 'Custom,Lego');
-        _trailingIcon.SetSize(34, 34, 'dp');
-        _trailingIcon.SetTextSize(24)
-        _trailingIcon.SetTextColor(_iconTextColor)
-        _trailingIcon.SetStyle(_iconColor,_iconColor,_iconRadius,null,null,0);
-        _trailingIcon.SetFontFile(defaultIcons)
-        _trailingIcon.SetMargins(16,13,8,null,'dp')
-        
-        _avatarLay = app.AddLayout(_searchContainer,'Card');
-        _avatarLay.SetCornerRadius(15)
-        _avatarIcon = app.AddImage(_avatarLay, secondTrailingIcon, null, null,'async')
-        _avatarIcon.SetSize(30, 30, 'dp');
-        _avatarLay.SetMargins(0,13,16,null,'dp')
-        
-        //SetOnTouch Implementation
-        _leadingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(leadingIcon))
-                //searchObj.onTouch(leadingIcon);
-            }
-        });
-        
-        _trailingIcon.SetOnTouch(function(){
-            if(searchObj.onTouch){
-                M(this, searchObj.onTouch(firstTrailingIcon))
-                //searchObj.onTouch(firstTrailingIcon);
-            }
-        });
-        
-        
-        _avatarIcon.SetOnTouchDown(function(){
-            if(searchObj.onTouch){
-                M(this,searchObj.onTouch('avatar'))
-                //searchObj.onTouch('avatar');
-            }
-        });
-     
-    }
-    
-}
 
 
 function textObject(text, width, height, options, parentLay){
@@ -1809,73 +1992,6 @@ function drawEmptyDialog(dialogLayout, width, height, options, empty__thirdIconO
     emptyDlg.AddLayout(dlgUi);
     emptyDlg.Show();
     return emptyDlg;
-}
-
-
-function appBarObject(title, leadingIcon, controlIcons, parentLay) {
-    let barCardLay;
-    this.SetOnTouch = function (onTouch) {
-        this.onTouch = onTouch
-    }
-    
-    
-    barCardLay = drawAppBar(title, leadingIcon, controlIcons, parentLay, this)
-}
-
-//144 w
-//72 ts
-
-
-function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
-    barCardLay = app.AddLayout(parentLay, "Card");
-    barCardLay.SetSize(DW(), dpToPxConversion(64), 'px');
-    
-    barCardLay.SetBackColor(stateColor(md_theme_light_surface, md_theme_dark_surface))
-    barCardLay.SetMargins(0, 0)
-    
-    
-    barUi = app.CreateLayout('Linear', 'Horizontal,Left');
-    barCardLay.AddChild(barUi);
-    
-    _iconColor = stateColor(md_theme_light_background,md_theme_dark_background);
-    _IconRadius = 50/100 * 120;
-    
-    _leftIcon = app.AddButton(barUi, leadingIcon, null, null, 'Custom, Lego');
-    _leftIcon.SetSize(144, 144, 'px');
-    _leftIcon.SetStyle(_iconColor,_iconColor, _IconRadius, null,null, 0)
-    _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
-    
-    _leftIcon.SetFontFile(defaultIcons)
-    _leftIcon.SetTextSize(72, 'px');
-    _leftIcon.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
-    _leftIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            appBarObj.onTouch(leadingIcon)
-        }
-    })
-    
-    _title = app.AddText(barUi, title, -1, -1, 'Wrap');
-    _title.SetMargins(null, 24, null, 24, 'px')
-
-    _title.SetTextSize(28, 'dp');
-    _title.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
-    
-    
-    
-    _rightIcon = app.AddButton(barUi, controlIcons, null, null, 'Custom, Lego');
-    _rightIcon.SetMargins(pxToDpConversion(DW()) - 190, 24, 30, null, 'px')
-    _rightIcon.SetStyle(_iconColor,_iconColor, _IconRadius, null,null, 0)
-    _rightIcon.SetSize(144, 144, 'px');
-    _rightIcon.SetTextSize(72, 'px');
-    
-    _rightIcon.SetFontFile(defaultIcons)
-    _rightIcon.SetTextColor(stateColor(md_theme_light_onSurface, md_theme_dark_onSurface))
-    _rightIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            appBarObj.onTouch(controlIcons)
-        }
-    })
-    return barCardLay;
 }
 
 

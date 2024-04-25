@@ -205,7 +205,8 @@ const ui = {
     },
     
     addSwitchSettings: function(listOfSettings, switchValues, width, height, parentLay){
-        return new switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
+        return new 
+        switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
     },
     
     
@@ -475,8 +476,7 @@ function drawNavigationBar(listOfTabs, labels, options, parentLay){
     let __bottomNav;
     let __bottomMain,__bottomBar,__labelLayout;
     
-    let __barColor = stateColor(md_theme_light_inverseOnSurface,
-    md_theme_dark_inverseOnSurface);
+    
     
     let __firstBar,__secondBar,__thirdBar,__fourthBar;
     let __firstLabel,__secondLabel,__thirdLabel,__fourthLabel;
@@ -531,11 +531,11 @@ function drawNavigationBar(listOfTabs, labels, options, parentLay){
     
     __bottomBar = app.AddLayout(__bottomMain, 'Linear','Horizontal');
     __bottomBar.SetSize(pxToDpConversion(DW()), 44, 'dp')
-    __bottomBar.SetBackColor(__barColor);
+    __bottomBar.SetBackColor(bottomBarClr);
     
     __labelLayout = app.AddLayout(__bottomMain, 'Linear','Horizontal,Left')
     __labelLayout.SetSize(pxToDpConversion(DW()), 36, 'dp')
-    __labelLayout.SetBackColor(__barColor);
+    __labelLayout.SetBackColor(bottomBarClr);
     
     drawNavBar(getTabNames(), getTabLabels(), options, __bottomBar);
     
@@ -551,21 +551,23 @@ function drawNavigationBar(listOfTabs, labels, options, parentLay){
     __thirdIconLabel = app.AddText(__labelLayout,__thirdLabel )
     __thirdIconLabel.SetMargins(48,0,16,0,'dp')  
     
+    bottomBarClr.value = stateColor(md_theme_light_inverseOnSurface,
+    md_theme_dark_inverseOnSurface);
     return __bottomNav;
 }
 
 function drawNavBar(sortedTabNames, sortedLabels, options, parentLay){
     
     let __activeTab;
-    let clearClr = "#00000000";
-    let activeShade = stateColor(md_theme_light_secondaryContainer,
-    md_theme_dark_secondaryContainer)
+    let clearClr = "#00000000";    
     
-    
+    activeShade.subscribe((value)=>{
+        icons[index].SetBackColor(value);
+    })
     const setActiveTab = (index) =>{
         const icons = [__firstIcon, __secondIcon, __thirdIcon];
         
-        icons[index].SetBackColor(activeShade);
+        icons[index].SetBackColor(activeShade.value);
         __activeTab = index;   
     }    
     
@@ -600,6 +602,8 @@ function drawNavBar(sortedTabNames, sortedLabels, options, parentLay){
         
     }
     
+    activeShade.value = stateColor(md_theme_light_secondaryContainer,
+    md_theme_dark_secondaryContainer)
     
     setActiveTab(0);
     
@@ -607,14 +611,7 @@ function drawNavBar(sortedTabNames, sortedLabels, options, parentLay){
 
 
 function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
-    let __secondaryTab;
     let __activeTab;
-    
-    let backColor = stateColor(md_theme_light_surface,md_theme_dark_surface)
-    let buttonColor = stateColor(md_theme_dark_onSurfaceVariant,
-    md_theme_dark_onSurfaceVariant);
-    
-    let lightBarClr = stateColor(md_theme_light_primary,md_theme_dark_primary)
     
     let qaudTween = 'Quadratic.In';
     let linTween = 'Linear.None'
@@ -634,21 +631,21 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
     
     noOfTabs(listOfTabs);
     
-    __secondaryMain = app.AddLayout(parentLay, 'Linear','Vertical')
-    __seecondaryMain.SetSize(width, height);
+    let __secondaryMain = app.AddLayout(parentLay, 'Linear','Vertical')
+    __secondaryMain.SetSize(width, height);
     
-    
-    __secondaryTab = app.AddLayout(__secondaryMain, 'Card','Vertical');
+    let __secondaryTab = app.AddLayout(__secondaryMain, 'Card','Vertical');
     __secondaryTab.SetMargins(0,0,0,null);
     __secondaryTab.SetSize(pxToDpConversion(DW()), 48, 'dp');
+    __secondaryTab.SetBackColor(secondaryTabClr.value);
     
-    __secTabInnerTab = app.AddLayout(__secondaryTab, 'Absolute','Vertical,Left')
+    let __secTabInnerTab = app.AddLayout(__secondaryTab, 'Absolute','Vertical,Left')
     __secTabInnerTab.SetSize(pxToDpConversion(DW()), 48, 'dp');
-    __secTabInnerTab.SetbackColorkColor(backColor);
+    //__secTabInnerTab.SetBackColor(secondaryTabClr.value);
     
     __secTabInnerLay = app.AddLayout(__secTabInnerTab, 'Linear','Horizontal');
     __secTabInnerLay.SetSize(pxToDpConversion(DW()), 46, 'dp');
-    __secTabInnerLay.SetBackColor(backColor);
+    //__secTabInnerLay.SetBackColor(secondaryTabClr.value);
     
     // By default active tab is the first
     
@@ -657,20 +654,20 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             __firstTabActive = true;
         }
         
-        __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
-        __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __firstTabBtn.SetStyle(backColor,backColor,0,null,null,0)
+        let __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'NoPad');
+        __firstTabBtn.SetTextColor(secondaryTabTxtClr.value)
+        __firstTabBtn.SetBackColor(secondaryTabClr.value)
         __firstTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
         __firstTabBtn.SetMargins(0,0,0)
         
-        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, 0.5, -1, 'Custom,NoPad');
-        __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __secondTabBtn.SetStyle(backColor,backColor,0,null,null,0)
+        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, 0.5, -1, 'NoPad');
+        __secondTabBtn.SetTextColor(secondaryTabTxtClr.value)
+        __secondTabBtn.SetBackColor(secondaryTabClr.value)
         __secondTabBtn.SetSize(pxToDpConversion(DW())/2,46,'dp')
         
-        lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
+        lightStrip = app.AddText(__secTabInnerTab,'',null, null,'Wrap')
         lightStrip.SetSize(pxToDpConversion(DW())/2,2,'dp')
-        lightStrip.SetBackColor(lightBarClr) 
+        lightStrip.SetBackColor(lightBarClr.value) 
         
         
         const tweenValues = ()=>{
@@ -749,7 +746,12 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             }
             lightStripPower();
         }
-        
+        secondaryTabClr.subscribe((value)=>{
+        __secTabInnerLay.SetBackColor(value);
+        __firstTabBtn.SetBackColor(value)
+        __secondTabBtn.SetBackColor(value)
+    }) 
+    
     }
     
     else {
@@ -759,24 +761,24 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         }
         
         __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab,null,null, 'Custom,NoPad');
-        __firstTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __firstTabBtn.SetStyle(backColor,backColor,0,null,null,0)
+        __firstTabBtn.SetTextColor(secondaryTabTxtClr.value)
+        __firstTabBtn.SetStyle(secondaryTabClr.value,secondaryTabClr.value,0,null,null,0)
         __firstTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         __firstTabBtn.SetMargins(0,0,0)
         
         __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, null, null, 'Custom,NoPad');
-        __secondTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __secondTabBtn.SetStyle(backColor,backColor,0,null,null,0)
+        __secondTabBtn.SetTextColor(secondaryTabTxtClr.value)
+        __secondTabBtn.SetStyle(secondaryTabClr.value,secondaryTabClr.value,0,null,null,0)
         __secondTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         
         __thirdTabBtn = app.AddButton(__secTabInnerLay, __thirdTab, null, null, 'Custom,NoPad');
-        __thirdTabBtn.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
-        __thirdTabBtn.SetStyle(backColor,backColor,0,null,null,0)
+        __thirdTabBtn.SetTextColor(secondaryTabTxtClr.value)
+        __thirdTabBtn.SetStyle(secondaryTabClr.value,secondaryTabClr.value,0,null,null,0)
         __thirdTabBtn.SetSize(pxToDpConversion(DW())/3,46,'dp')
         
         lightStrip = app.AddText(__secTabInnerTab,'',null, null,'')
         lightStrip.SetSize(pxToDpConversion(DW())/3,2,'dp')
-        lightStrip.SetBackColor(lightBarClr) 
+        lightStrip.SetBackColor(lightBarClr.value) 
         
         
         const tweenValues = ()=>{
@@ -873,6 +875,8 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         
         activeTabLayoutSwitch(true);  
         
+       
+        
         secTabObject.prototype.SetActiveTab = function(index){
             setTab(index);
         }
@@ -902,7 +906,14 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
             
             lightStripPower();
         }
+        secondaryTabClr.subscribe((value)=>{
+        __secTabInnerLay.SetBackColor(value);
+        __firstTabBtn.SetBackColor(value)
+        __secondTabBtn.SetBackColor(value)
+    }) 
     }
+    
+    
     
     secTabObject.prototype.GetTabLayout = function(tab){
         if (tab == __firstTab) return __firstTabLay;
@@ -910,6 +921,13 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay){
         if (tab == __thirdTab) return __thirdTabLay;
     }
     
+       
+    lightBarClr.subscribe((value)=>{
+        lightStrip.SetBackColor(value) 
+    })
+    secondaryTabTxtClr.subscribe((value)=>{
+        __secondTabBtn.SetTextColor(value)
+    })
     
     return __secondaryTab;
 }

@@ -26,7 +26,7 @@ const ui = {
     
     setTheme: (mode) =>{
         if (mode == undefined){
-            let baseTheme = jsonData.baseTheme;
+            //let baseTheme = jsonData.baseTheme;
             if (theme == 'light'){
                 theme = 'dark';
             }
@@ -62,25 +62,26 @@ const ui = {
     
     createLayout: function(type, options, width, height, parentLay) {
         let lay;
-        backgroundClr.subscribe((value)=>{
-            lay.SetBackColor(value);
-            //app.SetStatusBarColor(value);
-        })
         
         if (!parentLay) {
-            
             lay = app.CreateLayout(type, options);
-    
+            lay.SetBackColor(backgroundClr.value)
+            
             layoutType = type;
             layoutOptions = options;
         } 
         
         else {
             lay = app.AddLayout(parentLay, type, options);
+            lay.SetBackColor(backgroundClr.value)
             lay.SetSize(width, height);
         }
-        backgroundClr.value = stateColor(md_theme_light_background,
-        md_theme_dark_background);
+        
+        backgroundClr.subscribe((value)=>{
+            lay.SetBackColor(value);
+            //app.SetStatusBarColor(value);
+        })
+        
         return lay;
     },
  
@@ -2173,16 +2174,10 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
 
 function drawFilledButton(btnName, width, height, icon, parentLay) {
     let filledButton;
-    
-    filledBtnClr.subscribe((value)=>{
-        filledButton.SetStyle(value, value, 20, null, null, 0)
-    })
-    
-    filledBtnTxtClr.subscribe((value)=>{
-        filledButton.SetTextColor(value)
-    })
-    
+
     filledButton = app.AddButton(parentLay, null, width, height, 'Custom,FontAwesome');
+    filledButton.SetStyle(filledBtnClr.value, filledBtnClr.value, 20, null, null, 0)
+    filledButton.SetTextColor(filledBtnTxtClr.value)
     
     if (icon === null) {
         filledButton.SetText(btnName);
@@ -2192,8 +2187,13 @@ function drawFilledButton(btnName, width, height, icon, parentLay) {
 
     filledButton.SetFontFile(defaultFont);
     
-    filledBtnClr.value = stateColor(md_theme_light_primary,md_theme_dark_primary)
-    filledBtnTxtClr.value = stateColor(md_theme_light_onPrimary, md_theme_dark_onPrimary);
+    filledBtnClr.subscribe((value)=>{
+        filledButton.SetStyle(value, value, 20, null, null, 0)
+    })
+    
+    filledBtnTxtClr.subscribe((value)=>{
+        filledButton.SetTextColor(value)
+    })
     
     return filledButton;
 }

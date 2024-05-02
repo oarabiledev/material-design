@@ -4,7 +4,9 @@
    Under The MIT License.
    @ 2024 - Till Forever.
 */
+
 cfg.Fast
+_Boost(true)
 
 const ui = {};
 
@@ -18,6 +20,8 @@ app.Script('Transmitters.js',true);
    Be Compiled.
 */
 
+/** Initialize Material3, basically reads your baseTheme.json File
+*/
 ui.InitializeMaterialPlugin = function() {
     if (!app.FileExists('baseTheme.json')) {
         warnDeveloper(ErrorCodes["404"]);
@@ -29,12 +33,17 @@ ui.InitializeMaterialPlugin = function() {
     isInitialized.value = true;
 }
 
+/** Initialize Material3, basically reads your baseTheme.json File. Also Old.
+*/
 app.CreateMaterial3 = () => {
     ui.InitializeMaterialPlugin();
     warnDeveloper(ErrorCodes["301"]+`
     \nUse ui.InitializeMaterialPlugin()`);
 }
 
+/**
+ * @param {string} mode - 'light' or 'dark'
+*/
 ui.setTheme = function (mode) {
     if (mode == undefined){
         if (theme == 'light'){
@@ -48,6 +57,12 @@ ui.setTheme = function (mode) {
 }
 
 
+/**
+ * @param {string} type - A DroidScript Layout Type
+ * @param {string} options - Options For Layout, i.e: FillXY
+ * @param {number} width - layout Width in DroidScript Scale 0 - 1
+ * @param {number} height - layout height in DroidScript Scale 0 - 1
+*/
 ui.createLayout = function(type, options, width, height, parentLay) {
     let lay;
     if(isInitialized.value === false) {
@@ -60,14 +75,13 @@ ui.createLayout = function(type, options, width, height, parentLay) {
         if (!parentLay) {
             lay = app.CreateLayout(type, options);
             lay.SetBackColor(backgroundClr.value)
-            app.SetStatusBarColor(backgroundClr.value);
+            app.SetStatusBarColor(md_theme_dark_background);
             
             layoutType = type;
             layoutOptions = options;
         } 
         else {
             lay = app.AddLayout(parentLay, type, options);
-            lay.SetBackColor(backgroundClr.value)
             lay.SetSize(width, height);
         }
         backgroundClr.subscribe((value)=>{
@@ -77,35 +91,82 @@ ui.createLayout = function(type, options, width, height, parentLay) {
     }
 }
 
+/**
+ * @param {string} btnName - Name Of Your Button
+ * @param {number} width - Width in DroidScript Scale 0 - 1
+ * @param {number} height - Height in DroidScript Scale 0 - 1
+ * @param {string} icon - Favicon for button (dont add fa)
+ * @param {object} parentLay - parent For Button
+*/
+
 ui.addFilledButton = function (btnName, width, height, icon, parentLay) {
     return new filledButtonObject(btnName, width, height, icon, parentLay);
 }
 
+/**
+ * @param {string} btnName - Name Of Your Button
+ * @param {number} width - Width in DroidScript Scale 0 - 1
+ * @param {number} height - Height in DroidScript Scale 0 - 1
+ * @param {string} icon - Favicon for button (dont add fa)
+ * @param {object} parentLay - parent For Button
+*/
 ui.addElevatedButton =  function (btnName, width, height, icon, parentLay) {
     return new elevatedButtonObject(btnName, width, height, icon, parentLay);
 }
 
+/**
+ * @param {string} btnName - Name Of Your Button
+ * @param {number} width - Width in DroidScript Scale 0 - 1
+ * @param {number} height - Height in DroidScript Scale 0 - 1
+ * @param {string} icon - Favicon for button (dont add fa)
+ * @param {object} parentLay - parent For Button
+*/
 ui.addFilledTonalButton = function (btnName, width, height, icon, parentLay) {
     return new filledTonalButtonObject(btnName, width, height, icon, parentLay);
 }
 
+/**
+ * @param {string} btnName - Name Of Your Button
+ * @param {number} width - Width in DroidScript Scale 0 - 1
+ * @param {number} height - Height in DroidScript Scale 0 - 1
+ * @param {string} icon - Favicon for button (dont add fa)
+ * @param {object} parentLay - parent For Button
+*/
 ui.addOutlinedButton = function (btnName, width, height, icon, parentLay) {
     return new outlinedButtonObject(btnName, width, height, icon, parentLay);
 }
-    
+
+/**
+ * @param {string} btnName - Name Of Your Button
+ * @param {number} width - Width in DroidScript Scale 0 - 1
+ * @param {number} height - Height in DroidScript Scale 0 - 1
+ * @param {string} icon - Favicon for button (dont add fa)
+ * @param {object} parentLay - parent For Button
+*/   
 ui.addTextButton = function (btnName, width, height, icon, parentLay) {
     return new textButtonObject(btnName, width, height, icon, parentLay);
 }
 
-
+/**
+ * @param {string} icon - Icon
+ * @param {object} layout - parent For Component
+*/ 
 ui.addSmallFAB = function (icon, layout) {
     return new smallFABObject(icon, layout);
 }
-    
+
+/**
+ * @param {string} icon - Icon
+ * @param {object} layout - parent For Component
+*/ 
 ui.addFAB = function (icon, layout) {
     return new fabObject(icon, layout);
 }
-    
+
+/**
+ * @param {string} icon - Icon
+ * @param {object} layout - parent For Component
+*/ 
 ui.addLargeFAB = function (icon, layout) {
     return new largeFABObject(icon, layout);
 }
@@ -113,35 +174,73 @@ ui.addLargeFAB = function (icon, layout) {
 ui.addChip = function (type, text, icon, width, height, parentLay) {
     return new chipObject(type, text, icon, width, height, parentLay);
 }
-    
-ui.addIconButton = function (iconName, parentLay) {
-    return new _iconButtonObject(iconName, parentLay)
-}
 
+/**
+ * @param {string} text - Information displayed on SnackBar
+ * @param {string} btnAction - Name of The Button
+ * @param {number} width - Width in DroidScript Scale 0 -1
+*/
 ui.addSnackBar = function (text, btnAction, width, alignment) {
     return new SnackBarObject(text, btnAction, width, alignment);
 }
 
+/**
+ * @param {string} progressType - Progress Bar Type (linear,linearIntermediate or Circular)
+ * @param {number} width - Width In DroidScript Scale 0 -1
+ * @param {object} layout - Parent For SnackBar
+*/ 
 ui.addProgressBar = function (progressType, width, layout) {
     return new progressObject(progressType, width, layout);
 }
 
+/**
+    * @param {string} title - AppBar Title
+    * @param {string} leadingIcon - Left Icon of AppBar
+    * @param {string} controlsIcons - Upto 3 Icons in a String With Commas.
+    * @param {object} parentLay - ParentLayout For AppBar
+*/
 ui.addAlignedAppBar = function (title, leadingIcon, controlIcons, parentLay) {
     return new centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay);
 }
-    
+
+/**
+    * @param {string} title - AppBar Title
+    * @param {string} leadingIcon - Left Icon of AppBar
+    * @param {string} controlsIcons - Upto 3 Icons in a String With Commas.
+    * @param {object} parentLay - ParentLayout For AppBar
+*/
 ui.addSmallAppBar = function(title, leadingIcon, controlIcons, parentLay){
     return new smallAppBarObject(title, leadingIcon, controlIcons, parentLay);
 }
+
+
+/**
+ * @param {json} barPropsInjson - Properties in a JSON Format
+ * @param {object} parentLayout - Parent For bottomBar
+*/
 
 ui.addBottomAppBar = function (barPropsInjson, parentLayout) {
     return new bottomBarObject(barPropsInjson, parentLayout);
 }
 
+/**
+ * @param {string} leadingIcon - Icon (Material Icon)
+ * @param {string} leadingIcon - Icon (Material Icon)
+ * @param {string} hint - Search Hint on TextArea
+ * @param {number} width - Width In DroidScript Scale 0 -1
+ * @param {object} layout - Parent For SearchBar
+*/
 ui.addSearchBar = function(leadingIcon, trailingIcon, hint, width, parentLayout){
     return new searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout);
 }
 
+/**
+ * @param {string} listOfTabs - listOfTabs With Commas As One String
+ * @param {number} width - Width In DroidScript Scale 0 -1
+ * @param {number} height - Height In DroidScript Scale 0 -1
+ * @param {string} options - Options
+ * @param {object} parentLay - Parent for Tab Component
+*/
 ui.addTabs = function(listOfTabs,width, height, options, parentLay){
     return new secTabObject(listOfTabs,width, height, options, parentLay);
 }
@@ -193,6 +292,10 @@ function setM3BaseColors(isThemeChanging, file) {
   
   iconFill = jsonData.baseIcons;
   
+  if(iconFill == undefined){
+      defaultIcons = _m3Path + 'uxFonts/Icons/Outlined-Regular.otf';
+  }
+  else{
   switch (iconFill) {
     case 'outlined':
       defaultIcons = _m3Path + 'uxFonts/Icons/Outlined-Regular.otf';
@@ -206,10 +309,9 @@ function setM3BaseColors(isThemeChanging, file) {
     case 'round':
       defaultIcons = _m3Path + 'uxFonts/Icons/Round-Regular.otf'
       break;
-    default:
-      defaultIcons = _m3Path + 'uxFonts/Icons/Outlined-Regular.otf';
   }
-  
+  } 
+  //alert(defaultIcons)
   // Function to get the text value based on the color name 
   const getColorTextValue = (jsonData, colorName) => {
     const colorObject = jsonData.resources.color.find(color => color._name === colorName);
@@ -334,5 +436,8 @@ function setM3BaseColors(isThemeChanging, file) {
   lightBarClr.value = stateColor(md_theme_light_primary, md_theme_dark_primary)
   
   secondaryTabTxtClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface)
+  
+  smallAppBarClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
+  
+  smallAppBarIconClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface)
 }
-

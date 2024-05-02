@@ -34,7 +34,7 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     _leftIcon.SetSize(144, 144, 'px');
     _leftIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
     _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
-    
+   
     _leftIcon.SetFontFile(defaultIcons)
     _leftIcon.SetTextSize(72, 'px');
     _leftIcon.SetTextColor(appBarTextsClr.value )
@@ -81,6 +81,121 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
         _rightIcon.SetTextColor(value )
     })
     return barCardLay;
+}
+
+
+function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
+    let smallAppBar;
+    
+    /**
+     *@param {function} onTouch - Function To Be Called When An Icon Is Touched
+    */
+    this.SetOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    if(!parentLay){
+        warnDeveloper();
+    }
+   
+    else smallAppBar = drawSmallAppBar(title, leadingIcon,controlIcons,parentLay,this);
+}
+
+
+function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAbpObj){
+    let smallAppBar,noOfControlIcons;
+    
+    smallAppBar = app.AddLayout(parentLay,'Card');
+    smallAppBar.SetBackColor(smallAppBarClr.value);
+    smallAppBar.SetSize(pxToDpConversion(DW()),64,'dp')
+    
+    let linearBarLayout = app.AddLayout(smallAppBar,'Linear','Horizontal,Left');
+    
+    if(controlIcons == null) {
+        noOfControlIcons = nil ;
+    }
+    else {
+        noOfControlIcons = controlIcons.split(',').length;
+    }
+    
+    let IconRadius = 50/100 * 144;
+    
+    let firstIcon = app.AddButton(linearBarLayout,leadingIcon,null,null,'Custom');
+    firstIcon.SetStyle(smallAppBarClr.value,smallAppBarClr.value,IconRadius,null,null,0)
+    firstIcon.SetFontFile(defaultIcons)
+    firstIcon.SetMargins(16, 24,null, null, 'px')
+    firstIcon.SetSize(144, 144, 'px');
+    firstIcon.SetTextSize(72, 'px');
+    firstIcon.SetTextColor(smallAppBarIconClr.value)
+    
+    let header = app.AddText(linearBarLayout,title,-1,-1)
+    header.SetMargins(16, pxToDpConversion(40), null, pxToDpConversion(30), 'dp')
+
+    header.SetTextSize(24, 'dp');
+    header.SetTextColor(smallAppBarIconClr.value)
+    
+    /* Loop And Add Buttons */
+
+    let controlIconA = controlIcons.split(',')[0];
+    let controlIconB = controlIcons.split(',')[1];
+    let controlIconC = controlIcons.split(',')[2];
+    
+    let controlIconNames = [controlIconA, controlIconB, controlIconC];
+    
+    /**
+     * @returns {number} Maximum distance to edge of device
+    */
+    
+    let controlMargins = () =>{
+        if (noOfControlIcons == 1){
+            return pxToDpConversion(DW()) - 10;
+        }
+        if (noOfControlIcons == 2){
+            return pxToDpConversion(DW()) - 320;
+        }
+        else {
+            return 16;
+        }
+    }
+    
+    let controlMarginB = () =>{
+        if (noOfControlIcons > 1 || noOfControlIcons >=2){
+            return 16;
+        }
+        else {
+            return null;
+        }
+    }
+    for (let i = 0; i < noOfControlIcons; i++) {
+        if (i < controlIconNames.length) {
+            let icon = controlIconNames[i];
+            
+            let controlIcon = app.AddButton(linearBarLayout, icon, null, null, 'Custom');
+            controlIcon.SetStyle(smallAppBarClr.value, smallAppBarClr.value, IconRadius, null, null, 0);
+            controlIcon.SetSize(dpToPxConversion(48), dpToPxConversion(48), 'px');
+            controlIcon.SetTextSize(72, 'px');
+            controlIcon.SetMargins(controlMargins(), 8, null, null, 'dp');
+            
+            controlIcon.SetFontFile(defaultIcons)
+            controlIcon.SetTextColor(smallAppBarIconClr.value);
+            controlIcon.SetOnTouch(function () {
+                if (smallAbpObj.onTouch) {
+                    M(this, smallAbpObj.onTouch(icon));
+                }
+            });
+        }
+    }
+
+    smallAppBarClr.subscribe((value)=>{
+        smallAppBar.SetBackColor(value);
+        firstIcon.SetStyle(value,value,IconRadius,null,null,0)
+        controlIcon.SetStyle(value,value,IconRadius,null,null,0)
+    })
+    
+    smallAppBarIconClr.subscribe((value)=>{
+        firstIcon.SetTextColor(value)
+        header.SetTextColor(value)
+    })
+    return smallAppBar;
 }
 
 function bottomBarObject(barPropsInjson, parentLay) {

@@ -3,6 +3,9 @@
 
 # Material3 For Droidscript:
 
+[![Github All Releases](https://img.shields.io/github/downloads/oarabiledev/Material3/total.svg)]()
+
+
 
 Here is the implementation of Material Design 3 for Droidscript,
 For those who dont know Droidscript is a JS Framework that allows

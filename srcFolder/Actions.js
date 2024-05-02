@@ -76,9 +76,67 @@ function drawFilledButton(btnName, width, height, icon, parentLay) {
     } else {
         filledButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     }
-
-    filledButton.SetFontFile(defaultFont);
     
+    filledButton.SetFontFile(defaultFont);
+    var pos = filledButton.GetPosition()
+    /**
+     * @params {boolean} enableDrag - Allow Button To Be Dragged
+    */
+    filledButtonObject.prototype.EnableDrag = function() {
+    // Create signal outside the function scope
+    var dragInitializer = createSignal();
+    dragInitializer.value = false;
+    
+    var hasDragBeenEnabled = createSignal();
+    hasDragBeenEnabled.value = 0;
+
+    /**Only calls it subscriber event once*/
+    filledButton.SetOnLongTouch(() => {
+        if(hasDragBeenEnabled.value === true) return;
+        else {
+        dragInitializer.value = true;
+        hasDragBeenEnabled.value = true;
+        }
+    });
+
+    // Subscribe to dragInitializer outside the callback
+    dragInitializer.subscribe((value) => {
+       
+            // Your drag logic here
+            let main = app.CreateLayout('Absolute', 'FillXY,TouchSpy,TouchThrough');
+            main.SetSize(1, 1)
+            
+            
+            let clonedObj = app.AddButton(main, null, width, height, 'Custom,FontAwesome');
+            clonedObj.SetStyle(filledBtnClr.value, filledBtnClr.value, 20, null, null, 0)
+            clonedObj.SetTextColor(filledBtnTxtClr.value)
+            clonedObj.SetPosition(filledButton.GetPosition().left,filledButton.GetPosition().top)
+            
+            
+            filledButton.Gone();
+            
+            if (icon === null) {
+                clonedObj.SetText(btnName);
+            } else {
+                clonedObj.SetText(`[fa-${icon}]` + ' ' + btnName);
+            }
+            
+            clonedObj.SetFontFile(defaultFont);
+            
+            
+            main.SetOnTouchMove(function(event) {
+                let xVal = JSON.stringify(event.x[0]);
+                let yVal = JSON.stringify(event.y[0])
+                console.log("<div style='color:#FF7900'>" + 'X :: '+JSON.stringify(event.x[0]))
+                console.log("<div style='color:red'>" + 'Y :: '+JSON.stringify(event.y[0]))
+                clonedObj.SetPosition(xVal,yVal)        
+            });
+            
+            app.AddLayout(main);
+        
+    });
+};
+
     filledBtnClr.subscribe((value)=>{
         filledButton.SetStyle(value, value, 20, null, null, 0)
     })

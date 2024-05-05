@@ -1,18 +1,18 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.80 [To Be Released Soon]
+## version 0.80 [To Be Released 10 MAY 2024]
 
 - [x]  Add Light/Dark Mode
 - [x]  Add ChangeKit Method
-- [ ]  Implement Signals on Every component.
-- [ ]  Move Away Completly From Material 2
-- [ ]  All Dialogs
+- [x]  Implement Signals on Every component.
+- [x]  Move Away Completly From Material 2
+- [x]  All Dialogs
 - [x]  Tabs Component
 - [ ]  Add List Component
 - [x]  Add Switch Settings
 - [ ]  Add Radio Settings
 - [ ]  Add CheckBox Component
-- [ ]  Text Components
+- [x]  Text Components
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB
 - [ ]  Adding Bottom Navigation
@@ -23,7 +23,8 @@
 - [ ]  Empty Menu Type
 - [ ]  Chips Complete
 - [x]  Fix BottomAppBar
-- [ ]  Add More Documentation And Samples
+- [x]  Add Node & Python Support
+- [x]  Add More Documentation And Samples
 
 ---
 

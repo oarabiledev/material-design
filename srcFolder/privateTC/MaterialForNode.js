@@ -1,4 +1,3 @@
-
 /* Material Design 3 Plugin.
    
    This Project Is Licensed
@@ -6,14 +5,11 @@
    @ 2024 - Till Forever.
 */
 
+cfg.Fast
 _Boost(true)
 
 module.exports = {};
 
-app.Script('EnvVars.js',true);
-app.Script('Actions.js',true);
-app.Script('Navigators.js',true);
-app.Script('Transmitters.js',true);
 /* Added To Load Variables 
    While Not Waiting For 
    The Main Script To 
@@ -284,6 +280,14 @@ module.exports.addTabs = function(listOfTabs,width, height, options, parentLay){
 /* Global Variables & Functions Here */
 
 var theme;
+
+var _mDebug,_m3Path,privateFolder;
+
+_mDebug = app.GetAppPath().endsWith('/Material3');
+privateFolder = 
+app.GetPrivateFolder('Plugins') + '/material3/';
+_m3Path = _mDebug ? '' : privateFolder;
+
 let defaultFont = _m3Path + 'Roboto.ttf';
 let mediumFont = _m3Path + 'Roboto-Medium.ttf';
 let boldFont = _m3Path + 'Roboto-Bold.ttf';

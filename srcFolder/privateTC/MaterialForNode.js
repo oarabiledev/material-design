@@ -5,7 +5,6 @@
    @ 2024 - Till Forever.
 */
 
-cfg.Fast
 _Boost(true)
 
 module.exports = {};

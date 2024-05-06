@@ -95,12 +95,18 @@ function drawSwitchNoIcon(value, parent_Layout, switchObj) {
     handle.SetAutoUpdate(true)
     
     /* This if else doesnt work in setHandleState Function Btw*/
+    
     if(value){
         handle.SetPaintColor(switchHandleOnColor.value)
     }
     else{
         handle.SetPaintColor(switchHandleOffColor.value)
     }
+    
+    switchColor.subscribe((value)=>{
+        _switch.SetBackColor(value)
+    });
+    
     
     const setHandleState = (bool) =>{
         if(bool){
@@ -186,7 +192,7 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
             __headerText.SetHtml(`<b>${headerValue}</b><br>${descriptionValue}`)
             __headerText.SetEllipsize( "end" );
             __headerText.SetMargins(8,4,null,null,'dp');
-            __headerText.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+            __headerText.SetTextColor(switchSettingTextClr.value)
             __headerText.SetFontFile(boldFont)
             __headerText.SetTextSize(15)
         }
@@ -195,17 +201,19 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
         __headerText.SetMargins(8,4,null,null,'dp');
         __headerText.SetEllipsize( "end" );
         __headerText.SetFontFile(boldFont)
-        __headerText.SetTextColor(stateColor(md_theme_light_onSurface,md_theme_dark_onSurface))
+        __headerText.SetTextColor(switchSettingTextClr.value)
         __headerText.SetTextSize(15)
         }
         
         _cardLayout = ui.addSwitch('noIcon',true,__layout);
         _cardLayout.SetMargins(dsUnitsToDp(width,'w') - dsUnitsToDp(0.7,'w')-42,8,12,8,'dp')
-        /* TODO */
-        
+    
     }
     
-    
+    switchSettingTextClr.subscribe((value)=>{
+        __headerText.SetTextColor(value)
+    }) 
+
     /* Get Any Description Values */
     
     for (let i = 0; i < noOfSettings; i++){
@@ -226,5 +234,6 @@ function drawSwitchSettings(listOfSettings, switchValues, width, height, parentL
             
             __SwitchTemplate(headerValue,null)
         }
+        
     }
 }

@@ -3,20 +3,18 @@
    This Project Is Licensed
    Under The MIT License.
    @ 2024 - Till Forever.
+   
+   ------------------------
+   Version :: 0.79.4 - Node
+   Release Date :: 8/05/24
 */
+
 
 module.exports = {};
-
-/* Added To Load Variables 
-   While Not Waiting For 
-   The Main Script To 
-   Be Compiled.
-*/
 
 /** Initialize Material3, basically reads your baseTheme.json File
 */
 module.exports.InitializeMaterialPlugin = function() {
-    app.SetDebug('console')
     if (!app.FileExists('baseTheme.json')) {
         warnDeveloper(ErrorCodes["404"]);
         return;
@@ -36,6 +34,13 @@ app.CreateMaterial3 = () => {
 }
 
 /**
+ * @returns Plugin Version Number
+*/
+module.exports.getVersion = function(){
+    return 0.79.4n;
+}
+
+/**
  * @param {string} mode - 'light' or 'dark'
 */
 module.exports.setTheme = function (mode) {
@@ -48,41 +53,6 @@ module.exports.setTheme = function (mode) {
     }
     else theme = mode;
     setM3BaseColors();
-}
-
-
-/**Experimental Api - Bmodule.exportsldFromForm
-*/
-
-module.exports.readFromForm = function(){
-    
-}
-
-/*Experimental Api - Bmodule.exportsld Hybrid Apps using Euphoria 
-  Framework.
-  https://github.com/oarabiledev/Euphoria
-*/
-
-/**
- * @param {json} appProps - Properties like page routing in json
-*/
-module.exports.mixWithEuphoria = function(appProps){
-    folderName = app.GetAppName();
-    
-    // Create A New Folder Called Euphoria
-    
-    fs = app.MakeFolder('Euphoria');
-    
-    moveNxpXFolder = app.CopyFolder()
-    AppJsFile = app.CreateFile('Euphoria/App.mjs','rw');
-    //AppJsFile.WriteData()
-    
-    euphoriaServer = app.CreateWebServer(5188,'ListDir');
-    euphoriaServer.SetFolder('./');
-    euphoriaServer.Start();
-    
-    var ip = app.GetIPAddress();
-    app.Alert( ip +":5188", "Type the following address into your browser" );
 }
 
 /**
@@ -241,6 +211,16 @@ module.exports.addSmallAppBar = function(title, leadingIcon, controlIcons, paren
     return new smallAppBarObject(title, leadingIcon, controlIcons, parentLay);
 }
 
+/**
+    * @param {string} title - AppBar Title
+    * @param {string} leadingIcon - Left Icon of AppBar
+    * @param {string} controlsIcons - Upto 3 Icons in a String With Commas.
+    * @param {object} parentLay - ParentLayout For AppBar
+*/
+module.exports.addMediumAppBar = function(title, leadingIcon, controlIcons, parentLay){
+    return new mediumAppBarObject(title, leadingIcon, controlIcons, parentLay);
+}
+
 
 /**
  * @param {json} barPropsInjson - Properties in a JSON Format
@@ -272,187 +252,67 @@ module.exports.addSearchBar = function(leadingIcon, trailingIcon, hint, width, p
 module.exports.addTabs = function(listOfTabs,width, height, options, parentLay){
     return new secTabObject(listOfTabs,width, height, options, parentLay);
 }
-    
+
+/**
+ * @param {object} sheetLayout - Add a layout to the bottomsheet
+ * @param {number} height - Height of BottomSheet In ds Unit Scale.
+ * @param {string} options - BottomSheet Options (NoDim)
+ * @returns A BottomSheet
+*/
+module.exports.addBottomSheet = function(sheetLayout, height, options){
+    return new bottomSheetObject(sheetLayout, height, options);
+}
+
+/**
+ * @param {string} switchType - Set The Type of switch
+ * @param {boolean} value - Add Boolean 
+ * @param {object} parentLayout - Add a parent
+*/
+module.exports.addSwitch = function (switchType, value, parentLayout) {
+    return new switchObject(switchType, value, parentLayout);
+}
+
+/**
+ * @param {string} listOfSettings - Add list of Settings, use [] to add descriptions.
+ * @param {string} switchValues - Add list of true/false values 
+ * @param {number} width - Component width in ds scale.
+ * @param {number} height - Component height in ds scale.
+ * @param {object} parentLay - Parent For Component
+*/
+module.exports.addSwitchSettings = function(listOfSettings, switchValues, width, height, parentLay){
+    return new 
+    switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
+}
+
+/**
+ * @param {number} value - A value on a 0 - 100 scale.
+ * @param {number} width - Component width in ds scale.
+ * @param {object} parentLay - Parent For Component
+*/
+module.exports.addContinuousSlider = function(value, width, parentLay){
+    return new continuosSliderObj(value, width, parentLay)
+}
+
+/**
+ * @param {string} list - A String, list separated in commas.
+ * @param {string} checkDefinitions - A String List Of True/False.
+ * @param {number} width - Component width in ds scale.
+ * @param {number} height - Component height in ds scale.
+ * @param {object} parentLay - Parent For Component
+*/
+module.exports.addCheckBoxList = function(list, checkDefinitions, width, height, parentLay){
+    return new checkBoxListObject(list, checkDefinitions, width, height, parentLay)
+}
 
 /* Global Variables & Functions Here */
 
 var theme;
-
-var _mDebug,_m3Path,privateFolder;
-
-/* Using var To take advantage
-   of hoisting.
-*/
- 
-var isInitialized;
-
-isInitialized = createSignal();
-
-isInitialized.value = false;
-
-var backgroundClr;
-backgroundClr = createSignal();
-
-var filledBtnClr;
-
-filledBtnClr = createSignal();
-
-var filledBtnTxtClr;
-
-filledBtnTxtClr = createSignal();
-
-var elevatedBtnClr;
-
-elevatedBtnClr = createSignal();
-
-var elevatedBtnTxtClr;
-
-elevatedBtnTxtClr = createSignal();
-
-var filledTonalBtnClr;
-
-filledTonalBtnClr = createSignal();
-
-var filledTonalBtnTxtClr;
-
-filledTonalBtnTxtClr = createSignal();
-
-var textBtnTxtClr;
-
-textBtnTxtClr = createSignal();
-
-var outlinedBtnClr;
-
-outlinedBtnClr = createSignal();
-
-var outlinedBtnTxtClr;
-
-outlinedBtnTxtClr = createSignal();
-
-var _smallFabClr;
-
-_smallFabClr = createSignal();
-
-var _smallFabTxtClr;
-
-_smallFabTxtClr = createSignal();
-
-var _fabColor;
-
-_fabColor = createSignal();
-
-var _fabIconClr;
-
-_fabIconClr = createSignal();
-
-var progressBackClr;
-
-progressBackClr = createSignal();
-
-var progressIndicatorClr;
-
-progressIndicatorClr = createSignal();
-
-var appBarColor = createSignal();
-var appBarIconColor = createSignal();
-var appBarTextsClr = createSignal();
-var bottomBarAppClr = createSignal();
-var bottomBarAppTxtClr = createSignal()
-var bottomAppBarFAB = createSignal();
-
-var searchBarClr = createSignal();
-var searchBarIconClr = createSignal();
-var searchBarTextClr = createSignal();
-var searchBarInputTextClr = createSignal();
-
-var secondaryTabClr = createSignal();
-var lightBarClr = createSignal();
-var secondaryTabTxtClr = createSignal();
-
-var smallAppBarClr = createSignal();
-
-var smallAppBarIconClr = createSignal();
-
-
-var ErrorCodes;
-
-ErrorCodes = {
-    "301":"component Has Been Moved or Name Changed",
-    "400":"parentLayout Is Not Defined For ::",
-    "404":"baseTheme File Not Found",
-    "415":"un-supported Media Type For ::",
-    "428":"plugin Is Not Initialized"
-}
-
-var unpositionalLayout = ["Linear", "Frame", "Card"];
-
-var ErrorLayout;
-
-ErrorLayout = () =>{
-    let layout = app.CreateLayout('Linear','FillXY,H/VCenter');
-    
-    let errorMsg = app.AddText(layout,'Hi 🙋 you didnt Initailize Material3.')
-    
-    return layout;
-}
-
-
-_mDebug = app.GetAppPath().endsWith('/Material3');
-privateFolder = 
-app.GetPrivateFolder('Plugins') + '/material3/';
-_m3Path = _mDebug ? '' : privateFolder;
-
 let defaultFont = _m3Path + 'Roboto.ttf';
 let mediumFont = _m3Path + 'Roboto-Medium.ttf';
 let boldFont = _m3Path + 'Roboto-Bold.ttf';
 
 
 
-const warnDeveloper = (Msg) =>{
-    let alertClr = "<div style='color:#FF7900'>";
-    console.log(alertClr + Msg);
-}
-
-
-const dpToPxConversion = (dpValue) => {
-    return dpValue * (app.GetScreenDensity() / 160);
-}
-
-const pxToDpConversion = (pxValue) => {
-    return pxValue / (app.GetScreenDensity() / 160);
-}
-
-const dsUnitsToDp = function(dsUnit, side){
-    if (side == 'width' || side == 'w'){
-        let dWidth = pxToDpConversion(DW());
-        return dsUnit * dWidth;
-    }
-    else {
-        let dHeight =  pxToDpConversion(DH());
-        return dsUnit * dHeight;
-    }
-}
-
-const dpToDsUnit = function(dpValue, side){
-    if (side == 'width' || side == 'w'){
-        let dWidth = pxToDpConversion(DW());
-        return dpValue/dWidth;
-    }
-    else {
-        let dHeight =  pxToDpConversion(DH());
-        return dpValue/dHeight;
-    }
-}
-
-function stateColor (lightValue, darkValue) {
-    /* Default theme is always dark
-       and can be changed w,
-       setTheme method.
-    */
-    if(theme == undefined) theme = 'dark';
-    if (theme === 'light') return lightValue;
-    else return darkValue; 
-}
 
 function createSignal(defaultValue) {
     let __InnerValue = defaultValue;
@@ -624,11 +484,14 @@ function setM3BaseColors(isThemeChanging, file) {
   bottomAppBarFAB.value = stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer)
     
   searchBarClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  
   searchBarIconClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  
   searchBarTextClr.value = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
+  
   searchBarInputTextClr.value = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
   
-   secondaryTabClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
+  secondaryTabClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
   
   
   lightBarClr.value = stateColor(md_theme_light_primary, md_theme_dark_primary)
@@ -638,6 +501,16 @@ function setM3BaseColors(isThemeChanging, file) {
   smallAppBarClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
   
   smallAppBarIconClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface)
+  
+  switchColor.value = stateColor(md_theme_light_secondaryContainer,md_theme_dark_secondaryContainer)
+  
+  switchHandleOffColor.value = stateColor(md_theme_light_outline,md_theme_dark_outline)
+  
+  switchHandleOnColor.value = stateColor(md_theme_light_primary,md_theme_dark_primary);
+  
+  switchSettingTextClr.value = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
+  
+  mediumBarClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
 }
 
 
@@ -718,9 +591,28 @@ function drawFilledButton(btnName, width, height, icon, parentLay) {
     } else {
         filledButton.SetText(`[fa-${icon}]` + ' ' + btnName);
     }
-
+    
     filledButton.SetFontFile(defaultFont);
     
+    
+    /**To use Drag Api, The Parent of that component must be
+     **an Absolute layout, it should have TouchSpy and TouchThrough
+     **as options.
+     enableDrag - Allow Button To Be Dragged
+    */
+    filledButtonObject.prototype.EnableDrag = function() {
+    
+    parentLay.SetOnTouchMove(function(event) {
+        let xVal = JSON.stringify(event.x[0]);
+        let yVal = JSON.stringify(event.y[0]);
+        console.log("<div style='color:#FF7900'>" + 'X :: '+JSON.stringify(event.x[0]))
+        console.log("<div style='color:red'>" + 'Y :: '+JSON.stringify(event.y[0]))
+        filledButton.SetPosition(xVal,yVal)        
+    });
+    
+    }
+    
+
     filledBtnClr.subscribe((value)=>{
         filledButton.SetStyle(value, value, 20, null, null, 0)
     })
@@ -1244,7 +1136,486 @@ function drawLargeFab(icon, parentLay, largefabOBj, largeFABObj) {
 }
 
 
+function checkBoxListObject(list, checkDefinitions, width, height, parentLay){
+    let checkbox;
+    
+    if(!parentLay){
+        warnDeveloper('No Parent For CheckBox');
+        return;
+    }
+    else checkbox = drawCheckBoxList(list, checkDefinitions, width, height, parentLay);
+    
+}
 
+function drawCheckBoxList(list, checkDefinitions, width, height, parentLay){
+    let noOfSettings = list.split(',').length;
+    
+    /* If checkDefinitions is null or undefined assume all is true */
+    let noOfCheckDefinitions = checkDefinitions.split(',').length;
+    let checkbox,singleCheckList;
+    
+    checkbox = module.exports.createLayout('Linear',null,width,height,parentLay);
+    
+    /* Just A Simple Template */
+    singleCheckList = function(item, checkDefinition){
+        let singleCheckLay = module.exports.createLayout('Linear',null,width,height,checkbox)
+        let check = app.AddButton(singleCheckLay,null,null,null,'Custom');
+        /* TODO */
+    }
+    return checkbox;
+}
+
+function bottomSheetObject(sheetLayout, height, options) {
+    this.Dismiss = function () {
+        dismissBSheet();
+    }
+    this.Show = function () {
+        drawBottomSheet(sheetLayout, height, options);
+    }
+}
+
+function drawBottomSheet(sheetLayout, height, options) {
+    let bottomSheet,cardLayout;
+    
+    bottomSheet = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
+    bottomSheet.SetSize(1, 1);
+    bottomSheet.SetOnTouchUp(dismissBSheet);
+    bottomSheet.SetBackColor(stateColor(md_theme_light_scrim, md_theme_dark_scrim));
+    bottomSheet.SetBackAlpha(0.33);
+    
+    
+    cardLayout = app.CreateLayout('Card', 'FillX,VCenter,Top');
+    
+    cardLayout.SetCornerRadius(28);
+    
+    cardLayout.AddChild(sheetLayout);
+    cardLayout.SetBackColor(stateColor(md_theme_light_surfaceVariant, md_theme_dark_surfaceVariant))
+    bottomSheet.AddChild(cardLayout);
+    
+    cardLayout.Animate('BounceBottom', null, 550);
+    
+    app.AddLayout(bottomSheet);
+    
+    function dismissBSheet() {
+        cardLayout.Animate('SlideToBottom', function(){
+            cardLayout.RemoveChild(sheetLayout);
+            app.RemoveLayout(bottomSheet)
+        }, 210);
+        
+    }
+}
+
+
+var switchValue = createSignal();
+
+
+function switchObject(switchType, value, parent_Layout) {
+    let _switch;
+    
+    this.GetValue = function () {
+        return switchValue;
+    }
+    this.SetOnToggle = function (onToggle) {
+        this.onToggle = onToggle;
+    }
+    this.SetPosition = function (left, top, width, height, options) {
+        _switch.SetPosition(left, top, width, height, options)
+    }
+    
+    this.SetMargins = function(left,top,right,bottom,mode){
+        _switch.SetMargins(left,top,right,bottom,mode)
+    }
+    /*
+    switch(switchType){
+        case 'noIcon':
+            drawSwitchNoIcon(value,parent_Layout,this);
+            break;
+        case 'onIcon':
+            drawSwitchOnIcon(value,parent_Layout,this);
+            break;
+        case 'allIcon':
+            drawSwitchAllIcon(value,parent_Layout,this);
+    }
+    */
+    
+    //Temporary !
+    _switch = drawSwitchNoIcon(value, parent_Layout, this);
+}
+
+
+
+function drawSwitchNoIcon(value, parent_Layout, switchObj) {
+    let _switch;
+    let handle;
+    switchValue.value = value;
+    
+    _switch = app.CreateLayout('Card')
+    _switch.SetSize(52, 32, 'dp');
+    _switch.SetElevation(0.9)
+    _switch.SetCornerRadius(16)
+    _switch.SetBackColor(switchColor.value)
+    
+    abs = app.AddLayout(_switch,'Absolute')
+    abs.SetSize(52, 32, 'dp');
+    
+    handle = app.AddImage(abs,null, 0.085, 0.05)
+    handle.SetAutoUpdate(true)
+    
+    /* This if else doesnt work in setHandleState Function Btw*/
+    
+    if(value){
+        handle.SetPaintColor(switchHandleOnColor.value)
+    }
+    else{
+        handle.SetPaintColor(switchHandleOffColor.value)
+    }
+    
+    switchColor.subscribe((value)=>{
+        _switch.SetBackColor(value)
+    });
+    
+    
+    const setHandleState = (bool) =>{
+        if(bool){
+            handle.SetPosition(0.052,0)
+            handle.DrawCircle(0.52, 0.42, 0.45)
+        }
+        else { 
+            handle.SetPosition(0,0)
+            handle.DrawCircle(0.52, 0.42, 0.30) 
+        }
+    }
+    
+    setHandleState(switchValue.value)
+    
+    handle.SetOnTouchDown(M(this,function(){
+        if(switchValue.value){
+            switchValue.value = false
+            handle.Tween({x:0.0,y:0},100,'Linear.None',0,false,()=>{
+                handle.Clear()
+                handle.DrawCircle(0.52, 0.42, 0.30)
+            })
+        }
+        else{
+            switchValue.value = true
+            
+            handle.Tween({x:0.05,y:0},100,'Linear.None',0,false,()=>{
+                handle.Clear();
+                handle.DrawCircle(0.52, 0.42, 0.45)
+                
+            })
+        }
+    }))
+    
+    /* Also wont work in SetOnTouchDown */
+    switchValue.subscribe((value)=>{
+        if(value){
+            handle.SetPaintColor(switchHandleOnColor.value);
+        }
+        else{
+            handle.SetPaintColor(switchHandleOffColor.value);
+        }
+        
+        if(switchObj.onToggle) switchObj.onToggle(value);
+    })
+    
+    parent_Layout.AddChild(_switch);
+    return _switch;
+    
+}
+
+
+function switchSettingsObject(listOfSettings, switchValues, width, height, parentLay){
+    let _SwitchSettings;
+    if(!parentLay){
+        warnDeveloper('No Parent To Swicth Settings.')
+    }
+    else _SwitchSettings = drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay);
+}
+
+function drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay){
+    
+    /* Get No Of Switch Settings */
+    if(!listOfSettings.includes(',')){
+        warnDeveloper('It seems like you didnt give a list.');
+        return;
+    }
+    
+    noOfSettings = listOfSettings.split(',').length;
+    
+    __SwicthListContainer = app.AddLayout(parentLay,'Linear','Vertical')
+    __SwicthListContainer.SetSize(width,height);
+    
+    
+    /* Create A Template For A Single Setting */
+    
+    let __SwitchTemplate = function (headerValue, descriptionValue, boolSwitchValue){
+        __layout = module.exports.createLayout('Linear','Left,Horizontal',-1,-1,__SwicthListContainer)
+        __layout.SetSize(dsUnitsToDp(width,'w'),64,'dp');
+        __layout.SetMargins(null, 0.01)
+        
+        if(descriptionValue){
+            __headerText = app.AddText(__layout,null,0.6,-1,'Left,Multiline')
+            __headerText.SetHtml(`<b>${headerValue}</b><br>${descriptionValue}`)
+            __headerText.SetEllipsize( "end" );
+            __headerText.SetMargins(8,4,null,null,'dp');
+            __headerText.SetTextColor(switchSettingTextClr.value)
+            __headerText.SetFontFile(boldFont)
+            __headerText.SetTextSize(15)
+        }
+        else {
+        __headerText = app.AddText(__layout, headerValue,0.6,-1,'Left,Bold')
+        __headerText.SetMargins(8,4,null,null,'dp');
+        __headerText.SetEllipsize( "end" );
+        __headerText.SetFontFile(boldFont)
+        __headerText.SetTextColor(switchSettingTextClr.value)
+        __headerText.SetTextSize(15)
+        }
+        
+        _cardLayout = module.exports.addSwitch('noIcon',true,__layout);
+        _cardLayout.SetMargins(dsUnitsToDp(width,'w') - dsUnitsToDp(0.7,'w')-42,8,12,8,'dp')
+    
+    }
+    
+    switchSettingTextClr.subscribe((value)=>{
+        __headerText.SetTextColor(value)
+    }) 
+
+    /* Get Any Description Values */
+    
+    for (let i = 0; i < noOfSettings; i++){
+        if (listOfSettings.split(',')[i].includes('[')){
+            
+            posOfBracket = listOfSettings.split(',')[i].indexOf('[');
+            posOfLastBracket = listOfSettings.split(',')[i].indexOf(']');
+            
+            headerValue = listOfSettings.split(',')[i].slice(0, posOfBracket).trim()
+            
+            descriptionValue = listOfSettings.split(',')[i].substring(posOfBracket +1,posOfLastBracket)
+        
+            __SwitchTemplate(headerValue,descriptionValue)
+        }
+        
+        else {
+            headerValue = listOfSettings.split(',')[i].trim()
+            
+            __SwitchTemplate(headerValue,null)
+        }
+        
+    }
+}
+
+function continuosSliderObj(value, width, parentLay){
+    let slider;
+    
+    if(!parentLay){
+        warnDeveloper('Add a parent to slider')
+    }
+    else{
+        slider = drawContinousSlider(value, width, parentLay);
+    }
+}
+
+function drawContinousSlider(value, width, parentLay){
+    let slider;
+    
+    slider = app.CreateImage(null, 508 ,100 ,"px");
+    slider.SetSize(dsUnitsToDp(width,'w'),64, 'dp');
+    slider.SetAutoUpdate( false );
+    slider.SetOnTouchMove(function(event){
+        draw(event.x[0])
+    });
+    
+    draw(value)
+    
+    
+function draw(x) {
+    hemi = 4/500
+    slider.Clear()
+    slider.SetLineWidth( 8 ) 
+    slider.SetPaintColor( "#00ff00" ) // left
+    slider.DrawLine( 0+hemi,0.5 ,x-hemi,0.5 ) 
+    slider.DrawCircle(  hemi,0.5,hemi)
+    slider.SetPaintColor( "#99ff99" ) // right
+    slider.DrawLine( x+5*hemi,0.5 ,1-hemi ,0.5 ) 
+    slider.DrawCircle(  1-hemi,0.5,hemi)  
+    slider.SetPaintColor( "#ff0000" ) // bar
+    slider.DrawLine( x+2*hemi,0.25 ,x+2*hemi ,0.75 ) 
+    slider.Update()
+}
+    parentLay.AddChild(slider)
+    return slider;
+}
+
+
+function mediumAppBarObject(title, leadingIcon, controlIcons, parentLay){
+    let mediumBar;
+    
+    this.SetSize = function(width, height, options){
+        mediumBar.SetSize(width,height,options);
+    }
+    
+    /* Add SetOnTouch */
+    
+ 
+    if(!parentLay){
+        warnDeveloper('No Parent For App Bar');
+        return;
+    }
+    else {
+        mediumBar = drawMediumAppBar(title, leadingIcon, controlIcons, parentLay);
+    }
+}
+
+function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay){
+    let mediumBar,appBarContainer;
+    let contentContainer,scroller;
+    let firstIcon,header;
+    let radius =  50/100 * 40;
+    
+    let noOfControlIcons = controlIcons.split(',').length;
+    
+    mediumBar = module.exports.createLayout('Linear','Vertical');
+    mediumBar.SetSize(1,1);
+   
+    appBarContainer = app.AddLayout(mediumBar,'Card');
+    appBarContainer.SetSize(pxToDpConversion(DW()),112,'dp');
+    appBarContainer.SetBackColor(mediumBarClr.value)
+    
+    if (theme == 'dark'){
+        app.SetStatusBarColor(mediumBarClr.value);
+    }
+    
+    innerContainer = app.AddLayout(appBarContainer,'Absolute');
+    innerContainer.SetSize(pxToDpConversion(DW()),112,'dp');
+    
+    firstIcon = app.AddButton(innerContainer,leadingIcon,-1,-1,'Custom')
+    firstIcon.SetStyle(appBarIconColor.value,appBarIconColor.value,
+    radius,null,null,0);
+    firstIcon.SetSize(40,40,'dp')
+    
+    firstIcon.SetFontFile(defaultIcons)
+    firstIcon.SetTextSize(20)
+    firstIcon.SetTextColor(appBarTextsClr.value);
+    firstIcon.SetPosition(dpToPxConversion(16),dpToPxConversion(20),null,null,'px')
+    
+    header = app.AddText(innerContainer,title,null,null,'Left');
+    header.SetTextSize(24);
+    header.SetFontFile(defaultFont)
+    
+    header.SetTextColor(appBarTextsClr.value);
+    header.SetPosition(dpToPxConversion(20),dpToPxConversion(64),null,null,'px')
+    
+    if(noOfControlIcons < 2){
+        warnDeveloper('Must Have More Than 2 Icons On App Bar.')
+        return;
+    }
+    if (noOfControlIcons == 2) drawTwoControls();
+    else drawThreeControls();
+    
+    function drawTwoControls (){
+        let iconA = controlIcons.split(',')[1];
+        let iconB = controlIcons.split(',')[0];
+        
+        controlA = app.AddButton(innerContainer, iconA, null, null, 'Custom,NoPad');
+        controlA.SetFontFile(defaultIcons)
+        controlA.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlA.SetTextColor(appBarTextsClr.value);
+        controlA.SetPosition(DW() - (dpToPxConversion(16) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlA.SetSize(40,40,'dp');
+        controlA.SetTextSize(20);
+        
+        controlB = app.AddButton(innerContainer, iconB, null, null, 'Custom,NoPad');
+        controlB.SetFontFile(defaultIcons)
+        controlB.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlB.SetTextColor(appBarTextsClr.value);
+        controlB.SetPosition(DW() - (dpToPxConversion(72) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlB.SetSize(40,40,'dp');
+        controlB.SetTextSize(20);
+    }
+    
+    function drawThreeControls (){
+        let iconA = controlIcons.split(',')[2];
+        let iconB = controlIcons.split(',')[1];
+        let iconC = controlIcons.split(',')[0];
+        
+        controlA = app.AddButton(innerContainer, iconA, null, null, 'Custom,NoPad');
+        controlA.SetFontFile(defaultIcons)
+        controlA.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlA.SetTextColor(appBarTextsClr.value);
+        controlA.SetPosition(DW() - (dpToPxConversion(16) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlA.SetSize(40,40,'dp');
+        controlA.SetTextSize(20);
+        
+        controlB = app.AddButton(innerContainer, iconB, null, null, 'Custom,NoPad');
+        controlB.SetFontFile(defaultIcons)
+        controlB.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlB.SetTextColor(appBarTextsClr.value);
+        controlB.SetPosition(DW() - (dpToPxConversion(72) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlB.SetSize(40,40,'dp');
+        controlB.SetTextSize(20);
+        
+        controlC = app.AddButton(innerContainer, iconC, null, null, 'Custom,NoPad');
+        controlC.SetFontFile(defaultIcons)
+        controlC.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlC.SetTextColor(appBarTextsClr.value);
+        controlC.SetPosition(DW() - (dpToPxConversion(136) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlC.SetSize(40,40,'dp');
+        controlC.SetTextSize(20);
+    }
+    
+    scroller = app.AddScroller(mediumBar,null,null,'NoScrollBar')
+    scroller.SetSize(pxToDpConversion(DW()),pxToDpConversion(DH()) - 112,'dp');
+    
+    contentContainer = module.exports.createLayout('Linear',null,null,null);
+    contentContainer.SetSize(pxToDpConversion(DW()),pxToDpConversion(DH()) - 112,'dp')
+    scroller.AddChild(contentContainer)
+    
+    /**
+     * @returns The Layout To Add Content Under The App Bar
+    */
+    mediumAppBarObject.prototype.GetLayout = function(){
+        return contentContainer;
+    }
+    /* SubScribers */
+    mediumBarClr.subscribe((value)=>{
+        appBarContainer.SetBackColor(value);
+        app.SetStatusBarColor(value)
+    })
+    appBarIconColor.subscribe((value)=>{
+        firstIcon.SetStyle(value,value,radius,null,null,0);
+        controlA.SetStyle(value,value, radius, null,null, 0);
+        controlB.SetStyle(value,value, radius, null,null, 0);
+        
+        try {
+            controlC.SetStyle(value,value, radius, null,null, 0);
+        }
+        catch (error){}
+    })
+    appBarTextsClr.subscribe((value)=>{
+        header.SetTextColor(value);
+        firstIcon.SetTextColor(value);
+        controlA.SetTextColor(value)
+        controlB.SetTextColor(value)
+        try {
+            controlC.SetTextColor(value)
+        }
+        catch (error){}
+    })
+    parentLay.AddChild(mediumBar)
+    
+    return mediumBar;
+}
 
 function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
     let barCardLay;
@@ -1261,11 +1632,11 @@ function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
     }
 }
 
-function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
+function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarContainerObj) {
     barCardLay = app.AddLayout(parentLay, "Card");
     barCardLay.SetSize(DW(), dpToPxConversion(64), 'px');
     
-    barCardLay.SetBackColor(appBarColor.value)
+    barCardLay.SetBackColor(appBarContainerColor.value)
     barCardLay.SetMargins(0, 0)
     
     
@@ -1277,15 +1648,15 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     
     _leftIcon = app.AddButton(barUi, leadingIcon, null, null, 'Custom, Lego');
     _leftIcon.SetSize(144, 144, 'px');
-    _leftIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _leftIcon.SetStyle(appBarTextsClr.value,appBarTextsClr.value, _IconRadius, null,null, 0)
     _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
    
     _leftIcon.SetFontFile(defaultIcons)
     _leftIcon.SetTextSize(72, 'px');
     _leftIcon.SetTextColor(appBarTextsClr.value )
     _leftIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            M(this,appBarObj.onTouch(leadingIcon));
+        if (appBarContainerObj.onTouch) {
+            M(this,appBarContainerObj.onTouch(leadingIcon));
         }
     })
     
@@ -1299,23 +1670,23 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     
     _rightIcon = app.AddButton(barUi, controlIcons, null, null, 'Custom, Lego');
     _rightIcon.SetMargins(pxToDpConversion(DW()) - 240, 24, 30, null, 'px')
-    _rightIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _rightIcon.SetStyle(appBarTextsClr.value,appBarTextsClr.value, _IconRadius, null,null, 0)
     _rightIcon.SetSize(144, 144, 'px');
     _rightIcon.SetTextSize(72, 'px');
     
     _rightIcon.SetFontFile(defaultIcons)
     _rightIcon.SetTextColor(appBarTextsClr.value )
     _rightIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            M(this,appBarObj.onTouch(controlIcons))
+        if (appBarContainerObj.onTouch) {
+            M(this,appBarContainerObj.onTouch(controlIcons))
         }
     })
     
-    appBarColor.subscribe((value)=>{
+    appBarContainerColor.subscribe((value)=>{
         barCardLay.SetBackColor(value)
     })
     
-    appBarIconColor.subscribe((value)=>{
+    appBarTextsClr.subscribe((value)=>{
         _leftIcon.SetStyle(value,value, _IconRadius, null,null, 0)
         _rightIcon.SetStyle(value,value, _IconRadius, null,null, 0)
     })
@@ -1326,6 +1697,121 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
         _rightIcon.SetTextColor(value )
     })
     return barCardLay;
+}
+
+
+function smallAppBarObject(title, leadingIcon, controlIcons, parentLay){
+    let smallAppBar;
+    
+    /**
+     *@param {function} onTouch - Function To Be Called When An Icon Is Touched
+    */
+    this.SetOnTouch = function(onTouch){
+        this.onTouch = onTouch;
+    }
+    if(!parentLay){
+        warnDeveloper();
+    }
+   
+    else smallAppBar = drawSmallAppBar(title, leadingIcon,controlIcons,parentLay,this);
+}
+
+
+function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAbpObj){
+    let smallAppBar,noOfControlIcons;
+    
+    smallAppBar = app.AddLayout(parentLay,'Card');
+    smallAppBar.SetBackColor(smallAppBarClr.value);
+    smallAppBar.SetSize(pxToDpConversion(DW()),64,'dp')
+    
+    let linearBarLayout = app.AddLayout(smallAppBar,'Linear','Horizontal,Left');
+    
+    if(controlIcons == null) {
+        noOfControlIcons = nil ;
+    }
+    else {
+        noOfControlIcons = controlIcons.split(',').length;
+    }
+    
+    let IconRadius = 50/100 * 144;
+    
+    let firstIcon = app.AddButton(linearBarLayout,leadingIcon,null,null,'Custom');
+    firstIcon.SetStyle(smallAppBarClr.value,smallAppBarClr.value,IconRadius,null,null,0)
+    firstIcon.SetFontFile(defaultIcons)
+    firstIcon.SetMargins(16, 24,null, null, 'px')
+    firstIcon.SetSize(144, 144, 'px');
+    firstIcon.SetTextSize(72, 'px');
+    firstIcon.SetTextColor(smallAppBarIconClr.value)
+    
+    let header = app.AddText(linearBarLayout,title,-1,-1)
+    header.SetMargins(16, pxToDpConversion(40), null, pxToDpConversion(30), 'dp')
+
+    header.SetTextSize(24, 'dp');
+    header.SetTextColor(smallAppBarIconClr.value)
+    
+    /* Loop And Add Buttons */
+
+    let controlIconA = controlIcons.split(',')[0];
+    let controlIconB = controlIcons.split(',')[1];
+    let controlIconC = controlIcons.split(',')[2];
+    
+    let controlIconNames = [controlIconA, controlIconB, controlIconC];
+    
+    /**
+     * @returns {number} Maximum distance to edge of device
+    */
+    
+    let controlMargins = () =>{
+        if (noOfControlIcons == 1){
+            return pxToDpConversion(DW()) - 10;
+        }
+        if (noOfControlIcons == 2){
+            return pxToDpConversion(DW()) - 320;
+        }
+        else {
+            return 16;
+        }
+    }
+    
+    let controlMarginB = () =>{
+        if (noOfControlIcons > 1 || noOfControlIcons >=2){
+            return 16;
+        }
+        else {
+            return null;
+        }
+    }
+    for (let i = 0; i < noOfControlIcons; i++) {
+        if (i < controlIconNames.length) {
+            let icon = controlIconNames[i];
+            
+            let controlIcon = app.AddButton(linearBarLayout, icon, null, null, 'Custom');
+            controlIcon.SetStyle(smallAppBarClr.value, smallAppBarClr.value, IconRadius, null, null, 0);
+            controlIcon.SetSize(dpToPxConversion(48), dpToPxConversion(48), 'px');
+            controlIcon.SetTextSize(72, 'px');
+            controlIcon.SetMargins(controlMargins(), 8, null, null, 'dp');
+            
+            controlIcon.SetFontFile(defaultIcons)
+            controlIcon.SetTextColor(smallAppBarIconClr.value);
+            controlIcon.SetOnTouch(function () {
+                if (smallAbpObj.onTouch) {
+                    M(this, smallAbpObj.onTouch(icon));
+                }
+            });
+        }
+    }
+
+    smallAppBarClr.subscribe((value)=>{
+        smallAppBar.SetBackColor(value);
+        firstIcon.SetStyle(value,value,IconRadius,null,null,0)
+        controlIcon.SetStyle(value,value,IconRadius,null,null,0)
+    })
+    
+    smallAppBarIconClr.subscribe((value)=>{
+        firstIcon.SetTextColor(value)
+        header.SetTextColor(value)
+    })
+    return smallAppBar;
 }
 
 function bottomBarObject(barPropsInjson, parentLay) {
@@ -2560,4 +3046,4 @@ function drawProgressBar(progressType, width, parentLay, progressObj) {
         
         parentLay.AddChild(progressContainer);
     }
-}
+} 

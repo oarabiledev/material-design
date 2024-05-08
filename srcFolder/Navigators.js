@@ -1,5 +1,170 @@
 
+function mediumAppBarObject(title, leadingIcon, controlIcons, parentLay){
+    let mediumBar;
+    
+    this.SetSize = function(width, height, options){
+        mediumBar.SetSize(width,height,options);
+    }
+    
+ 
+    if(!parentLay){
+        warnDeveloper('No Parent For App Bar');
+        return;
+    }
+    else {
+        mediumBar = drawMediumAppBar(title, leadingIcon, controlIcons, parentLay);
+    }
+}
 
+function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay){
+    let mediumBar,appBarContainer;
+    let contentContainer,scroller;
+    let firstIcon,header;
+    let radius =  50/100 * 40;
+    
+    let noOfControlIcons = controlIcons.split(',').length;
+    
+    mediumBar = ui.createLayout('Linear','Vertical');
+    mediumBar.SetSize(1,1);
+   
+    appBarContainer = app.AddLayout(mediumBar,'Card');
+    appBarContainer.SetSize(pxToDpConversion(DW()),112,'dp');
+    appBarContainer.SetBackColor(mediumBarClr.value)
+    
+    if (theme == 'dark'){
+        app.SetStatusBarColor(mediumBarClr.value);
+    }
+    
+    innerContainer = app.AddLayout(appBarContainer,'Absolute');
+    innerContainer.SetSize(pxToDpConversion(DW()),112,'dp');
+    
+    firstIcon = app.AddButton(innerContainer,leadingIcon,-1,-1,'Custom')
+    firstIcon.SetStyle(appBarIconColor.value,appBarIconColor.value,
+    radius,null,null,0);
+    firstIcon.SetSize(40,40,'dp')
+    
+    firstIcon.SetFontFile(defaultIcons)
+    firstIcon.SetTextSize(20)
+    firstIcon.SetTextColor(appBarTextsClr.value);
+    firstIcon.SetPosition(dpToPxConversion(16),dpToPxConversion(20),null,null,'px')
+    
+    header = app.AddText(innerContainer,title,null,null,'Left');
+    header.SetTextSize(24);
+    header.SetFontFile(defaultFont)
+    
+    header.SetTextColor(appBarTextsClr.value);
+    header.SetPosition(dpToPxConversion(20),dpToPxConversion(64),null,null,'px')
+    
+    if(noOfControlIcons < 2){
+        warnDeveloper('Must Have More Than 2 Icons On App Bar.')
+        return;
+    }
+    if (noOfControlIcons == 2) drawTwoControls();
+    else drawThreeControls();
+    
+    function drawTwoControls (){
+        let iconA = controlIcons.split(',')[1];
+        let iconB = controlIcons.split(',')[0];
+        
+        controlA = app.AddButton(innerContainer, iconA, null, null, 'Custom,NoPad');
+        controlA.SetFontFile(defaultIcons)
+        controlA.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlA.SetTextColor(appBarTextsClr.value);
+        controlA.SetPosition(DW() - (dpToPxConversion(16) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlA.SetSize(40,40,'dp');
+        controlA.SetTextSize(20);
+        
+        controlB = app.AddButton(innerContainer, iconB, null, null, 'Custom,NoPad');
+        controlB.SetFontFile(defaultIcons)
+        controlB.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlB.SetTextColor(appBarTextsClr.value);
+        controlB.SetPosition(DW() - (dpToPxConversion(72) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlB.SetSize(40,40,'dp');
+        controlB.SetTextSize(20);
+    }
+    
+    function drawThreeControls (){
+        let iconA = controlIcons.split(',')[2];
+        let iconB = controlIcons.split(',')[1];
+        let iconC = controlIcons.split(',')[0];
+        
+        controlA = app.AddButton(innerContainer, iconA, null, null, 'Custom,NoPad');
+        controlA.SetFontFile(defaultIcons)
+        controlA.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlA.SetTextColor(appBarTextsClr.value);
+        controlA.SetPosition(DW() - (dpToPxConversion(16) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlA.SetSize(40,40,'dp');
+        controlA.SetTextSize(20);
+        
+        controlB = app.AddButton(innerContainer, iconB, null, null, 'Custom,NoPad');
+        controlB.SetFontFile(defaultIcons)
+        controlB.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlB.SetTextColor(appBarTextsClr.value);
+        controlB.SetPosition(DW() - (dpToPxConversion(72) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlB.SetSize(40,40,'dp');
+        controlB.SetTextSize(20);
+        
+        controlC = app.AddButton(innerContainer, iconC, null, null, 'Custom,NoPad');
+        controlC.SetFontFile(defaultIcons)
+        controlC.SetStyle(appBarIconColor.value,
+        appBarIconColor.value, radius, null,null, 0);
+        
+        controlC.SetTextColor(appBarTextsClr.value);
+        controlC.SetPosition(DW() - (dpToPxConversion(136) + dpToPxConversion(46)),dpToPxConversion(20),null,null,'px')
+        controlC.SetSize(40,40,'dp');
+        controlC.SetTextSize(20);
+    }
+    
+    scroller = app.AddScroller(mediumBar,null,null,'NoScrollBar')
+    scroller.SetSize(pxToDpConversion(DW()),pxToDpConversion(DH()) - 112,'dp');
+    
+    contentContainer = ui.createLayout('Linear',null,null,null);
+    contentContainer.SetSize(pxToDpConversion(DW()),pxToDpConversion(DH()) - 112,'dp')
+    scroller.AddChild(contentContainer)
+    
+    /**
+     * @returns The Layout To Add Content Under The App Bar
+    */
+    mediumAppBarObject.prototype.GetLayout = function(){
+        return contentContainer;
+    }
+    /* SubScribers */
+    mediumBarClr.subscribe((value)=>{
+        appBarContainer.SetBackColor(value);
+        app.SetStatusBarColor(value)
+    })
+    appBarIconColor.subscribe((value)=>{
+        firstIcon.SetStyle(value,value,radius,null,null,0);
+        controlA.SetStyle(value,value, radius, null,null, 0);
+        controlB.SetStyle(value,value, radius, null,null, 0);
+        
+        try {
+            controlC.SetStyle(value,value, radius, null,null, 0);
+        }
+        catch (error){}
+    })
+    appBarTextsClr.subscribe((value)=>{
+        header.SetTextColor(value);
+        firstIcon.SetTextColor(value);
+        controlA.SetTextColor(value)
+        controlB.SetTextColor(value)
+        try {
+            controlC.SetTextColor(value)
+        }
+        catch (error){}
+    })
+    parentLay.AddChild(mediumBar)
+    
+    return mediumBar;
+}
 
 function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
     let barCardLay;
@@ -16,11 +181,11 @@ function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
     }
 }
 
-function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
+function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarContainerObj) {
     barCardLay = app.AddLayout(parentLay, "Card");
     barCardLay.SetSize(DW(), dpToPxConversion(64), 'px');
     
-    barCardLay.SetBackColor(appBarColor.value)
+    barCardLay.SetBackColor(appBarContainerColor.value)
     barCardLay.SetMargins(0, 0)
     
     
@@ -32,15 +197,15 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     
     _leftIcon = app.AddButton(barUi, leadingIcon, null, null, 'Custom, Lego');
     _leftIcon.SetSize(144, 144, 'px');
-    _leftIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _leftIcon.SetStyle(appBarTextsClr.value,appBarTextsClr.value, _IconRadius, null,null, 0)
     _leftIcon.SetMargins(48, 24,  pxToDpConversion(DW()) - 190, null, 'px')
    
     _leftIcon.SetFontFile(defaultIcons)
     _leftIcon.SetTextSize(72, 'px');
     _leftIcon.SetTextColor(appBarTextsClr.value )
     _leftIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            M(this,appBarObj.onTouch(leadingIcon));
+        if (appBarContainerObj.onTouch) {
+            M(this,appBarContainerObj.onTouch(leadingIcon));
         }
     })
     
@@ -54,23 +219,23 @@ function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarObj) {
     
     _rightIcon = app.AddButton(barUi, controlIcons, null, null, 'Custom, Lego');
     _rightIcon.SetMargins(pxToDpConversion(DW()) - 240, 24, 30, null, 'px')
-    _rightIcon.SetStyle(appBarIconColor.value,appBarIconColor.value, _IconRadius, null,null, 0)
+    _rightIcon.SetStyle(appBarTextsClr.value,appBarTextsClr.value, _IconRadius, null,null, 0)
     _rightIcon.SetSize(144, 144, 'px');
     _rightIcon.SetTextSize(72, 'px');
     
     _rightIcon.SetFontFile(defaultIcons)
     _rightIcon.SetTextColor(appBarTextsClr.value )
     _rightIcon.SetOnTouch(function () {
-        if (appBarObj.onTouch) {
-            M(this,appBarObj.onTouch(controlIcons))
+        if (appBarContainerObj.onTouch) {
+            M(this,appBarContainerObj.onTouch(controlIcons))
         }
     })
     
-    appBarColor.subscribe((value)=>{
+    appBarContainerColor.subscribe((value)=>{
         barCardLay.SetBackColor(value)
     })
     
-    appBarIconColor.subscribe((value)=>{
+    appBarTextsClr.subscribe((value)=>{
         _leftIcon.SetStyle(value,value, _IconRadius, null,null, 0)
         _rightIcon.SetStyle(value,value, _IconRadius, null,null, 0)
     })

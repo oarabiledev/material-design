@@ -12,6 +12,7 @@ const ui = {};
 
 app.Script('EnvVars.js',true);
 app.Script('Actions.js',true);
+app.Script('Electors.js',true);
 app.Script('Navigators.js',true);
 app.Script('Transmitters.js',true);
 /* Added To Load Variables 
@@ -55,7 +56,6 @@ ui.setTheme = function (mode) {
     else theme = mode;
     setM3BaseColors();
 }
-
 
 /**
  * @param {string} type - A DroidScript Layout Type
@@ -213,6 +213,16 @@ ui.addSmallAppBar = function(title, leadingIcon, controlIcons, parentLay){
     return new smallAppBarObject(title, leadingIcon, controlIcons, parentLay);
 }
 
+/**
+    * @param {string} title - AppBar Title
+    * @param {string} leadingIcon - Left Icon of AppBar
+    * @param {string} controlsIcons - Upto 3 Icons in a String With Commas.
+    * @param {object} parentLay - ParentLayout For AppBar
+*/
+ui.addMediumAppBar = function(title, leadingIcon, controlIcons, parentLay){
+    return new mediumAppBarObject(title, leadingIcon, controlIcons, parentLay);
+}
+
 
 /**
  * @param {json} barPropsInjson - Properties in a JSON Format
@@ -244,7 +254,46 @@ ui.addSearchBar = function(leadingIcon, trailingIcon, hint, width, parentLayout)
 ui.addTabs = function(listOfTabs,width, height, options, parentLay){
     return new secTabObject(listOfTabs,width, height, options, parentLay);
 }
-    
+
+/**
+ * @param {object} sheetLayout - Add a layout to the bottomsheet
+ * @param {number} height - Height of BottomSheet In ds Unit Scale.
+ * @param {string} options - BottomSheet Options (NoDim)
+ * @returns A BottomSheet
+*/
+ui.addBottomSheet = function(sheetLayout, height, options){
+    return new bottomSheetObject(sheetLayout, height, options);
+}
+
+/**
+ * @param {string} switchType - Set The Type of switch
+ * @param {boolean} value - Add Boolean 
+ * @param {object} parentLayout - Add a parent
+*/
+ui.addSwitch = function (switchType, value, parentLayout) {
+        return new switchObject(switchType, value, parentLayout);
+}
+
+/**
+ * @param {string} listOfSettings - Add list of Settings, use [] to add descriptions.
+ * @param {string} switchValues - Add list of true/false values 
+ * @param {number} width - Component width in ds scale.
+ * @param {number} height - Component height in ds scale.
+ * @param {object} parentLay - Parent For Component
+*/
+ui.addSwitchSettings = function(listOfSettings, switchValues, width, height, parentLay){
+    return new 
+    switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
+}
+
+/**
+ * @param {number} value - A value on a 0 - 100 scale.
+ * @param {number} width - Component width in ds scale.
+ * @param {object} parentLay - Parent For Component
+*/
+ui.addContinuousSlider = function(value, width, parentLay){
+    return new continuosSliderObj(value, width, parentLay)
+}
 
 /* Global Variables & Functions Here */
 
@@ -426,11 +475,14 @@ function setM3BaseColors(isThemeChanging, file) {
   bottomAppBarFAB.value = stateColor(md_theme_light_primaryContainer,md_theme_dark_primaryContainer)
     
   searchBarClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  
   searchBarIconClr.value = stateColor(md_theme_light_surfaceVariant,md_theme_dark_surfaceVariant);
+  
   searchBarTextClr.value = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
+  
   searchBarInputTextClr.value = stateColor(md_theme_light_onSurfaceVariant,md_theme_dark_onSurfaceVariant)
   
-   secondaryTabClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
+  secondaryTabClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
   
   
   lightBarClr.value = stateColor(md_theme_light_primary, md_theme_dark_primary)
@@ -440,4 +492,14 @@ function setM3BaseColors(isThemeChanging, file) {
   smallAppBarClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
   
   smallAppBarIconClr.value = stateColor(md_theme_light_onSurface, md_theme_dark_onSurface)
+  
+  switchColor.value = stateColor(md_theme_light_secondaryContainer,md_theme_dark_secondaryContainer)
+  
+  switchHandleOffColor.value = stateColor(md_theme_light_outline,md_theme_dark_outline)
+  
+  switchHandleOnColor.value = stateColor(md_theme_light_primary,md_theme_dark_primary);
+  
+  switchSettingTextClr.value = stateColor(md_theme_light_onSurface,md_theme_dark_onSurface)
+  
+  mediumBarClr.value = stateColor(md_theme_light_surface, md_theme_dark_surface)
 }

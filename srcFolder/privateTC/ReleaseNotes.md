@@ -1,12 +1,12 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.79b6 [ Will Be Released 10 May]
+## version 0.79b6 [ Will Be Released 12 May]
 - [ ]  All TextFiels Components
 - [ ]  Completed Chips
 - [ ]  Adding Bottom Navigation
 - [ ]  Complete Sliders
 
-## version 0.79b5 [ Will Be Released 9 May ]
+## version 0.79b5 [ Will Be Released 10 May ]
 - [ ]  Add List Component
 - [ ]  Add Radio Settings
 - [ ]  Adding All Top App Bars

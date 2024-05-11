@@ -67,3 +67,41 @@ Also to Migrate Material 2 Projects To Material 3.
 
 # 2. Using Signals To Change Component Colors Adaptivley 
 Implementation may help in avoiding having to restart an application to change themes.
+
+# 3. Having Fun With Old Ds (✿◡‿◡)
+
+So this is something i may not implement, but I've been able to get this plugin partially working on a version of 
+DroidScript 1.78
+on a Samsung GT-S7262.
+
+
+This phone operates on Android 4.1.2
+
+
+Suprisingly and frustratingly, es6 isnt supported so i had to use a shady converter lol.
+It didnt work.
+
+I had to add var to almost all publicly declared variables.
+
+
+Also Ds doesnt have the app.Add* Methods, and DW or DH global functions arent supported.
+Which i used everywhere.
+I was able to get just a button working <3
+
+
+
+Suprisingly the button is responsive, does this show that support for old devices is devs being lazy.
+I mean if i can port parts of a ui library designed in 2021, to a phone made in 2014 and over 10 android version's old.
+
+
+I might be wrong, if so tell me why. Yes use create an issue i dont have an issue with that (●'◡'●).
+
+
+
+
+I have an idea: 
+
+To get this working fully, i'll dig into the app.js file :
+
+
+Then get app.Add* code so as some global Methods and add them to main, then we can use Material3 on old devices.

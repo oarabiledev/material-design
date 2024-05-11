@@ -71,7 +71,7 @@ Implementation may help in avoiding having to restart an application to change t
 # 3. Having Fun With Old Ds (✿◡‿◡)
 
 So this is something i may not implement, but I've been able to get this plugin partially working on a version of 
-DroidScript 1.78
+DroidScript 1.76
 on a Samsung GT-S7262.
 
 

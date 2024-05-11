@@ -88,7 +88,7 @@ Also Ds doesnt have the app.Add* Methods, and DW or DH global functions arent su
 Which i used everywhere.
 I was able to get just a button working <3
 
-
+![](IMG_20240511_073232_363.jpg)
 
 Suprisingly the button is responsive, does this show that support for old devices is devs being lazy.
 I mean if i can port parts of a ui library designed in 2021, to a phone made in 2014 and over 10 android version's old.

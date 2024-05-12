@@ -9,17 +9,20 @@
 - [ ]  Add Radio Settings
 - [ ]  Extensions Capability
 
-## version 0.79b5 [ Will Be Released 15 May ]
+## version 0.79.6 [ Will Be Released 15 May ]
 
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB
 - [ ]  Add CheckBox Component
 - [ ]  Empty Menu Type
 - [ ]  Chips Complete
-- [ ]  SplashScreen Method
-- [ ]  AlternateView
 - [ ]  ForMobileView/...TabletView/...DesktopView Method (Experimental)
 - [ ]  UI.Color.Green Standard Colors If You Dont Want To Add A BaseTheme.json FIle
+
+## version 0.79.4.1 (Patch) [ Will Be Released Today ]
+- Google Changed Material Color Scheme Color Values, Need To Adapt.
+- [ ]  SplashScreen Method
+- [ ]  AlternateView
 
 ## version 0.79b4 [ Released 8 May 2024 ]
 

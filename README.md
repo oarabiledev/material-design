@@ -1,4 +1,4 @@
-<img src="https://drive.google.com/uc?id=1JO00Je5CGrtDUP_WqEDuHQqdNfp09Mf1&export=download" style="width: 100%; max-width: 100%; height: auto"/>
+<img src="https://github.com/oarabiledev/Material3/blob/main/srcFolder/privateTC/banner.png" style="width: 100%; max-width: 100%; height: auto"/>
 
 
 # Material3 For Droidscript:

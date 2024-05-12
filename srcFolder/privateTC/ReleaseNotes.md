@@ -19,10 +19,10 @@
 - [ ]  ForMobileView/...TabletView/...DesktopView Method (Experimental)
 - [ ]  UI.Color.Green Standard Colors If You Dont Want To Add A BaseTheme.json FIle
 
-## version 0.79.4.1 (Patch) [ Will Be Released Today ]
-- Google Changed Material Color Scheme Color Values, Need To Adapt.
-- [ ]  SplashScreen Method
-- [ ]  AlternateView
+## version 0.79.4.1 (Patch) [ Released 12 May 2024 ]
+- Google Changed Material Color Scheme Color Values & Structure, Need To Adapt.
+- it will break apps, check documentation on color.
+- [x]  AlternateView
 
 ## version 0.79b4 [ Released 8 May 2024 ]
 

@@ -1,19 +1,25 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.79b6 [ Will Be Released 12 May]
+## version 0.80 [ Will Be Released 20 May]
 - [ ]  All TextFiels Components
 - [ ]  Completed Chips
 - [ ]  Adding Bottom Navigation
 - [ ]  Complete Sliders
-
-## version 0.79b5 [ Will Be Released 10 May ]
 - [ ]  Add List Component
 - [ ]  Add Radio Settings
+- [ ]  Extensions Capability
+
+## version 0.79b5 [ Will Be Released 15 May ]
+
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB
 - [ ]  Add CheckBox Component
 - [ ]  Empty Menu Type
 - [ ]  Chips Complete
+- [ ]  SplashScreen Method
+- [ ]  AlternateView
+- [ ]  ForMobileView/...TabletView/...DesktopView Method (Experimental)
+- [ ]  UI.Color.Green Standard Colors If You Dont Want To Add A BaseTheme.json FIle
 
 ## version 0.79b4 [ Released 8 May 2024 ]
 

@@ -329,6 +329,10 @@ ui.addContinuousSlider = function(value, width, parentLay){
     return new continuosSliderObj(value, width, parentLay)
 }
 
+/**
+ * @param {boolean} checked The state of Checked Button
+ * @param {object} parentLay The parent for checkbox
+*/
 ui.addCheckBox = function(checked, parentLay){
     return new checkboxObject(checked, parentLay)
 }
@@ -344,6 +348,9 @@ ui.addCheckBoxList = function(list, checkDefinitions, width, height, parentLay){
     return new checkBoxListObject(list, checkDefinitions, width, height, parentLay)
 }
 
+ui.addRadioButton = function(isChecked, parentLay){
+    return new radioButtonObject(isChecked, parentLay)
+}
 
 function alternateView(viewMappings){
     let rawView = JSON.stringify(viewMappings);
@@ -703,6 +710,95 @@ function setM3BaseColors() {
     mediumBarClr.value = surface;
 }
 
+function radioButtonObject(isChecked, parentLay){
+    let radio;
+    
+    this.SetOnCheck = function (onCheck){
+        this.onCheck = onCheck;
+    }
+    
+    /**
+     * @param {boolean} boolValue True or False, For Enabled/Disabled CheckBox
+    */
+    
+    this.SetEnabled = function(boolValue){
+        if (boolValue) {
+            radio.SetText('radio_button_checked')
+            radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+            radio.SetTextColor(outline)
+            radio.SetEnabled(false)
+        }
+        else {
+            radio.SetEnabled(true);
+            if (isChecked){
+                radio.SetText('radio_button_checked')
+                radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+                radio.SetTextColor(primary)
+            }
+            else {
+                radio.SetText('radio_button_unchecked')
+                radio.SetTextColor(onSurface);
+                radio.SetFontFile(defaultIcons);
+            }
+        }
+    }
+    
+    if (!parentLay){
+        warnDeveloper('No Parent For Your RadioButton');
+        return;
+    }
+    else radio = drawRadioButton(isChecked, parentLay, this)
+}
+
+function drawRadioButton(isChecked, parentLay, radioObj){
+    let radio;
+    let radius = 50/100 * (40)
+    
+     /* A subscriber for the checking utility */
+    let checkSubscriber = createSignal();
+    checkSubscriber.value = isChecked;
+    
+    
+    radio = app.AddButton(parentLay,null,null,null,'Custom');
+    
+    radio.SetSize(40,40,'dp');
+    radio.SetTextSize(24,'dp');
+    radio.SetStyle('#00000000','#00000000',radius,null,null,0);
+    
+    radio.SetOnTouch(()=>{
+       if (checkSubscriber.value){
+           checkSubscriber.value = false;
+           radio.SetTextColor(onSurface);
+           radio.SetFontFile(defaultIcons);
+           radio.SetText('radio_button_unchecked')
+        }
+        else {
+            checkSubscriber.value = true;
+            radio.SetText('radio_button_checked')
+            radio.SetTextColor(primary);
+            radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf");
+        }
+        
+        if (radioObj.onCheck){
+            M(this,radioObj.onCheck(checkSubscriber.value));
+        }
+        else return null;
+    });
+    
+    if (isChecked){
+        radio.SetText('radio_button_checked')
+        radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+        radio.SetTextColor(primary)
+    }
+    else {
+        radio.SetText('radio_button_unchecked')
+        radio.SetTextColor(onSurface);
+        radio.SetFontFile(defaultIcons);
+    }
+    
+    return radio;
+}
+
 function checkboxObject(checked, parentLay){
     let checkbox;
     
@@ -752,6 +848,7 @@ function checkboxObject(checked, parentLay){
     
     if (!parentLay){
         warnDeveloper('Add a parent for CheckBox');
+        return;
     }
     else checkbox = drawCheckBox(checked, parentLay, this);
 }

@@ -706,6 +706,17 @@ function setM3BaseColors() {
 function checkboxObject(checked, parentLay){
     let checkbox;
     
+    /** TODO
+     * Add SetPosition
+     * Add SetMargins
+     * Add ClearFocus
+     * Add Gone
+     * Add Hide
+     * Add Visibility
+     * Animate
+     * Tween
+    */
+    
     /**
      * @param {Function} onCheck This is your function called after a check.
     */
@@ -713,7 +724,11 @@ function checkboxObject(checked, parentLay){
         this.onCheck = onCheck;
     }
     
-    this.SetIntermediate = function(boolValue){
+    /**
+     * @param {boolean} boolValue True or False, For Enabled/Disabled CheckBox
+    */
+    
+    this.SetEnabled = function(boolValue){
         if (boolValue) {
             checkbox.SetText('indeterminate_check_box')
             checkbox.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")

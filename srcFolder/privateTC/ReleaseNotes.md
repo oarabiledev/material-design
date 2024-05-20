@@ -1,23 +1,22 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.80 [ Will Be Released 20 May]
+## version 0.80 [ Will Be Released 24 May]
 - [ ]  All TextFiels Components
-- [ ]  Completed Chips
 - [ ]  Adding Bottom Navigation
 - [ ]  Complete Sliders
 - [ ]  Add List Component
-- [ ]  Add Radio Settings
-- [ ]  Extensions Capability
 
-## version 0.79.6 [ Will Be Released 15 May ]
+## version 0.79.6 [ Will Be Released 21 May ]
 
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB
-- [ ]  Add CheckBox Component
-- [ ]  Empty Menu Type
-- [ ]  Chips Complete
-- [ ]  ForMobileView/...TabletView/...DesktopView Method (Experimental)
-- [ ]  UI.Color.Green Standard Colors If You Dont Want To Add A BaseTheme.json FIle
+- [x]  Extensions Capability
+- [x]  Add Radio Component
+- [x]  Add CheckBox Component
+- [x]  Empty Menu Type
+- [x]  Chips Complete
+- [x]  ForMobileView/...TabletView/...DesktopView Method (Experimental)
+- [x]  UI.Color.Green Standard Colors If You Dont Want To Add A BaseTheme.json FIle
 
 ## version 0.79.5 (Patch) [ Released 12 May 2024 ]
 - Google Changed Material Color Scheme Color Values & Structure, Need To Adapt.

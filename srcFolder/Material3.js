@@ -5,8 +5,12 @@
    @ 2024 - Till Forever.
    
    ------------------------
-   Version :: 0.79.7
-   Release Date :: 12/05/24
+   This Plugin File Is 
+   Constantly Updated, 
+   unlike
+   Material3.inc !
+   -----------------------
+   Version :: 0.79.7b
 */
 
 /* Global Variables & Functions Here */

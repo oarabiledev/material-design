@@ -1,12 +1,12 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.80 [ Will Be Released 24 May]
+## version 0.80 [ ]
 - [ ]  All TextFiels Components
 - [ ]  Adding Bottom Navigation
 - [ ]  Complete Sliders
 - [ ]  Add List Component
 
-## version 0.79.6 [ Will Be Released 21 May ]
+## version 0.79.6 [ ]
 
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB

@@ -574,7 +574,8 @@
             };
             request.send();
             const annotationGroup = RoughNotation.annotationGroup;
-            const currentVersion = '0.79.6';
+            const currentVersion = '0.79.7';
+           
             const apiUrl = 'https://api.github.com/repos/oarabiledev/Material3/releases/latest';
             //Update Check;
             let xhr = new XMLHttpRequest();
@@ -585,10 +586,13 @@
                     let responseData = xhr.response;
                     console.log(JSON.stringify(responseData))
                     let latestVersion = responseData.tag_name;
-                    if (latestVersion !== currentVersion) {
+                    if (parseFloat(latestVersion) < parseFloat(currentVersion)) {
                         const updateVersionStatusText = document.getElementById('versionText');
                         updateVersionStatusText.className = 'updateWarning';
                         updateVersionStatusText.textContent = `New Version Available : ${latestVersion}`;
+                    }
+                    else {
+                        console.info('Dev Version ')
                     }
                 }
             }
@@ -642,10 +646,10 @@
         <div class="navBar">
             <button class="back-btn" onClick=' history.back(); history.back(); 
         window.location.href = "../../Plugins.htm?ds=true"; return false;'>Back</button>
-            <button class="menu-icon">Config</button>
+            <button class="menu-icon" onClick='window.location.href = "resources/apps/Config/~ConfigApp.html" ' >Config</button>
         </div>
         <img class="headerImg" src="Img/banner2.png" />
-        <p class='versionText' id="versionText"> version 0.79.6</p>
+        <p class='versionText' id="versionText"> version 0.79.7</p>
         <p class='versionText' id='downloadText'> downloads [Still Calculating] </p>
         <p>Welcome To Material3 Documentation, this plugin is built using DroidScript native controls.</p>
         <p id="author">This plugin was built by :: Oarabile Koore</p>
@@ -708,10 +712,10 @@
         <div class='table-of-contents' id="table-of-contents">
             <ul>
                 <li>
-                    <a href="muiExtensions.html"> Material3 Extensions & Api </a>
+                    <a href="resources/apps/Extension/~Extension.html"> Material3 Extensions & Api </a>
                 </li>
                 <li>
-                    <a href="muiSamples.html"> Material3 Samples </a>
+                    <a > Material3 Samples </a>
                 </li>
             </ul>
             </ul>

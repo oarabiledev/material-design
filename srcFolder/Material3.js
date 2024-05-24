@@ -5,19 +5,28 @@
    @ 2024 - Till Forever.
    
    ------------------------
-   Version :: 0.79.6
+   Version :: 0.79.7
    Release Date :: 12/05/24
 */
 
 /* Global Variables & Functions Here */
 
-_Boost(true)
 const ui = {};
 
+
+var _mDebug,_m3Path,privateFolder;
+
+_mDebug = app.GetAppPath().endsWith('/Material3');
+
+privateFolder = 
+app.GetPrivateFolder('Plugins') + '/material3/';
+
+_m3Path = _mDebug ? '' : privateFolder;
+
 var theme;
-let defaultFont = _m3Path + 'Roboto.ttf';
-let mediumFont = _m3Path + 'Roboto-Medium.ttf';
-let boldFont = _m3Path + 'Roboto-Bold.ttf';
+let defaultFont = _m3Path + 'resources/textFonts/Roboto.ttf';
+let mediumFont = _m3Path + 'resources/textFonts/Roboto-Medium.ttf';
+let boldFont = _m3Path + 'resources/textFonts/Roboto-Bold.ttf';
 
 
 /** Initialize Material3, basically reads your baseTheme.json File
@@ -32,19 +41,19 @@ ui.InitializeMaterialPlugin = function(baseTheme, iconFill) {
     else {
         switch (iconFill) {
             case "outlined":
-                defaultIcons = _m3Path + "uxFonts/Icons/Outlined-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
             break;
             case "sharp":
-                defaultIcons = _m3Path + "uxFonts/Icons/Sharp-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Sharp-Regular.otf";
             break;
             case "two-tone":
-                defaultIcons = _m3Path + "uxFonts/Icons/TwoTone-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/TwoTone-Regular.otf";
             break;
             case "round":
-                defaultIcons = _m3Path + "uxFonts/Icons/Round-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Round-Regular.otf";
             break;
             default:
-            defaultIcons = _m3Path + "uxFonts/Icons/Outlined-Regular.otf";
+            defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
         }
         if (baseTheme === undefined){
             theme = 'dark';
@@ -66,7 +75,29 @@ app.CreateMaterial3 = (baseTheme, iconFill) => {
     \nUse ui.InitializeMaterialPlugin()`);
 }
 
+ui.installExtension = (url) =>{
+    
+}
 
+/**
+ * @summary Add an extension to your app.
+ * @param {string} extensionName 
+*/
+
+ui.loadExtension = (extensionName) =>{
+    
+}
+
+importExtension = function(name){
+    
+    const file = name + '.js';
+    
+    app.Script(file,true)
+}
+
+defineExtension = function(properttiesInJSON){
+    
+}
 /**
  * @returns Plugin Version Number
 */
@@ -496,14 +527,6 @@ ErrorLayout = () =>{
     return layout;
 }
 
-var _mDebug,_m3Path,privateFolder;
-
-_mDebug = app.GetAppPath().endsWith('/Material3');
-
-privateFolder = 
-app.GetPrivateFolder('Plugins') + '/material3/';
-
-_m3Path = _mDebug ? '' : privateFolder;
 
 const warnDeveloper = (Msg) =>{
     let alertClr = "<div style='color:#FF7900'>";
@@ -724,7 +747,7 @@ function radioButtonObject(isChecked, parentLay){
     this.SetEnabled = function(boolValue){
         if (boolValue) {
             radio.SetText('radio_button_checked')
-            radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
             radio.SetTextColor(outline)
             radio.SetEnabled(false)
         }
@@ -732,7 +755,7 @@ function radioButtonObject(isChecked, parentLay){
             radio.SetEnabled(true);
             if (isChecked){
                 radio.SetText('radio_button_checked')
-                radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+                radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
                 radio.SetTextColor(primary)
             }
             else {
@@ -776,7 +799,7 @@ function drawRadioButton(isChecked, parentLay, radioObj){
             checkSubscriber.value = true;
             radio.SetText('radio_button_checked')
             radio.SetTextColor(primary);
-            radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf");
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
         }
         
         if (radioObj.onCheck){
@@ -787,7 +810,7 @@ function drawRadioButton(isChecked, parentLay, radioObj){
     
     if (isChecked){
         radio.SetText('radio_button_checked')
-        radio.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+        radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
         radio.SetTextColor(primary)
     }
     else {
@@ -827,7 +850,7 @@ function checkboxObject(checked, parentLay){
     this.SetEnabled = function(boolValue){
         if (boolValue) {
             checkbox.SetText('indeterminate_check_box')
-            checkbox.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
             checkbox.SetTextColor(primary)
             checkbox.SetEnabled(false)
         }
@@ -835,7 +858,7 @@ function checkboxObject(checked, parentLay){
             checkbox.SetEnabled(true);
             if (checked){
                 checkbox.SetText('check_box')
-                checkbox.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+                checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
                 checkbox.SetTextColor(primary)
             }
             else {
@@ -878,7 +901,7 @@ function drawCheckBox(checked, parentLay, checkObj){
             checkSubscriber.value = true;
             checkbox.SetText('check_box')
             checkbox.SetTextColor(primary);
-            checkbox.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf");
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
         }
         
         if (checkObj.onCheck){
@@ -889,7 +912,7 @@ function drawCheckBox(checked, parentLay, checkObj){
     
     if (checked){
         checkbox.SetText('check_box')
-        checkbox.SetFontFile(_m3Path + "uxFonts/Icons/Sharp-Regular.otf")
+        checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
         checkbox.SetTextColor(primary)
     }
     else {

@@ -1,9 +1,5 @@
 /* Material Design 3 Plugin.
    
-   This Project Is Licensed
-   Under The MIT License.
-   @ 2024 - Till Forever.
-   
    ------------------------
    Version :: 0.99.9
    Release Date :: 12/05/24

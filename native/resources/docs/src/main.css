@@ -1,0 +1,196 @@
+/* Your original styles */
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+  background-color: #333;
+}
+
+
+p {
+  color: #f5f5f5;
+}
+h2 {
+  color: #f5f5f5;
+  text-decoration: underline dotted;
+}
+
+h3 {
+  color: #f5f5f5;
+  margin-bottom: 10px; /* Provides spacing between elements */
+}
+
+h4 {
+  color: #f5f5f5;
+  text-decoration: underline double;
+  margin-bottom: 10px; /* Provides spacing between elements */
+}
+
+li {
+  color: #ffa500;
+}
+
+a {
+  color: #4078c0;
+  text-decoration: dotted;
+}
+
+blockquote {
+  background-color: #7772;
+  border-left: 5px solid #3498db;
+  margin: 10px 0;
+}
+
+
+.headerImg {
+  display: block;
+  margin-top: 80px;
+  max-width: 100%;
+  height: auto;
+}
+
+.headerVid {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.imgExample {
+  max-width: 100%;
+  height: auto;
+}
+
+.versionText {
+  color: #afd4ae;
+}
+
+.updateWarning {
+  color: #ffa500;
+}
+
+
+
+.ry {
+  margin-right: 70%;
+}
+.comment {
+  color: #3fb950;
+}
+
+
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.langToggle,
+.general,
+.back-btn,
+.menu-icon {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.langToggle:active,
+.general:active,
+.searchBar:active,
+.back-btn:active,
+.menu-icon:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+.buttonArray {
+    
+    width: auto;
+    justify-content: space-between;
+    color: #f5f5f5;
+    display: flex;
+  
+    background-color: #0d1117;
+  border: 1px solid #999;
+  padding: 20px;
+  font-size: 100%;
+  font-family: monospace;
+}
+
+
+.menu-icon {
+  margin-right: 25px;
+}
+
+.searchBar {
+    margin-top: 20px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  color: #000;
+  width: 100%;
+  height: 50px;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
+  outline: none;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.table-of-contents {
+  margin-top: 40px;
+  background-color: #222;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.table-of-contents ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.table-of-contents li {
+  margin-bottom: 5px;
+}
+
+.table-of-contents a {
+  color: #fff;
+  text-decoration: none;
+  display: block; /* Make the entire list item clickable */
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+ .codeView {
+            margin-bottom: 20px;
+        }
+        
+        .pyCode {
+            display: none;
+        }

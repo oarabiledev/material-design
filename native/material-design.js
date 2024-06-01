@@ -5,12 +5,8 @@
    @ 2024 - Till Forever.
    
    ------------------------
-   This Plugin File Is 
-   Constantly Updated, 
-   unlike
-   Material3.inc !
-   -----------------------
-   Version :: 0.79.7b
+   Version :: 0.99.9
+   Release Date :: 12/05/24
 */
 
 /* Global Variables & Functions Here */
@@ -20,10 +16,10 @@ const ui = {};
 
 var _mDebug,_m3Path,privateFolder;
 
-_mDebug = app.GetAppPath().endsWith('/Material3');
+_mDebug = app.GetAppPath().endsWith('/Material-Design');
 
 privateFolder = 
-app.GetPrivateFolder('Plugins') + '/material3/';
+app.GetPrivateFolder('Plugins') + '/material-design/';
 
 _m3Path = _mDebug ? '' : privateFolder;
 
@@ -106,7 +102,7 @@ defineExtension = function(properttiesInJSON){
  * @returns Plugin Version Number
 */
 ui.getVersion = function(){
-    return '0.79.7';
+    return '0.99.9';
 }
 
 /**

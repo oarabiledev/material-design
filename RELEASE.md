@@ -1,15 +1,19 @@
 # MATERIAL 3 RELEASE NOTES
 
-## version 0.80 [ ]
+> [!NOTE]
+> This release file is adjusted for native components.
+
+
+## version 1.00 [ May be Achieved Via Contribution ]
 - [ ]  All TextFiels Components
 - [ ]  Adding Bottom Navigation
 - [ ]  Complete Sliders
 - [ ]  Add List Component
-
-## version 0.79.6 [ ]
-
 - [ ]  Adding All Top App Bars
 - [ ]  Adding Extended FAB
+
+## version 0.99.9 [ Released 1 June 2024 ]
+
 - [x]  Extensions Capability
 - [x]  Add Radio Component
 - [x]  Add CheckBox Component

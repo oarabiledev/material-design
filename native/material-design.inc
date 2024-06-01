@@ -3,24 +3,31 @@
    This Project Is Licensed
    Under The MIT License.
    @ 2024 - Till Forever.
-   
+   INC Version
    ------------------------
-   This File Is Only Updated
-   On Version Updates !.
-   -----------------------
-   Version :: 0.79.5
-   Release Date :: 12/05/24
+   Version :: 0.99.9
+   Release Date :: 01/06/24
 */
 
 /* Global Variables & Functions Here */
 
-_Boost(true)
 const ui = {};
 
+
+var _mDebug,_m3Path,privateFolder;
+
+_mDebug = app.GetAppPath().endsWith('/Material-Design');
+
+privateFolder = 
+app.GetPrivateFolder('Plugins') + '/material-design/';
+
+_m3Path = _mDebug ? '' : privateFolder;
+
 var theme;
-let defaultFont = _m3Path + 'Roboto.ttf';
-let mediumFont = _m3Path + 'Roboto-Medium.ttf';
-let boldFont = _m3Path + 'Roboto-Bold.ttf';
+let defaultFont = _m3Path + 'resources/textFonts/Roboto.ttf';
+let mediumFont = _m3Path + 'resources/textFonts/Roboto-Medium.ttf';
+let boldFont = _m3Path + 'resources/textFonts/Roboto-Bold.ttf';
+
 
 /** Initialize Material3, basically reads your baseTheme.json File
  * @param {string} baseTheme - Default theme. (light/dark etc)
@@ -34,19 +41,19 @@ ui.InitializeMaterialPlugin = function(baseTheme, iconFill) {
     else {
         switch (iconFill) {
             case "outlined":
-                defaultIcons = _m3Path + "uxFonts/Icons/Outlined-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
             break;
             case "sharp":
-                defaultIcons = _m3Path + "uxFonts/Icons/Sharp-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Sharp-Regular.otf";
             break;
             case "two-tone":
-                defaultIcons = _m3Path + "uxFonts/Icons/TwoTone-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/TwoTone-Regular.otf";
             break;
             case "round":
-                defaultIcons = _m3Path + "uxFonts/Icons/Round-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Round-Regular.otf";
             break;
             default:
-            defaultIcons = _m3Path + "uxFonts/Icons/Outlined-Regular.otf";
+            defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
         }
         if (baseTheme === undefined){
             theme = 'dark';
@@ -68,12 +75,34 @@ app.CreateMaterial3 = (baseTheme, iconFill) => {
     \nUse ui.InitializeMaterialPlugin()`);
 }
 
+ui.installExtension = (url) =>{
+    
+}
 
+/**
+ * @summary Add an extension to your app.
+ * @param {string} extensionName 
+*/
+
+ui.loadExtension = (extensionName) =>{
+    
+}
+
+importExtension = function(name){
+    
+    const file = name + '.js';
+    
+    app.Script(file,true)
+}
+
+defineExtension = function(properttiesInJSON){
+    
+}
 /**
  * @returns Plugin Version Number
 */
 ui.getVersion = function(){
-    return '0.79.5';
+    return '0.99.9';
 }
 
 /**
@@ -332,6 +361,14 @@ ui.addContinuousSlider = function(value, width, parentLay){
 }
 
 /**
+ * @param {boolean} checked The state of Checked Button
+ * @param {object} parentLay The parent for checkbox
+*/
+ui.addCheckBox = function(checked, parentLay){
+    return new checkboxObject(checked, parentLay)
+}
+
+/**
  * @param {string} list - A String, list separated in commas.
  * @param {string} checkDefinitions - A String List Of True/False.
  * @param {number} width - Component width in ds scale.
@@ -342,6 +379,9 @@ ui.addCheckBoxList = function(list, checkDefinitions, width, height, parentLay){
     return new checkBoxListObject(list, checkDefinitions, width, height, parentLay)
 }
 
+ui.addRadioButton = function(isChecked, parentLay){
+    return new radioButtonObject(isChecked, parentLay)
+}
 
 function alternateView(viewMappings){
     let rawView = JSON.stringify(viewMappings);
@@ -487,14 +527,6 @@ ErrorLayout = () =>{
     return layout;
 }
 
-var _mDebug,_m3Path,privateFolder;
-
-_mDebug = app.GetAppPath().endsWith('/Material3');
-
-privateFolder = 
-app.GetPrivateFolder('Plugins') + '/material3/';
-
-_m3Path = _mDebug ? '' : privateFolder;
 
 const warnDeveloper = (Msg) =>{
     let alertClr = "<div style='color:#FF7900'>";
@@ -701,7 +733,195 @@ function setM3BaseColors() {
     mediumBarClr.value = surface;
 }
 
+function radioButtonObject(isChecked, parentLay){
+    let radio;
+    
+    this.SetOnCheck = function (onCheck){
+        this.onCheck = onCheck;
+    }
+    
+    /**
+     * @param {boolean} boolValue True or False, For Enabled/Disabled CheckBox
+    */
+    
+    this.SetEnabled = function(boolValue){
+        if (boolValue) {
+            radio.SetText('radio_button_checked')
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+            radio.SetTextColor(outline)
+            radio.SetEnabled(false)
+        }
+        else {
+            radio.SetEnabled(true);
+            if (isChecked){
+                radio.SetText('radio_button_checked')
+                radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+                radio.SetTextColor(primary)
+            }
+            else {
+                radio.SetText('radio_button_unchecked')
+                radio.SetTextColor(onSurface);
+                radio.SetFontFile(defaultIcons);
+            }
+        }
+    }
+    
+    if (!parentLay){
+        warnDeveloper('No Parent For Your RadioButton');
+        return;
+    }
+    else radio = drawRadioButton(isChecked, parentLay, this)
+}
 
+function drawRadioButton(isChecked, parentLay, radioObj){
+    let radio;
+    let radius = 50/100 * (40)
+    
+     /* A subscriber for the checking utility */
+    let checkSubscriber = createSignal();
+    checkSubscriber.value = isChecked;
+    
+    
+    radio = app.AddButton(parentLay,null,null,null,'Custom');
+    
+    radio.SetSize(40,40,'dp');
+    radio.SetTextSize(24,'dp');
+    radio.SetStyle('#00000000','#00000000',radius,null,null,0);
+    
+    radio.SetOnTouch(()=>{
+       if (checkSubscriber.value){
+           checkSubscriber.value = false;
+           radio.SetTextColor(onSurface);
+           radio.SetFontFile(defaultIcons);
+           radio.SetText('radio_button_unchecked')
+        }
+        else {
+            checkSubscriber.value = true;
+            radio.SetText('radio_button_checked')
+            radio.SetTextColor(primary);
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
+        }
+        
+        if (radioObj.onCheck){
+            M(this,radioObj.onCheck(checkSubscriber.value));
+        }
+        else return null;
+    });
+    
+    if (isChecked){
+        radio.SetText('radio_button_checked')
+        radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+        radio.SetTextColor(primary)
+    }
+    else {
+        radio.SetText('radio_button_unchecked')
+        radio.SetTextColor(onSurface);
+        radio.SetFontFile(defaultIcons);
+    }
+    
+    return radio;
+}
+
+function checkboxObject(checked, parentLay){
+    let checkbox;
+    
+    /** TODO
+     * Add SetPosition
+     * Add SetMargins
+     * Add ClearFocus
+     * Add Gone
+     * Add Hide
+     * Add Visibility
+     * Animate
+     * Tween
+    */
+    
+    /**
+     * @param {Function} onCheck This is your function called after a check.
+    */
+    this.SetOnCheck = function (onCheck){
+        this.onCheck = onCheck;
+    }
+    
+    /**
+     * @param {boolean} boolValue True or False, For Enabled/Disabled CheckBox
+    */
+    
+    this.SetEnabled = function(boolValue){
+        if (boolValue) {
+            checkbox.SetText('indeterminate_check_box')
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+            checkbox.SetTextColor(primary)
+            checkbox.SetEnabled(false)
+        }
+        else {
+            checkbox.SetEnabled(true);
+            if (checked){
+                checkbox.SetText('check_box')
+                checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+                checkbox.SetTextColor(primary)
+            }
+            else {
+                checkbox.SetText('check_box_outline_blank')
+                checkbox.SetTextColor(onSurface);
+                checkbox.SetFontFile(defaultIcons);
+            }
+        }
+    }
+    
+    if (!parentLay){
+        warnDeveloper('Add a parent for CheckBox');
+        return;
+    }
+    else checkbox = drawCheckBox(checked, parentLay, this);
+}
+
+function drawCheckBox(checked, parentLay, checkObj){
+    let checkbox;
+    let radius = 50/100 * (40)
+    
+    /* A subscriber for the checking utility */
+    let checkSubscriber = createSignal();
+    checkSubscriber.value = checked;
+    
+    checkbox = app.AddButton(parentLay,null,null,null,'Custom');
+    
+    checkbox.SetSize(40,40,'dp');
+    checkbox.SetTextSize(24,'dp');
+    checkbox.SetStyle('#00000000','#00000000',radius,null,null,0);
+    
+    checkbox.SetOnTouch(()=>{
+       if (checkSubscriber.value){
+           checkSubscriber.value = false;
+           checkbox.SetTextColor(onSurface);
+           checkbox.SetFontFile(defaultIcons);
+           checkbox.SetText('check_box_outline_blank')
+        }
+        else {
+            checkSubscriber.value = true;
+            checkbox.SetText('check_box')
+            checkbox.SetTextColor(primary);
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
+        }
+        
+        if (checkObj.onCheck){
+            M(this,checkObj.onCheck(checkSubscriber.value));
+        }
+        else return null;
+    });
+    
+    if (checked){
+        checkbox.SetText('check_box')
+        checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf")
+        checkbox.SetTextColor(primary)
+    }
+    else {
+        checkbox.SetText('check_box_outline_blank')
+        checkbox.SetTextColor(onSurface);
+        checkbox.SetFontFile(defaultIcons);
+    }
+    return checkbox;
+}
 
 function filledButtonObject(btnName, width, height, icon, parentLay) {
     let filledButton;

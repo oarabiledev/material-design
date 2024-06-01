@@ -8,6 +8,20 @@ enable a reliable development workflow to build beautiful and functional Android
 Material Components for DroidScript is a drop-in replacement for Android's
 Design Support Library.
 
+> [!NOTE]
+> The native components only work in Android, located in native folder.
+
+
+# Material Components for Hybrid
+
+Material Components for DroidScript Hybrid framework help
+you execute the design. These help you build crossplatform interfaces for your app
+across all usage methods.
+
+> [!NOTE]
+> The hybrid components are not fully built and are in early development, located in hybrid folder.
+
+
 ## Getting Started
 
 For information on how to get started with Material Components for DroidScript

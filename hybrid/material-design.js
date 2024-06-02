@@ -8,19 +8,22 @@
 * GPL-2.0 license
 */
 
+'use strict'
 
-const mdui = {
-    getVersion : function(){
-        return '0.01';
+const mdui = function Material (){
+    this.getVersion = function () {
+        return '0.01' 
     }
 }
 
-let InitializePlugin = function (){
+
+function InitializePlugin (){
     ui.script('material-design/mdui.js');
     ui.css('material-design/mdui.css');
 }
 
 InitializePlugin();
+
 
 /**
  * Add a layout
@@ -40,7 +43,6 @@ const layout = function (parent, type, options, width, height){
     this.element.backColor = '--mdui-color-primary-light'
     return this.element;
 }
-
 
 /**
  * Changes Interface Theme
@@ -73,11 +75,13 @@ mdui.addButton = function (parent, text, options, width, height){
 }
 
 const buttonObject = class extends ui.Control {
-    constructor(parent, text, options, width, height) {
+    constructor(parent, text, options = 'filled', width, height) {
         super(parent, width, height, options, 'Button');
         this.text = text;
+        
         this._create()
     }
+    
     _create(){
 
         this.element = document.createElement('mdui-button');
@@ -85,24 +89,45 @@ const buttonObject = class extends ui.Control {
         this.element.style.width = this.width;
             
         this.element.style.height = this.height;
-          
-        if (this.options.split(',').length == 1){
-            this.element.variant = this.options.split(',')[0]
+        
+        let splitOptions = this.options.split(',');
+        let noOfOptions = splitOptions.length;
+        let buttonVariant, buttonOptions;
+        
+        let btnVariants = ['filled','outlined','tonal','elevated','text'];
+        let btnOptions = ['link','loading'];
+        
+        splitOptions.forEach(option => {
+            if (btnVariants.includes(option)) {
+                buttonVariant = option;
+            }
+            else if (btnOptions.includes(option)) {
+                buttonOptions = option;
+            }
+            else { ; }
+        });
+        
+        
+        if (noOfOptions == 1) {
+            this.element.variant = buttonVariant;
             this.element.textContent = this.text;
         }
-
         else {
-            if (this.options.includes('link')){
-
-                this.element.variant = this.options.split(',')[0]
+            this.element.variant = buttonVariant;
+            this.element.textContent = this.text;
+            
+            if (buttonOptions == 'link') {
+                this.element.href = 'https://www.google.com'
+                this.element.target = "_blank"
             }
-            if (this.options.includes('loading')){
+            
+            if (buttonOptions == 'loading') {
                 this.element.loading = true;
-                this.element.textContent = this.text;
-                this.element.variant = this.options.split(',')[0]
             }
+            else { ; }
+            
         }
-        
+          
         this._div.appendChild(this.element)
     }
     

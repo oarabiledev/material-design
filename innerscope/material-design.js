@@ -73,7 +73,7 @@ mdui.addButton = function (parent, text, options, width, height){
     return new buttonObject(parent, text, options, width, height)
 }
 
-const buttonObject = class extends ui.Control {
+const buttonObject = class extends ElementComposer {
     constructor(parent, text, options = 'filled', width, height) {
         super(parent, width, height, options, 'Button');
         this.text = text;
@@ -129,7 +129,7 @@ const buttonObject = class extends ui.Control {
             
         }
           
-        this._div.appendChild(this.element)
+        this.composer.appendChild(this.element)
     }
     
     /**    
@@ -179,7 +179,7 @@ mdui.addIcon = function (parent, icon, options, width, height){
     return new iconObject(parent, icon, options, width, height)
 }
 
-const iconObject = class extends ui.Control {
+const iconObject = class extends ElementComposer {
     constructor(parent, icon, options = 'standard', width, height){
         super(parent, width, height, options, 'Icon');
         
@@ -204,7 +204,7 @@ const iconObject = class extends ui.Control {
             if (splitOptions.includes(option)) {
                 switch (option) {
                     case 'link':
-                      this.element.href = 'https://www.droidscript.org';
+                      this.element.href = 'https://github.com/oarabiledev/innerscope';
                       this.element.target = '_blank';
                       break;
                     case 'disabled':
@@ -219,7 +219,7 @@ const iconObject = class extends ui.Control {
             }
         })
         
-        this._div.appendChild(this.element)   
+        this.composer.appendChild(this.element)   
     }
     
     /**    
@@ -260,7 +260,7 @@ mdui.addFAB = function (parent, icon, options, text) {
     return new fabObject(parent, icon, options, text)
 }
 
-const fabObject = class extends ui.Control {
+const fabObject = class extends ElementComposer {
     constructor(parent, icon, options = 'normal', text){
         super (parent, null, null, options, 'FAB')
         
@@ -301,7 +301,7 @@ const fabObject = class extends ui.Control {
                 }
                 
                 if (option == 'link'){
-                    this.element.href = 'https://www.droidscript.org';
+                    this.element.href = 'https://github.com/oarabiledev/innerscope';
                     this.element.target = '_blank';
                 }
                 
@@ -310,7 +310,7 @@ const fabObject = class extends ui.Control {
             
             else { ; }
         })
-        this._div.appendChild(this.element)
+        this.composer.appendChild(this.element)
     }
     
     /**    

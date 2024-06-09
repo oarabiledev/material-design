@@ -1,5 +1,9 @@
 
-# Material Components for Android
+# Material DroidScript Components
+
+[![DroidScript](https://img.shields.io/badge/%E2%9D%A4-DroidScript-brightgreen?style=for-the-badge&labelColor=32c974&color=41db84&logoColor=violet)](http://droidscript.org)
+[![DroidStore](https://img.shields.io/badge/DroidStore-Download%20Plugin-brightgreen?style=for-the-badge&labelColor=2196F3&color=217cf4)](https://ds.justplayer.de/uploads/material-design)
+
 
 Material Components for DroidScript  help developers execute
 [Material Design](https://www.material.io). These components

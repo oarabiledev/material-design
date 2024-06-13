@@ -1,4 +1,5 @@
 
+
 # Material DroidScript Components
 
 [![DroidScript](https://img.shields.io/badge/%E2%9D%A4-DroidScript-brightgreen?style=for-the-badge&labelColor=32c974&color=41db84&logoColor=violet)](http://droidscript.org)

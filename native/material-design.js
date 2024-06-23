@@ -1567,9 +1567,6 @@ function drawCheckBoxList(list, checkDefinitions, width, height, parentLay){
 }
 
 function bottomSheetObject(sheetLayout, height, options) {
-    this.Dismiss = function () {
-        dismissBSheet();
-    }
     this.Show = function () {
         drawBottomSheet(sheetLayout, height, options);
     }
@@ -1580,7 +1577,12 @@ function drawBottomSheet(sheetLayout, height, options) {
     
     bottomSheet = app.CreateLayout('Linear', 'FillXY,VCenter,Bottom');
     bottomSheet.SetSize(1, 1);
-    bottomSheet.SetOnTouchUp(dismissBSheet);
+    bottomSheet.SetOnTouchUp(function(){
+        cardLayout.Animate('SlideToBottom', function(){
+            cardLayout.RemoveChild(sheetLayout);
+            app.RemoveLayout(bottomSheet)
+        }, 210); 
+    });
     bottomSheet.SetBackColor(scrim);
     bottomSheet.SetBackAlpha(0.33);
     
@@ -1597,12 +1599,11 @@ function drawBottomSheet(sheetLayout, height, options) {
     
     app.AddLayout(bottomSheet);
     
-    function dismissBSheet() {
-        cardLayout.Animate('SlideToBottom', function(){
+    bottomSheetObject.prototype.Dismiss = function(){
+       cardLayout.Animate('SlideToBottom', function(){
             cardLayout.RemoveChild(sheetLayout);
             app.RemoveLayout(bottomSheet)
-        }, 210);
-        
+        }, 210); 
     }
 }
 

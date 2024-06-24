@@ -1589,7 +1589,13 @@ function drawBottomSheet(sheetLayout, height, options) {
     
     cardLayout = app.CreateLayout('Card', 'FillX,VCenter,Top');
     
-    cardLayout.SetCornerRadius(28);
+    
+    if (options.toLowerCase().includes('nocorner')){
+        cardLayout.SetCornerRadius(0);
+        }
+    else {
+        cardLayout.SetCornerRadius(28);
+    }
     
     cardLayout.AddChild(sheetLayout);
     cardLayout.SetBackColor(surfaceVariant)

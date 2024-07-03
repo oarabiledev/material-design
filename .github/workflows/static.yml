@@ -38,7 +38,7 @@ jobs:
         with:
           # Upload entire repository
           path: './native'
-          source-directory: /native
+          source-directory: "./native"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

@@ -1,19 +1,52 @@
-## Material-Design Plugin Using Native Framework
 
-The native file directory contains all files that the native version of this plugin uses.
-The native version can only run in android and the hybrid version can run anywhere.
+# Material DroidScript Components
 
+[![DroidScript](https://img.shields.io/badge/%E2%9D%A4-DroidScript-brightgreen?style=for-the-badge&labelColor=32c974&color=41db84&logoColor=violet)](http://droidscript.org)
+[![DroidStore](https://img.shields.io/badge/DroidStore-Download%20Plugin-brightgreen?style=for-the-badge&labelColor=2196F3&color=217cf4)](https://ds.justplayer.de/uploads/material-design)
 
-It is recommended to use the Hybrid Version, although currently its development just began.
+Material Components for DroidScript  help developers execute
+[Material Design](https://www.material.io). These components
+enable a reliable development workflow to build beautiful and functional Android apps.
 
-## What About The Future Of Native Version ?
+Material Components for DroidScript is a drop-in replacement for Android's
+Design Support Library.
 
-I cannot answer that question, droidScript is pushing for Hybrid, and Hybrid is the better option
-as of cross-compatability.
+> [!NOTE]
+> The native components only work in Android, located in native folder.
 
-The native version of this plugin will stall till the Hybrid version catches up.
-That means that the native version will not recieve any major or additional updtates.
+## Getting Started
 
-That also means, users can contribute components for both and contributions to both will be accepted.
-The native version will only get major updates via contributions and bug patches only.
+For information on how to get started with Material Components for DroidScript
+install the plugin & view docs/guide.
 
+## Submitting Bugs or Feature Requests
+
+For usage questions: ask on
+[DroidScript MUI Channel](https://discord.com/channels/985908716060684388/985937795111583804).
+
+Bugs or feature requests should be submitted on Github Issues.
+
+## Useful Links
+
+-[All Components](https://m3.material.io/components)
+
+-[Material Design Guidelines](https://material.google.com)
+
+## Documentation
+
+Documentation is provided in the plugin Documentation Section.
+You can view docs by visiting hosted pages.
+Install the plugin to use.
+
+## Contributors
+
+Im thankfull to the following people for contributing and offering help during the creation of this plugin.
+I really couldnt have done it well to this level of qaulity without them, thank you, you are the unkown heroes.
+
+1. Symbrsom
+
+2. Alan H
+
+3. Cemal
+
+4. CaptainStarBuck

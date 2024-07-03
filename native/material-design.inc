@@ -2,7 +2,7 @@
 
    INC Version
    ------------------------
-   Version :: 0.99.9
+   Version :: 1.0
    Release Date :: 01/06/24
 */
 

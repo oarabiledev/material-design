@@ -7,11 +7,6 @@ Material Components for DroidScript is a drop-in replacement for Android's
 Design Support Library.
 
 
-> **Note:** 
-> I cannot continue active development of this plugin therefore,
-> I have taken the decision to archive it.
-> Ignore the v2.0 commits.
-
 ---
 
 

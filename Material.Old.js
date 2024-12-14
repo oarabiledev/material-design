@@ -1,3 +1,6 @@
+// DO NOT REFER TO THIS FILE WHEN BUILDING ELEMENTS OR
+// PORTING THEM, THIS IS A FRESH RE-WRITE
+
 /* Material Design 3 Plugin.
    
    ------------------------
@@ -33,24 +36,19 @@ ui.InitializeMaterialPlugin = function (baseTheme, iconFill) {
     } else {
         switch (iconFill) {
             case "outlined":
-                defaultIcons =
-                    _m3Path + "resources/iconFonts/Outlined-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
                 break;
             case "sharp":
-                defaultIcons =
-                    _m3Path + "resources/iconFonts/Sharp-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Sharp-Regular.otf";
                 break;
             case "two-tone":
-                defaultIcons =
-                    _m3Path + "resources/iconFonts/TwoTone-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/TwoTone-Regular.otf";
                 break;
             case "round":
-                defaultIcons =
-                    _m3Path + "resources/iconFonts/Round-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Round-Regular.otf";
                 break;
             default:
-                defaultIcons =
-                    _m3Path + "resources/iconFonts/Outlined-Regular.otf";
+                defaultIcons = _m3Path + "resources/iconFonts/Outlined-Regular.otf";
         }
         if (baseTheme === undefined) {
             theme = "dark";
@@ -70,7 +68,7 @@ app.CreateMaterial3 = (baseTheme, iconFill) => {
     warnDeveloper(
         ErrorCodes["301"] +
             `
-    \nUse ui.InitializeMaterialPlugin()`
+    \nUse ui.InitializeMaterialPlugin()`,
     );
 };
 
@@ -253,12 +251,7 @@ ui.addProgressBar = function (progressType, width, layout) {
  * @param {object} parentLay - ParentLayout For AppBar
  */
 ui.addAlignedAppBar = function (title, leadingIcon, controlIcons, parentLay) {
-    return new centerAlignedAppBarObj(
-        title,
-        leadingIcon,
-        controlIcons,
-        parentLay
-    );
+    return new centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay);
 };
 
 /**
@@ -297,20 +290,8 @@ ui.addBottomAppBar = function (barPropsInjson, parentLayout) {
  * @param {number} width - Width In DroidScript Scale 0 -1
  * @param {object} layout - Parent For SearchBar
  */
-ui.addSearchBar = function (
-    leadingIcon,
-    trailingIcon,
-    hint,
-    width,
-    parentLayout
-) {
-    return new searchBarObject(
-        leadingIcon,
-        trailingIcon,
-        hint,
-        width,
-        parentLayout
-    );
+ui.addSearchBar = function (leadingIcon, trailingIcon, hint, width, parentLayout) {
+    return new searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout);
 };
 
 /**
@@ -350,20 +331,8 @@ ui.addSwitch = function (switchType, value, parentLayout) {
  * @param {number} height - Component height in ds scale.
  * @param {object} parentLay - Parent For Component
  */
-ui.addSwitchSettings = function (
-    listOfSettings,
-    switchValues,
-    width,
-    height,
-    parentLay
-) {
-    return new switchSettingsObject(
-        listOfSettings,
-        switchValues,
-        width,
-        height,
-        parentLay
-    );
+ui.addSwitchSettings = function (listOfSettings, switchValues, width, height, parentLay) {
+    return new switchSettingsObject(listOfSettings, switchValues, width, height, parentLay);
 };
 
 /**
@@ -390,20 +359,8 @@ ui.addCheckBox = function (checked, parentLay) {
  * @param {number} height - Component height in ds scale.
  * @param {object} parentLay - Parent For Component
  */
-ui.addCheckBoxList = function (
-    list,
-    checkDefinitions,
-    width,
-    height,
-    parentLay
-) {
-    return new checkBoxListObject(
-        list,
-        checkDefinitions,
-        width,
-        height,
-        parentLay
-    );
+ui.addCheckBoxList = function (list, checkDefinitions, width, height, parentLay) {
+    return new checkBoxListObject(list, checkDefinitions, width, height, parentLay);
 };
 
 ui.addRadioButton = function (isChecked, parentLay) {
@@ -766,18 +723,14 @@ function radioButtonObject(isChecked, parentLay) {
     this.SetEnabled = function (boolValue) {
         if (boolValue) {
             radio.SetText("radio_button_checked");
-            radio.SetFontFile(
-                _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-            );
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
             radio.SetTextColor(outline);
             radio.SetEnabled(false);
         } else {
             radio.SetEnabled(true);
             if (isChecked) {
                 radio.SetText("radio_button_checked");
-                radio.SetFontFile(
-                    _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-                );
+                radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
                 radio.SetTextColor(primary);
             } else {
                 radio.SetText("radio_button_unchecked");
@@ -817,9 +770,7 @@ function drawRadioButton(isChecked, parentLay, radioObj) {
             checkSubscriber.value = true;
             radio.SetText("radio_button_checked");
             radio.SetTextColor(primary);
-            radio.SetFontFile(
-                _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-            );
+            radio.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
         }
 
         if (radioObj.onCheck) {
@@ -868,18 +819,14 @@ function checkboxObject(checked, parentLay) {
     this.SetEnabled = function (boolValue) {
         if (boolValue) {
             checkbox.SetText("indeterminate_check_box");
-            checkbox.SetFontFile(
-                _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-            );
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
             checkbox.SetTextColor(primary);
             checkbox.SetEnabled(false);
         } else {
             checkbox.SetEnabled(true);
             if (checked) {
                 checkbox.SetText("check_box");
-                checkbox.SetFontFile(
-                    _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-                );
+                checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
                 checkbox.SetTextColor(primary);
             } else {
                 checkbox.SetText("check_box_outline_blank");
@@ -919,9 +866,7 @@ function drawCheckBox(checked, parentLay, checkObj) {
             checkSubscriber.value = true;
             checkbox.SetText("check_box");
             checkbox.SetTextColor(primary);
-            checkbox.SetFontFile(
-                _m3Path + "resources/iconFonts/Sharp-Regular.otf"
-            );
+            checkbox.SetFontFile(_m3Path + "resources/iconFonts/Sharp-Regular.otf");
         }
 
         if (checkObj.onCheck) {
@@ -1008,21 +953,8 @@ function filledButtonObject(btnName, width, height, icon, parentLay) {
 function drawFilledButton(btnName, width, height, icon, parentLay) {
     let filledButton;
 
-    filledButton = app.AddButton(
-        parentLay,
-        null,
-        width,
-        height,
-        "Custom,FontAwesome"
-    );
-    filledButton.SetStyle(
-        filledBtnClr.value,
-        filledBtnClr.value,
-        20,
-        null,
-        null,
-        0
-    );
+    filledButton = app.AddButton(parentLay, null, width, height, "Custom,FontAwesome");
+    filledButton.SetStyle(filledBtnClr.value, filledBtnClr.value, 20, null, null, 0);
     filledButton.SetTextColor(filledBtnTxtClr.value);
 
     if (icon === null) {
@@ -1042,14 +974,8 @@ function drawFilledButton(btnName, width, height, icon, parentLay) {
         parentLay.SetOnTouchMove(function (event) {
             let xVal = JSON.stringify(event.x[0]);
             let yVal = JSON.stringify(event.y[0]);
-            console.log(
-                "<div style='color:#FF7900'>" +
-                    "X :: " +
-                    JSON.stringify(event.x[0])
-            );
-            console.log(
-                "<div style='color:red'>" + "Y :: " + JSON.stringify(event.y[0])
-            );
+            console.log("<div style='color:#FF7900'>" + "X :: " + JSON.stringify(event.x[0]));
+            console.log("<div style='color:red'>" + "Y :: " + JSON.stringify(event.y[0]));
             filledButton.SetPosition(xVal, yVal);
         });
     };
@@ -1125,25 +1051,12 @@ function elevatedButtonObject(btnName, width, height, icon, parentLay) {
     };
 
     //Call It
-    elevatedButton = drawElevatedBtn(
-        btnName,
-        width,
-        height,
-        icon,
-        parentLay,
-        this
-    );
+    elevatedButton = drawElevatedBtn(btnName, width, height, icon, parentLay, this);
 }
 
 function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
     let elevatedButton;
-    elevatedButton = app.AddButton(
-        parentLay,
-        null,
-        width,
-        height,
-        "Custom,FontAwesome"
-    );
+    elevatedButton = app.AddButton(parentLay, null, width, height, "Custom,FontAwesome");
     elevatedButton.SetTextColor(elevatedBtnTxtClr.value);
     elevatedButton.SetFontFile(defaultFont);
 
@@ -1151,14 +1064,7 @@ function drawElevatedBtn(btnName, width, height, icon, parentLay, elevatedObj) {
         elevatedButton.SetText(btnName);
     } else elevatedButton.SetText(`[fa-${icon}]` + " " + btnName);
 
-    elevatedButton.SetStyle(
-        elevatedBtnClr.value,
-        elevatedBtnClr.value,
-        20,
-        null,
-        null,
-        0
-    );
+    elevatedButton.SetStyle(elevatedBtnClr.value, elevatedBtnClr.value, 20, null, null, 0);
 
     elevatedBtnClr.subscribe((value) => {
         elevatedButton.SetStyle(value, value, 20, null, null, 0);
@@ -1211,9 +1117,7 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
         filledTonalButton.SetOnTouch(I(onTouch.bind(filledTonalButton)));
     };
     this.SetOnLongTouch = function (onLongTouch) {
-        filledTonalButton.SetOnLongTouch(
-            I(onLongTouch.bind(filledTonalButton))
-        );
+        filledTonalButton.SetOnLongTouch(I(onLongTouch.bind(filledTonalButton)));
     };
     this.Tween = function (target, duration, type, repeat, yoyo, callback) {
         filledTonalButton.Tween(target, duration, type, repeat, yoyo, callback);
@@ -1233,32 +1137,12 @@ function filledTonalButtonObject(btnName, width, height, icon, parentLay) {
 
     //Call It
 
-    filledTonalButton = drawFilledTonalBtn(
-        btnName,
-        width,
-        height,
-        icon,
-        parentLay,
-        this
-    );
+    filledTonalButton = drawFilledTonalBtn(btnName, width, height, icon, parentLay, this);
 }
 
-function drawFilledTonalBtn(
-    btnName,
-    width,
-    height,
-    icon,
-    parentLay,
-    filledTonalObj
-) {
+function drawFilledTonalBtn(btnName, width, height, icon, parentLay, filledTonalObj) {
     let filledTonalButton;
-    filledTonalButton = app.AddButton(
-        parentLay,
-        null,
-        width,
-        height,
-        "Custom,FontAwesome"
-    );
+    filledTonalButton = app.AddButton(parentLay, null, width, height, "Custom,FontAwesome");
     filledTonalButton.SetFontFile(defaultFont);
     filledTonalButton.SetTextColor(filledTonalBtnTxtClr.value);
 
@@ -1266,14 +1150,7 @@ function drawFilledTonalBtn(
         filledTonalButton.SetText(btnName);
     } else filledTonalButton.SetText(`[fa-${icon}]` + " " + btnName);
 
-    filledTonalButton.SetStyle(
-        filledTonalBtnClr.value,
-        filledTonalBtnClr.value,
-        20,
-        null,
-        null,
-        0
-    );
+    filledTonalButton.SetStyle(filledTonalBtnClr.value, filledTonalBtnClr.value, 20, null, null, 0);
 
     filledTonalBtnClr.subscribe((value) => {
         filledTonalButton.SetStyle(value, value, 20, null, null, 0);
@@ -1344,24 +1221,11 @@ function outlinedButtonObject(btnName, width, height, icon, parentLay) {
     };
 
     //Call It
-    _outlinedButton = drawOutlinedBtn(
-        btnName,
-        width,
-        height,
-        icon,
-        parentLay,
-        this
-    );
+    _outlinedButton = drawOutlinedBtn(btnName, width, height, icon, parentLay, this);
 }
 
 function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
-    let _outlinedButton = app.AddButton(
-        parentLay,
-        null,
-        width,
-        height,
-        "Custom,FontAwesome"
-    );
+    let _outlinedButton = app.AddButton(parentLay, null, width, height, "Custom,FontAwesome");
     _outlinedButton.SetFontFile(defaultFont);
     _outlinedButton.SetTextColor(outlinedBtnTxtClr.value);
 
@@ -1369,14 +1233,7 @@ function drawOutlinedBtn(btnName, width, height, icon, parentLay, outlineObj) {
         _outlinedButton.SetText(btnName);
     } else _outlinedButton.SetText(`[fa-${icon}]` + " " + btnName);
 
-    _outlinedButton.SetStyle(
-        outlinedBtnClr.value,
-        outlinedBtnClr.value,
-        20,
-        outline,
-        1,
-        0
-    );
+    _outlinedButton.SetStyle(outlinedBtnClr.value, outlinedBtnClr.value, 20, outline, 1, 0);
 
     outlinedBtnClr.subscribe((value) => {
         _outlinedButton.SetStyle(value, value, 20, outline, 1, 0);
@@ -1454,13 +1311,7 @@ function textButtonObject(btnName, width, height, icon, parentLay) {
 }
 
 function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
-    let _textButton = app.AddButton(
-        parentLay,
-        null,
-        width,
-        height,
-        "Custom,FontAwesome"
-    );
+    let _textButton = app.AddButton(parentLay, null, width, height, "Custom,FontAwesome");
     _textButton.SetFontFile(defaultFont);
     _textButton.SetTextColor(textBtnTxtClr.value);
 
@@ -1468,14 +1319,7 @@ function drawTextBtn(btnName, width, height, icon, parentLay, textBtnObj) {
         _textButton.SetText(btnName);
     } else _textButton.SetText(`[fa-${icon}]` + " " + btnName);
 
-    _textButton.SetStyle(
-        backgroundClr.value,
-        backgroundClr.value,
-        20,
-        null,
-        null,
-        0
-    );
+    _textButton.SetStyle(backgroundClr.value, backgroundClr.value, 20, null, null, 0);
 
     backgroundClr.subscribe((value) => {
         _textButton.SetStyle(value, value, 20, null, null, 0);
@@ -1497,13 +1341,8 @@ function fabObject(icon, parentLay) {
        If FillXY isnt being used notify dev
     */
 
-    if (
-        unpositionalLayout.includes(layoutType) ||
-        !layoutOptions.includes("FillXY")
-    ) {
-        warnDeveloper(
-            "FAB Component Only Used With Absolute Layouts\n With FillXY"
-        );
+    if (unpositionalLayout.includes(layoutType) || !layoutOptions.includes("FillXY")) {
+        warnDeveloper("FAB Component Only Used With Absolute Layouts\n With FillXY");
     } else fabContainer = drawFAB(icon, parentLay, this);
 }
 
@@ -1544,13 +1383,8 @@ function smallFABObject(icon, parentLay) {
         smallFabContainer.SetPosition(left, top);
     };
 
-    if (
-        unpositionalLayout.includes(layoutType) ||
-        !layoutOptions.includes("FillXY")
-    ) {
-        warnDeveloper(
-            "FAB Component Only Used With Absolute Layouts\n With FillXY"
-        );
+    if (unpositionalLayout.includes(layoutType) || !layoutOptions.includes("FillXY")) {
+        warnDeveloper("FAB Component Only Used With Absolute Layouts\n With FillXY");
     } else {
         smallFabContainer = drawSmallFab(icon, parentLay, this);
     }
@@ -1565,14 +1399,7 @@ function drawSmallFab(icon, parentLay, j) {
     _smallFab.SetTextSize(20, "dp");
     _smallFab.SetTextColor(_smallFabTxtClr.value);
     _smallFab.SetFontFile(defaultIcons);
-    _smallFab.SetStyle(
-        _smallFabClr.value,
-        _smallFabClr.value,
-        12,
-        null,
-        null,
-        0
-    );
+    _smallFab.SetStyle(_smallFabClr.value, _smallFabClr.value, 12, null, null, 0);
 
     _smallFabClr.subscribe((value) => {
         _smallFab.SetStyle(value, value, 12, null, null, 0);
@@ -1630,7 +1457,7 @@ function drawLargeFab(icon, parentLay, largefabOBj, largeFABObj) {
         _fabIcon.SetOnTouchDown(
             M(this, function () {
                 onTouch();
-            })
+            }),
         );
     };
 
@@ -1652,14 +1479,7 @@ function checkBoxListObject(list, checkDefinitions, width, height, parentLay) {
     if (!parentLay) {
         warnDeveloper("No Parent For CheckBox");
         return;
-    } else
-        checkbox = drawCheckBoxList(
-            list,
-            checkDefinitions,
-            width,
-            height,
-            parentLay
-        );
+    } else checkbox = drawCheckBoxList(list, checkDefinitions, width, height, parentLay);
 }
 
 function drawCheckBoxList(list, checkDefinitions, width, height, parentLay) {
@@ -1673,13 +1493,7 @@ function drawCheckBoxList(list, checkDefinitions, width, height, parentLay) {
 
     /* Just A Simple Template */
     singleCheckList = function (item, checkDefinition) {
-        let singleCheckLay = ui.createLayout(
-            "Linear",
-            null,
-            width,
-            height,
-            checkbox
-        );
+        let singleCheckLay = ui.createLayout("Linear", null, width, height, checkbox);
         let check = app.AddButton(singleCheckLay, null, null, null, "Custom");
         /* TODO */
     };
@@ -1704,7 +1518,7 @@ function drawBottomSheet(sheetLayout, height, options) {
                 cardLayout.RemoveChild(sheetLayout);
                 app.RemoveLayout(bottomSheet);
             },
-            210
+            210,
         );
     });
     bottomSheet.SetBackColor(scrim);
@@ -1733,7 +1547,7 @@ function drawBottomSheet(sheetLayout, height, options) {
                 cardLayout.RemoveChild(sheetLayout);
                 app.RemoveLayout(bottomSheet);
             },
-            210
+            210,
         );
     };
 }
@@ -1818,33 +1632,19 @@ function drawSwitchNoIcon(value, parent_Layout, switchObj) {
         M(this, function () {
             if (switchValue.value) {
                 switchValue.value = false;
-                handle.Tween(
-                    { x: 0.0, y: 0 },
-                    100,
-                    "Linear.None",
-                    0,
-                    false,
-                    () => {
-                        handle.Clear();
-                        handle.DrawCircle(0.52, 0.42, 0.3);
-                    }
-                );
+                handle.Tween({ x: 0.0, y: 0 }, 100, "Linear.None", 0, false, () => {
+                    handle.Clear();
+                    handle.DrawCircle(0.52, 0.42, 0.3);
+                });
             } else {
                 switchValue.value = true;
 
-                handle.Tween(
-                    { x: 0.05, y: 0 },
-                    100,
-                    "Linear.None",
-                    0,
-                    false,
-                    () => {
-                        handle.Clear();
-                        handle.DrawCircle(0.52, 0.42, 0.45);
-                    }
-                );
+                handle.Tween({ x: 0.05, y: 0 }, 100, "Linear.None", 0, false, () => {
+                    handle.Clear();
+                    handle.DrawCircle(0.52, 0.42, 0.45);
+                });
             }
-        })
+        }),
     );
 
     /* Also wont work in SetOnTouchDown */
@@ -1862,33 +1662,14 @@ function drawSwitchNoIcon(value, parent_Layout, switchObj) {
     return _switch;
 }
 
-function switchSettingsObject(
-    listOfSettings,
-    switchValues,
-    width,
-    height,
-    parentLay
-) {
+function switchSettingsObject(listOfSettings, switchValues, width, height, parentLay) {
     let _SwitchSettings;
     if (!parentLay) {
         warnDeveloper("No Parent To Swicth Settings.");
-    } else
-        _SwitchSettings = drawSwitchSettings(
-            listOfSettings,
-            switchValues,
-            width,
-            height,
-            parentLay
-        );
+    } else _SwitchSettings = drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay);
 }
 
-function drawSwitchSettings(
-    listOfSettings,
-    switchValues,
-    width,
-    height,
-    parentLay
-) {
+function drawSwitchSettings(listOfSettings, switchValues, width, height, parentLay) {
     /* Get No Of Switch Settings */
     if (!listOfSettings.includes(",")) {
         warnDeveloper("It seems like you didnt give a list.");
@@ -1902,45 +1683,21 @@ function drawSwitchSettings(
 
     /* Create A Template For A Single Setting */
 
-    let __SwitchTemplate = function (
-        headerValue,
-        descriptionValue,
-        boolSwitchValue
-    ) {
-        __layout = ui.createLayout(
-            "Linear",
-            "Left,Horizontal",
-            -1,
-            -1,
-            __SwicthListContainer
-        );
+    let __SwitchTemplate = function (headerValue, descriptionValue, boolSwitchValue) {
+        __layout = ui.createLayout("Linear", "Left,Horizontal", -1, -1, __SwicthListContainer);
         __layout.SetSize(dsUnitsToDp(width, "w"), 64, "dp");
         __layout.SetMargins(null, 0.01);
 
         if (descriptionValue) {
-            __headerText = app.AddText(
-                __layout,
-                null,
-                0.6,
-                -1,
-                "Left,Multiline"
-            );
-            __headerText.SetHtml(
-                `<b>${headerValue}</b><br>${descriptionValue}`
-            );
+            __headerText = app.AddText(__layout, null, 0.6, -1, "Left,Multiline");
+            __headerText.SetHtml(`<b>${headerValue}</b><br>${descriptionValue}`);
             __headerText.SetEllipsize("end");
             __headerText.SetMargins(8, 4, null, null, "dp");
             __headerText.SetTextColor(switchSettingTextClr.value);
             __headerText.SetFontFile(boldFont);
             __headerText.SetTextSize(15);
         } else {
-            __headerText = app.AddText(
-                __layout,
-                headerValue,
-                0.6,
-                -1,
-                "Left,Bold"
-            );
+            __headerText = app.AddText(__layout, headerValue, 0.6, -1, "Left,Bold");
             __headerText.SetMargins(8, 4, null, null, "dp");
             __headerText.SetEllipsize("end");
             __headerText.SetFontFile(boldFont);
@@ -1949,13 +1706,7 @@ function drawSwitchSettings(
         }
 
         _cardLayout = ui.addSwitch("noIcon", true, __layout);
-        _cardLayout.SetMargins(
-            dsUnitsToDp(width, "w") - dsUnitsToDp(0.7, "w") - 42,
-            8,
-            12,
-            8,
-            "dp"
-        );
+        _cardLayout.SetMargins(dsUnitsToDp(width, "w") - dsUnitsToDp(0.7, "w") - 42, 8, 12, 8, "dp");
     };
 
     switchSettingTextClr.subscribe((value) => {
@@ -1969,14 +1720,9 @@ function drawSwitchSettings(
             posOfBracket = listOfSettings.split(",")[i].indexOf("[");
             posOfLastBracket = listOfSettings.split(",")[i].indexOf("]");
 
-            headerValue = listOfSettings
-                .split(",")
-                [i].slice(0, posOfBracket)
-                .trim();
+            headerValue = listOfSettings.split(",")[i].slice(0, posOfBracket).trim();
 
-            descriptionValue = listOfSettings
-                .split(",")
-                [i].substring(posOfBracket + 1, posOfLastBracket);
+            descriptionValue = listOfSettings.split(",")[i].substring(posOfBracket + 1, posOfLastBracket);
 
             __SwitchTemplate(headerValue, descriptionValue);
         } else {
@@ -2040,12 +1786,7 @@ function mediumAppBarObject(title, leadingIcon, controlIcons, parentLay) {
         warnDeveloper("No Parent For App Bar");
         return;
     } else {
-        mediumBar = drawMediumAppBar(
-            title,
-            leadingIcon,
-            controlIcons,
-            parentLay
-        );
+        mediumBar = drawMediumAppBar(title, leadingIcon, controlIcons, parentLay);
     }
 }
 
@@ -2072,39 +1813,20 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
     innerContainer.SetSize(pxToDpConversion(DW()), 112, "dp");
 
     firstIcon = app.AddButton(innerContainer, leadingIcon, -1, -1, "Custom");
-    firstIcon.SetStyle(
-        appBarIconColor.value,
-        appBarIconColor.value,
-        radius,
-        null,
-        null,
-        0
-    );
+    firstIcon.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
     firstIcon.SetSize(40, 40, "dp");
 
     firstIcon.SetFontFile(defaultIcons);
     firstIcon.SetTextSize(20);
     firstIcon.SetTextColor(appBarTextsClr.value);
-    firstIcon.SetPosition(
-        dpToPxConversion(16),
-        dpToPxConversion(20),
-        null,
-        null,
-        "px"
-    );
+    firstIcon.SetPosition(dpToPxConversion(16), dpToPxConversion(20), null, null, "px");
 
     header = app.AddText(innerContainer, title, null, null, "Left");
     header.SetTextSize(24);
     header.SetFontFile(defaultFont);
 
     header.SetTextColor(appBarTextsClr.value);
-    header.SetPosition(
-        dpToPxConversion(20),
-        dpToPxConversion(64),
-        null,
-        null,
-        "px"
-    );
+    header.SetPosition(dpToPxConversion(20), dpToPxConversion(64), null, null, "px");
 
     if (noOfControlIcons < 2) {
         warnDeveloper("Must Have More Than 2 Icons On App Bar.");
@@ -2117,22 +1839,9 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
         let iconA = controlIcons.split(",")[1];
         let iconB = controlIcons.split(",")[0];
 
-        controlA = app.AddButton(
-            innerContainer,
-            iconA,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        controlA = app.AddButton(innerContainer, iconA, null, null, "Custom,NoPad");
         controlA.SetFontFile(defaultIcons);
-        controlA.SetStyle(
-            appBarIconColor.value,
-            appBarIconColor.value,
-            radius,
-            null,
-            null,
-            0
-        );
+        controlA.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
 
         controlA.SetTextColor(appBarTextsClr.value);
         controlA.SetPosition(
@@ -2140,27 +1849,14 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
             dpToPxConversion(20),
             null,
             null,
-            "px"
+            "px",
         );
         controlA.SetSize(40, 40, "dp");
         controlA.SetTextSize(20);
 
-        controlB = app.AddButton(
-            innerContainer,
-            iconB,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        controlB = app.AddButton(innerContainer, iconB, null, null, "Custom,NoPad");
         controlB.SetFontFile(defaultIcons);
-        controlB.SetStyle(
-            appBarIconColor.value,
-            appBarIconColor.value,
-            radius,
-            null,
-            null,
-            0
-        );
+        controlB.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
 
         controlB.SetTextColor(appBarTextsClr.value);
         controlB.SetPosition(
@@ -2168,7 +1864,7 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
             dpToPxConversion(20),
             null,
             null,
-            "px"
+            "px",
         );
         controlB.SetSize(40, 40, "dp");
         controlB.SetTextSize(20);
@@ -2179,22 +1875,9 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
         let iconB = controlIcons.split(",")[1];
         let iconC = controlIcons.split(",")[0];
 
-        controlA = app.AddButton(
-            innerContainer,
-            iconA,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        controlA = app.AddButton(innerContainer, iconA, null, null, "Custom,NoPad");
         controlA.SetFontFile(defaultIcons);
-        controlA.SetStyle(
-            appBarIconColor.value,
-            appBarIconColor.value,
-            radius,
-            null,
-            null,
-            0
-        );
+        controlA.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
 
         controlA.SetTextColor(appBarTextsClr.value);
         controlA.SetPosition(
@@ -2202,27 +1885,14 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
             dpToPxConversion(20),
             null,
             null,
-            "px"
+            "px",
         );
         controlA.SetSize(40, 40, "dp");
         controlA.SetTextSize(20);
 
-        controlB = app.AddButton(
-            innerContainer,
-            iconB,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        controlB = app.AddButton(innerContainer, iconB, null, null, "Custom,NoPad");
         controlB.SetFontFile(defaultIcons);
-        controlB.SetStyle(
-            appBarIconColor.value,
-            appBarIconColor.value,
-            radius,
-            null,
-            null,
-            0
-        );
+        controlB.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
 
         controlB.SetTextColor(appBarTextsClr.value);
         controlB.SetPosition(
@@ -2230,27 +1900,14 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
             dpToPxConversion(20),
             null,
             null,
-            "px"
+            "px",
         );
         controlB.SetSize(40, 40, "dp");
         controlB.SetTextSize(20);
 
-        controlC = app.AddButton(
-            innerContainer,
-            iconC,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        controlC = app.AddButton(innerContainer, iconC, null, null, "Custom,NoPad");
         controlC.SetFontFile(defaultIcons);
-        controlC.SetStyle(
-            appBarIconColor.value,
-            appBarIconColor.value,
-            radius,
-            null,
-            null,
-            0
-        );
+        controlC.SetStyle(appBarIconColor.value, appBarIconColor.value, radius, null, null, 0);
 
         controlC.SetTextColor(appBarTextsClr.value);
         controlC.SetPosition(
@@ -2258,25 +1915,17 @@ function drawMediumAppBar(title, leadingIcon, controlIcons, parentLay) {
             dpToPxConversion(20),
             null,
             null,
-            "px"
+            "px",
         );
         controlC.SetSize(40, 40, "dp");
         controlC.SetTextSize(20);
     }
 
     scroller = app.AddScroller(mediumBar, null, null, "NoScrollBar");
-    scroller.SetSize(
-        pxToDpConversion(DW()),
-        pxToDpConversion(DH()) - 112,
-        "dp"
-    );
+    scroller.SetSize(pxToDpConversion(DW()), pxToDpConversion(DH()) - 112, "dp");
 
     contentContainer = ui.createLayout("Linear", null, null, null);
-    contentContainer.SetSize(
-        pxToDpConversion(DW()),
-        pxToDpConversion(DH()) - 112,
-        "dp"
-    );
+    contentContainer.SetSize(pxToDpConversion(DW()), pxToDpConversion(DH()) - 112, "dp");
     scroller.AddChild(contentContainer);
 
     /**
@@ -2323,23 +1972,11 @@ function centerAlignedAppBarObj(title, leadingIcon, controlIcons, parentLay) {
     if (!parentLay) {
         warnDeveloper("No Parent For App Bar.");
     } else {
-        barCardLay = drawAppBar(
-            title,
-            leadingIcon,
-            controlIcons,
-            parentLay,
-            this
-        );
+        barCardLay = drawAppBar(title, leadingIcon, controlIcons, parentLay, this);
     }
 }
 
-function drawAppBar(
-    title,
-    leadingIcon,
-    controlIcons,
-    parentLay,
-    appBarContainerObj
-) {
+function drawAppBar(title, leadingIcon, controlIcons, parentLay, appBarContainerObj) {
     barCardLay = app.AddLayout(parentLay, "Card");
     barCardLay.SetSize(DW(), dpToPxConversion(64), "px");
 
@@ -2353,14 +1990,7 @@ function drawAppBar(
 
     _leftIcon = app.AddButton(barUi, leadingIcon, null, null, "Custom, Lego");
     _leftIcon.SetSize(144, 144, "px");
-    _leftIcon.SetStyle(
-        appBarTextsClr.value,
-        appBarTextsClr.value,
-        _IconRadius,
-        null,
-        null,
-        0
-    );
+    _leftIcon.SetStyle(appBarTextsClr.value, appBarTextsClr.value, _IconRadius, null, null, 0);
     _leftIcon.SetMargins(48, 24, pxToDpConversion(DW()) - 190, null, "px");
 
     _leftIcon.SetFontFile(defaultIcons);
@@ -2380,14 +2010,7 @@ function drawAppBar(
 
     _rightIcon = app.AddButton(barUi, controlIcons, null, null, "Custom, Lego");
     _rightIcon.SetMargins(pxToDpConversion(DW()) - 240, 24, 30, null, "px");
-    _rightIcon.SetStyle(
-        appBarTextsClr.value,
-        appBarTextsClr.value,
-        _IconRadius,
-        null,
-        null,
-        0
-    );
+    _rightIcon.SetStyle(appBarTextsClr.value, appBarTextsClr.value, _IconRadius, null, null, 0);
     _rightIcon.SetSize(144, 144, "px");
     _rightIcon.SetTextSize(72, "px");
 
@@ -2427,34 +2050,17 @@ function smallAppBarObject(title, leadingIcon, controlIcons, parentLay) {
     };
     if (!parentLay) {
         warnDeveloper();
-    } else
-        smallAppBar = drawSmallAppBar(
-            title,
-            leadingIcon,
-            controlIcons,
-            parentLay,
-            this
-        );
+    } else smallAppBar = drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, this);
 }
 
-function drawSmallAppBar(
-    title,
-    leadingIcon,
-    controlIcons,
-    parentLay,
-    smallAbpObj
-) {
+function drawSmallAppBar(title, leadingIcon, controlIcons, parentLay, smallAbpObj) {
     let smallAppBar, noOfControlIcons;
 
     smallAppBar = app.AddLayout(parentLay, "Card");
     smallAppBar.SetBackColor(smallAppBarClr.value);
     smallAppBar.SetSize(pxToDpConversion(DW()), 64, "dp");
 
-    let linearBarLayout = app.AddLayout(
-        smallAppBar,
-        "Linear",
-        "Horizontal,Left"
-    );
+    let linearBarLayout = app.AddLayout(smallAppBar, "Linear", "Horizontal,Left");
 
     if (controlIcons == null) {
         noOfControlIcons = nil;
@@ -2464,21 +2070,8 @@ function drawSmallAppBar(
 
     let IconRadius = (50 / 100) * 144;
 
-    let firstIcon = app.AddButton(
-        linearBarLayout,
-        leadingIcon,
-        null,
-        null,
-        "Custom"
-    );
-    firstIcon.SetStyle(
-        smallAppBarClr.value,
-        smallAppBarClr.value,
-        IconRadius,
-        null,
-        null,
-        0
-    );
+    let firstIcon = app.AddButton(linearBarLayout, leadingIcon, null, null, "Custom");
+    firstIcon.SetStyle(smallAppBarClr.value, smallAppBarClr.value, IconRadius, null, null, 0);
     firstIcon.SetFontFile(defaultIcons);
     firstIcon.SetMargins(16, 24, null, null, "px");
     firstIcon.SetSize(144, 144, "px");
@@ -2486,13 +2079,7 @@ function drawSmallAppBar(
     firstIcon.SetTextColor(smallAppBarIconClr.value);
 
     let header = app.AddText(linearBarLayout, title, -1, -1);
-    header.SetMargins(
-        16,
-        pxToDpConversion(40),
-        null,
-        pxToDpConversion(30),
-        "dp"
-    );
+    header.SetMargins(16, pxToDpConversion(40), null, pxToDpConversion(30), "dp");
 
     header.SetTextSize(24, "dp");
     header.SetTextColor(smallAppBarIconClr.value);
@@ -2531,26 +2118,9 @@ function drawSmallAppBar(
         if (i < controlIconNames.length) {
             let icon = controlIconNames[i];
 
-            let controlIcon = app.AddButton(
-                linearBarLayout,
-                icon,
-                null,
-                null,
-                "Custom"
-            );
-            controlIcon.SetStyle(
-                smallAppBarClr.value,
-                smallAppBarClr.value,
-                IconRadius,
-                null,
-                null,
-                0
-            );
-            controlIcon.SetSize(
-                dpToPxConversion(48),
-                dpToPxConversion(48),
-                "px"
-            );
+            let controlIcon = app.AddButton(linearBarLayout, icon, null, null, "Custom");
+            controlIcon.SetStyle(smallAppBarClr.value, smallAppBarClr.value, IconRadius, null, null, 0);
+            controlIcon.SetSize(dpToPxConversion(48), dpToPxConversion(48), "px");
             controlIcon.SetTextSize(72, "px");
             controlIcon.SetMargins(controlMargins(), 8, null, null, "dp");
 
@@ -2589,10 +2159,7 @@ function bottomBarObject(barPropsInjson, parentLay) {
     };
 
     if (unpositionalLayout.includes(layoutType)) {
-        warnDeveloper(
-            "BottomAppBar Cannot Be Set On A Linear Layout",
-            "Change To Absolute Layout"
-        );
+        warnDeveloper("BottomAppBar Cannot Be Set On A Linear Layout", "Change To Absolute Layout");
         return;
     } else {
         bottomBarContainer = drawBottomBar(barPropsInjson, parentLay, this);
@@ -2813,29 +2380,11 @@ function searchBarObject(leadingIcon, trailingIcon, hint, width, parentLayout) {
         //.SetMargins(left, top, right, bottom, mode);
     };
     if (parentLayout) {
-        drawSearchBar(
-            leadingIcon,
-            trailingIcon,
-            hint,
-            width,
-            parentLayout,
-            this
-        );
-    } else
-        warnDeveloper(
-            "You didnt add a parent to the search component",
-            "Add parent To SearchBar"
-        );
+        drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, this);
+    } else warnDeveloper("You didnt add a parent to the search component", "Add parent To SearchBar");
 }
 
-function drawSearchBar(
-    leadingIcon,
-    trailingIcon,
-    hint,
-    width,
-    parentLayout,
-    searchObj
-) {
+function drawSearchBar(leadingIcon, trailingIcon, hint, width, parentLayout, searchObj) {
     const imageFileTypes = ["jpg", "png", "jpeg", "ico", "tiff"];
 
     const searchBarType = (trailingIcon) => {
@@ -2885,25 +2434,15 @@ function drawSearchBar(
             drawSearchWithAvatar();
             break;
         case "WithTwoIcons":
-            drawSearchWithTwoIcons(
-                searchType.firstTrailingIcon,
-                searchType.secondTrailingIcon
-            );
+            drawSearchWithTwoIcons(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
             break;
         case "WithAvatar&Icon":
-            drawSearchWithAvatarIcon(
-                searchType.firstTrailingIcon,
-                searchType.secondTrailingIcon
-            );
+            drawSearchWithAvatarIcon(searchType.firstTrailingIcon, searchType.secondTrailingIcon);
             break;
     }
 
     function drawSearchWithIcon() {
-        let _search,
-            _searchContainer,
-            _leadingIcon,
-            _searchInput,
-            _trailingIcon;
+        let _search, _searchContainer, _leadingIcon, _searchInput, _trailingIcon;
 
         let _iconRadius = (50 / 100) * 34;
         let _searchBarWidth = function () {
@@ -2912,7 +2451,7 @@ function drawSearchBar(
                     `SearchBar Width Cant Be Less Than \n
                 0.4 dsUnits or 144 dp.\n
                 So Have Been Set To 0.4 !`,
-                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log"
+                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log",
                 );
                 return 144;
             } else {
@@ -2928,34 +2467,15 @@ function drawSearchBar(
         _search.SetBackColor(searchBarClr.value);
 
         _searchContainer = app.AddLayout(_search, "Linear", "Horizontal,Left");
-        _leadingIcon = app.AddButton(
-            _searchContainer,
-            leadingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, "Custom,Lego");
         _leadingIcon.SetSize(34, 34, "dp");
         _leadingIcon.SetTextSize(24);
         _leadingIcon.SetTextColor(searchBarTextClr.value);
-        _leadingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _leadingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _leadingIcon.SetFontFile(defaultIcons);
         _leadingIcon.SetMargins(16, 13, 16, null, "dp");
 
-        _searchInput = app.AddTextEdit(
-            _searchContainer,
-            "",
-            null,
-            null,
-            "Singleline,Left"
-        );
+        _searchInput = app.AddTextEdit(_searchContainer, "", null, null, "Singleline,Left");
         _searchInput.SetBackColor(searchBarClr.value);
         _searchInput.SetMargins(null, 8, null, null, "dp");
         _searchInput.SetSize(_searchInputWidth(), -1, "dp");
@@ -2965,24 +2485,11 @@ function drawSearchBar(
             _searchInput.SetHint(hint);
         }
 
-        _trailingIcon = app.AddButton(
-            _searchContainer,
-            trailingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _trailingIcon = app.AddButton(_searchContainer, trailingIcon, null, null, "Custom,Lego");
         _trailingIcon.SetSize(34, 34, "dp");
         _trailingIcon.SetTextSize(24);
         _trailingIcon.SetTextColor(searchBarTextClr.value);
-        _trailingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _trailingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _trailingIcon.SetFontFile(defaultIcons);
         _trailingIcon.SetMargins(16, 13, 16, null, "dp");
 
@@ -3020,12 +2527,7 @@ function drawSearchBar(
     }
 
     function drawSearchWithAvatar() {
-        let _search,
-            _searchContainer,
-            _leadingIcon,
-            _searchInput,
-            _trailingIcon,
-            _trailingLay;
+        let _search, _searchContainer, _leadingIcon, _searchInput, _trailingIcon, _trailingLay;
 
         let _iconRadius = (50 / 100) * 34;
         let _searchBarWidth = function () {
@@ -3034,7 +2536,7 @@ function drawSearchBar(
                     `SearchBar Width Cant Be Less Than \n
                 0.4 dsUnits or 144 dp.\n
                 So Have Been Set To 0.4 !`,
-                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log"
+                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log",
                 );
                 return 144;
             } else {
@@ -3050,34 +2552,15 @@ function drawSearchBar(
         _search.SetBackColor(searchBarClr.value);
 
         _searchContainer = app.AddLayout(_search, "Linear", "Horizontal,Left");
-        _leadingIcon = app.AddButton(
-            _searchContainer,
-            leadingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, "Custom,Lego");
         _leadingIcon.SetSize(34, 34, "dp");
         _leadingIcon.SetTextSize(24);
         _leadingIcon.SetTextColor(searchBarTextClr.value);
-        _leadingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _leadingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _leadingIcon.SetFontFile(defaultIcons);
         _leadingIcon.SetMargins(16, 13, 16, null, "dp");
 
-        _searchInput = app.AddTextEdit(
-            _searchContainer,
-            "",
-            null,
-            null,
-            "Singleline,Left"
-        );
+        _searchInput = app.AddTextEdit(_searchContainer, "", null, null, "Singleline,Left");
         _searchInput.SetBackColor(searchBarClr.value);
         _searchInput.SetMargins(null, 8, null, null, "dp");
         _searchInput.SetSize(_searchInputWidth(), -1, "dp");
@@ -3089,21 +2572,12 @@ function drawSearchBar(
 
         //Check If Image File Exists And If Not Dont Procced
         if (!app.FileExists(trailingIcon)) {
-            warnDeveloper(
-                `The Avatar ${trailingIcon}, Does Not Exist`,
-                "Search Avatar Not Found"
-            );
+            warnDeveloper(`The Avatar ${trailingIcon}, Does Not Exist`, "Search Avatar Not Found");
             return;
         } else {
             _trailingLay = app.AddLayout(_searchContainer, "Card");
             _trailingLay.SetCornerRadius(15);
-            _trailingIcon = app.AddImage(
-                _trailingLay,
-                trailingIcon,
-                null,
-                null,
-                "async"
-            );
+            _trailingIcon = app.AddImage(_trailingLay, trailingIcon, null, null, "async");
             _trailingIcon.SetSize(30, 30, "dp");
             _trailingLay.SetMargins(16, 13, 16, null, "dp");
         }
@@ -3139,12 +2613,7 @@ function drawSearchBar(
     }
 
     function drawSearchWithTwoIcons(firstTrailingIcon, secondTrailingIcon) {
-        let _search,
-            _searchContainer,
-            _leadingIcon,
-            _searchInput,
-            _firstTrailingIcon,
-            _secondTrailingIcon;
+        let _search, _searchContainer, _leadingIcon, _searchInput, _firstTrailingIcon, _secondTrailingIcon;
         let _iconRadius = (50 / 100) * 34;
         let _searchBarWidth = function () {
             if (dsUnitsToDp(width, "w") < 144) {
@@ -3152,7 +2621,7 @@ function drawSearchBar(
                     `SearchBar Width Cant Be Less Than \n
                 0.4 dsUnits or 144 dp.\n
                 So Have Been Set To 0.4 !`,
-                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log"
+                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log",
                 );
                 return 144;
             } else {
@@ -3169,34 +2638,15 @@ function drawSearchBar(
         _search.SetBackColor(searchBarClr.value);
 
         _searchContainer = app.AddLayout(_search, "Linear", "Horizontal,Left");
-        _leadingIcon = app.AddButton(
-            _searchContainer,
-            leadingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, "Custom,Lego");
         _leadingIcon.SetSize(34, 34, "dp");
         _leadingIcon.SetTextSize(24);
         _leadingIcon.SetTextColor(searchBarTextClr.value);
-        _leadingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _leadingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _leadingIcon.SetFontFile(defaultIcons);
         _leadingIcon.SetMargins(16, 13, 16, null, "dp");
 
-        _searchInput = app.AddTextEdit(
-            _searchContainer,
-            "",
-            null,
-            null,
-            "Singleline,Left"
-        );
+        _searchInput = app.AddTextEdit(_searchContainer, "", null, null, "Singleline,Left");
         _searchInput.SetBackColor(searchBarClr.value);
         _searchInput.SetMargins(null, 8, null, null, "dp");
         _searchInput.SetSize(_searchInputWidth(), -1, "dp");
@@ -3206,13 +2656,7 @@ function drawSearchBar(
             _searchInput.SetHint(hint);
         }
 
-        _firstTrailingIcon = app.AddButton(
-            _searchContainer,
-            firstTrailingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _firstTrailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, "Custom,Lego");
         _firstTrailingIcon.SetSize(34, 34, "dp");
         _firstTrailingIcon.SetTextSize(24);
         _firstTrailingIcon.SetTextColor(searchBarTextClr.value);
@@ -3222,18 +2666,12 @@ function drawSearchBar(
             _iconRadius,
             null,
             null,
-            0
+            0,
         );
         _firstTrailingIcon.SetFontFile(defaultIcons);
         _firstTrailingIcon.SetMargins(16, 13, 8, null, "dp");
 
-        _secondTrailingIcon = app.AddButton(
-            _searchContainer,
-            secondTrailingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _secondTrailingIcon = app.AddButton(_searchContainer, secondTrailingIcon, null, null, "Custom,Lego");
         _secondTrailingIcon.SetSize(34, 34, "dp");
         _secondTrailingIcon.SetTextSize(24);
         _secondTrailingIcon.SetTextColor(searchBarTextClr.value);
@@ -3243,7 +2681,7 @@ function drawSearchBar(
             _iconRadius,
             null,
             null,
-            0
+            0,
         );
         _secondTrailingIcon.SetFontFile(defaultIcons);
         _secondTrailingIcon.SetMargins(null, 13, 16, null, "dp");
@@ -3274,22 +2712,8 @@ function drawSearchBar(
 
         searchBarIconClr.subscribe((value) => {
             _leadingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
-            _firstTrailingIcon.SetStyle(
-                value,
-                value,
-                _iconRadius,
-                null,
-                null,
-                0
-            );
-            _secondTrailingIcon.SetStyle(
-                value,
-                value,
-                _iconRadius,
-                null,
-                null,
-                0
-            );
+            _firstTrailingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
+            _secondTrailingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
         });
 
         searchBarTextClr.subscribe((value) => {
@@ -3311,7 +2735,7 @@ function drawSearchBar(
                     `SearchBar Width Cant Be Less Than \n
                 0.4 dsUnits or 144 dp.\n
                 So Have Been Set To 0.4 !`,
-                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log"
+                    "SearchBar Width Cant Be Less Than 0.4. Check Debug Log",
                 );
                 return 144;
             } else {
@@ -3328,34 +2752,15 @@ function drawSearchBar(
         _search.SetBackColor(searchBarClr.value);
 
         _searchContainer = app.AddLayout(_search, "Linear", "Horizontal,Left");
-        _leadingIcon = app.AddButton(
-            _searchContainer,
-            leadingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _leadingIcon = app.AddButton(_searchContainer, leadingIcon, null, null, "Custom,Lego");
         _leadingIcon.SetSize(34, 34, "dp");
         _leadingIcon.SetTextSize(24);
         _leadingIcon.SetTextColor(searchBarTextClr.value);
-        _leadingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _leadingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _leadingIcon.SetFontFile(defaultIcons);
         _leadingIcon.SetMargins(16, 13, 16, null, "dp");
 
-        _searchInput = app.AddTextEdit(
-            _searchContainer,
-            "",
-            null,
-            null,
-            "Singleline,Left"
-        );
+        _searchInput = app.AddTextEdit(_searchContainer, "", null, null, "Singleline,Left");
         _searchInput.SetBackColor(searchBarClr.value);
         _searchInput.SetMargins(null, 8, null, null, "dp");
         _searchInput.SetSize(_searchInputWidth(), -1, "dp");
@@ -3365,36 +2770,17 @@ function drawSearchBar(
             _searchInput.SetHint(hint);
         }
 
-        _trailingIcon = app.AddButton(
-            _searchContainer,
-            firstTrailingIcon,
-            null,
-            null,
-            "Custom,Lego"
-        );
+        _trailingIcon = app.AddButton(_searchContainer, firstTrailingIcon, null, null, "Custom,Lego");
         _trailingIcon.SetSize(34, 34, "dp");
         _trailingIcon.SetTextSize(24);
         _trailingIcon.SetTextColor(searchBarTextClr.value);
-        _trailingIcon.SetStyle(
-            searchBarIconClr.value,
-            searchBarIconClr.value,
-            _iconRadius,
-            null,
-            null,
-            0
-        );
+        _trailingIcon.SetStyle(searchBarIconClr.value, searchBarIconClr.value, _iconRadius, null, null, 0);
         _trailingIcon.SetFontFile(defaultIcons);
         _trailingIcon.SetMargins(16, 13, 8, null, "dp");
 
         _avatarLay = app.AddLayout(_searchContainer, "Card");
         _avatarLay.SetCornerRadius(15);
-        _avatarIcon = app.AddImage(
-            _avatarLay,
-            secondTrailingIcon,
-            null,
-            null,
-            "async"
-        );
+        _avatarIcon = app.AddImage(_avatarLay, secondTrailingIcon, null, null, "async");
         _avatarIcon.SetSize(30, 30, "dp");
         _avatarLay.SetMargins(0, 13, 16, null, "dp");
 
@@ -3426,35 +2812,14 @@ function drawSearchBar(
 
         searchBarIconClr.subscribe((value) => {
             _leadingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
-            _firstTrailingIcon.SetStyle(
-                value,
-                value,
-                _iconRadius,
-                null,
-                null,
-                0
-            );
-            _secondTrailingIcon.SetStyle(
-                value,
-                value,
-                _iconRadius,
-                null,
-                null,
-                0
-            );
+            _firstTrailingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
+            _secondTrailingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
         });
 
         searchBarTextClr.subscribe((value) => {
             _leadingIcon.SetTextColor(value);
             _firstTrailingIcon.SetTextColor(value);
-            _secondTrailingIcon.SetStyle(
-                value,
-                value,
-                _iconRadius,
-                null,
-                null,
-                0
-            );
+            _secondTrailingIcon.SetStyle(value, value, _iconRadius, null, null, 0);
         });
 
         searchBarInputTextClr.subscribe((value) => {
@@ -3483,13 +2848,7 @@ function secTabObject(listOfTabs, width, height, options, parentLay) {
     if (!parentLay) {
         warnDeveloper("No Parent To Tab", "No Parent To Tab");
     } else {
-        _secondaryTab = drawSecondaryTabs(
-            listOfTabs,
-            width,
-            height,
-            options,
-            parentLay
-        );
+        _secondaryTab = drawSecondaryTabs(listOfTabs, width, height, options, parentLay);
     }
 }
 
@@ -3503,8 +2862,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
     const noOfTabs = (listOfTabs) => {
         if (__tabCount >= 1 && __tabCount <= 3) {
             __firstTab = listOfTabs.split(",")[0];
-            (__secondTab = listOfTabs.split(",")[1]),
-                (__thirdTab = listOfTabs.split(",")[2]);
+            (__secondTab = listOfTabs.split(",")[1]), (__thirdTab = listOfTabs.split(",")[2]);
         } else {
             warnDeveloper(`You must have 2 or more tabs`);
             return;
@@ -3521,11 +2879,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
     __secondaryTab.SetSize(pxToDpConversion(DW()), 48, "dp");
     __secondaryTab.SetBackColor(secondaryTabClr.value);
 
-    let __secTabInnerTab = app.AddLayout(
-        __secondaryTab,
-        "Absolute",
-        "Vertical,Left"
-    );
+    let __secTabInnerTab = app.AddLayout(__secondaryTab, "Absolute", "Vertical,Left");
     __secTabInnerTab.SetSize(pxToDpConversion(DW()), 48, "dp");
     __secTabInnerTab.SetBackColor(secondaryTabClr.value);
 
@@ -3540,42 +2894,16 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             __firstTabActive = true;
         }
 
-        let __firstTabBtn = app.AddButton(
-            __secTabInnerLay,
-            __firstTab,
-            null,
-            null,
-            "Custom"
-        );
+        let __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab, null, null, "Custom");
         __firstTabBtn.SetTextColor(secondaryTabTxtClr.value);
-        __firstTabBtn.SetStyle(
-            secondaryTabClr.value,
-            secondaryTabClr.value,
-            0,
-            null,
-            null,
-            0
-        );
+        __firstTabBtn.SetStyle(secondaryTabClr.value, secondaryTabClr.value, 0, null, null, 0);
 
         __firstTabBtn.SetSize(pxToDpConversion(DW()) / 2, 46, "dp");
         __firstTabBtn.SetMargins(0, 0, 0);
 
-        __secondTabBtn = app.AddButton(
-            __secTabInnerLay,
-            __secondTab,
-            0.5,
-            -1,
-            "NoPad,Custom"
-        );
+        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, 0.5, -1, "NoPad,Custom");
         __secondTabBtn.SetTextColor(secondaryTabTxtClr.value);
-        __secondTabBtn.SetStyle(
-            secondaryTabClr.value,
-            secondaryTabClr.value,
-            0,
-            null,
-            null,
-            0
-        );
+        __secondTabBtn.SetStyle(secondaryTabClr.value, secondaryTabClr.value, 0, null, null, 0);
 
         __secondTabBtn.SetSize(pxToDpConversion(DW()) / 2, 46, "dp");
 
@@ -3595,14 +2923,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             else {
                 if (__firstTabActive === true && x === undefined)
                     lightStrip.Tween(tweenValues(), 250, linTween, false, null);
-                else
-                    lightStrip.Tween(
-                        tweenValues(),
-                        350,
-                        qaudTween,
-                        false,
-                        null
-                    );
+                else lightStrip.Tween(tweenValues(), 350, qaudTween, false, null);
             }
         };
 
@@ -3626,18 +2947,14 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
 
         /* Add Tab Specific Layouts */
 
-        __secondaryLayJacket = app.AddLayout(
-            __secondaryMain,
-            "Frame",
-            "Horizontal"
-        );
+        __secondaryLayJacket = app.AddLayout(__secondaryMain, "Frame", "Horizontal");
 
         __firstTabLay = ui.createLayout(
             layoutType,
             options,
             width,
             height - dpToDsUnit(48, "h"),
-            __secondaryLayJacket
+            __secondaryLayJacket,
         );
 
         __secondTabLay = ui.createLayout(
@@ -3645,7 +2962,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             options,
             width,
             height - dpToDsUnit(48, "h"),
-            __secondaryLayJacket
+            __secondaryLayJacket,
         );
 
         /* If firstTabActive first layout shows and vice versa */
@@ -3654,11 +2971,9 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             if (x) __firstTabLay.Show() || __secondTabLay.Hide();
             else {
                 if (__firstTabActive === true && x === undefined) {
-                    __firstTabLay.Animate("SlideFromLeft", null, 350) ||
-                        __secondTabLay.Hide();
+                    __firstTabLay.Animate("SlideFromLeft", null, 350) || __secondTabLay.Hide();
                 } else {
-                    __firstTabLay.Hide() ||
-                        __secondTabLay.Animate("SlideFromRight", null, 350);
+                    __firstTabLay.Hide() || __secondTabLay.Animate("SlideFromRight", null, 350);
                 }
             }
         };
@@ -3673,13 +2988,11 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             if (__firstTabActive && index == 0) return;
             if (index == 0) {
                 __firstTabActive = true;
-                __secondTabLay.Hide() ||
-                    __firstTabLay.Animate("SlideFromLeft", null, 350);
+                __secondTabLay.Hide() || __firstTabLay.Animate("SlideFromLeft", null, 350);
             }
             if (index == 1) {
                 __firstTabActive = false;
-                __firstTabLay.Hide() ||
-                    __secondTabLay.Animate("SlideFromLeft", null, 350);
+                __firstTabLay.Hide() || __secondTabLay.Animate("SlideFromLeft", null, 350);
             }
             lightStripPower();
         };
@@ -3704,59 +3017,20 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             __firstTabActive = 0;
         }
 
-        __firstTabBtn = app.AddButton(
-            __secTabInnerLay,
-            __firstTab,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        __firstTabBtn = app.AddButton(__secTabInnerLay, __firstTab, null, null, "Custom,NoPad");
         __firstTabBtn.SetTextColor(secondaryTabTxtClr.value);
-        __firstTabBtn.SetStyle(
-            secondaryTabClr.value,
-            secondaryTabClr.value,
-            0,
-            null,
-            null,
-            0
-        );
+        __firstTabBtn.SetStyle(secondaryTabClr.value, secondaryTabClr.value, 0, null, null, 0);
         __firstTabBtn.SetSize(pxToDpConversion(DW()) / 3, 46, "dp");
         __firstTabBtn.SetMargins(0, 0, 0);
 
-        __secondTabBtn = app.AddButton(
-            __secTabInnerLay,
-            __secondTab,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        __secondTabBtn = app.AddButton(__secTabInnerLay, __secondTab, null, null, "Custom,NoPad");
         __secondTabBtn.SetTextColor(secondaryTabTxtClr.value);
-        __secondTabBtn.SetStyle(
-            secondaryTabClr.value,
-            secondaryTabClr.value,
-            0,
-            null,
-            null,
-            0
-        );
+        __secondTabBtn.SetStyle(secondaryTabClr.value, secondaryTabClr.value, 0, null, null, 0);
         __secondTabBtn.SetSize(pxToDpConversion(DW()) / 3, 46, "dp");
 
-        __thirdTabBtn = app.AddButton(
-            __secTabInnerLay,
-            __thirdTab,
-            null,
-            null,
-            "Custom,NoPad"
-        );
+        __thirdTabBtn = app.AddButton(__secTabInnerLay, __thirdTab, null, null, "Custom,NoPad");
         __thirdTabBtn.SetTextColor(secondaryTabTxtClr.value);
-        __thirdTabBtn.SetStyle(
-            secondaryTabClr.value,
-            secondaryTabClr.value,
-            0,
-            null,
-            null,
-            0
-        );
+        __thirdTabBtn.SetStyle(secondaryTabClr.value, secondaryTabClr.value, 0, null, null, 0);
         __thirdTabBtn.SetSize(pxToDpConversion(DW()) / 3, 46, "dp");
 
         lightStrip = app.AddText(__secTabInnerTab, "", null, null);
@@ -3775,24 +3049,11 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             if (x) lightStrip.SetPosition(0, dpToDsUnit(46), null, null);
             else {
                 if (__firstTabActive === 0 && x === undefined) {
-                    lightStrip.Tween(
-                        tweenValues(),
-                        250,
-                        qaudTween,
-                        false,
-                        null
-                    );
+                    lightStrip.Tween(tweenValues(), 250, qaudTween, false, null);
                 }
                 if (__firstTabActive === 1) {
                     lightStrip.Tween(tweenValues(), 250, linTween, false, null);
-                } else
-                    lightStrip.Tween(
-                        tweenValues(),
-                        250,
-                        qaudTween,
-                        false,
-                        null
-                    );
+                } else lightStrip.Tween(tweenValues(), 250, qaudTween, false, null);
             }
         };
 
@@ -3818,18 +3079,14 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
 
         /* Add Tab Specific Layouts */
 
-        __secondaryLayJacket = app.AddLayout(
-            __secondaryMain,
-            "Frame",
-            "Horizontal"
-        );
+        __secondaryLayJacket = app.AddLayout(__secondaryMain, "Frame", "Horizontal");
 
         __firstTabLay = ui.createLayout(
             layoutType,
             options,
             width,
             height - dpToDsUnit(48, "h"),
-            __secondaryLayJacket
+            __secondaryLayJacket,
         );
 
         __secondTabLay = ui.createLayout(
@@ -3837,7 +3094,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             options,
             width,
             height - dpToDsUnit(48, "h"),
-            __secondaryLayJacket
+            __secondaryLayJacket,
         );
 
         __thirdTabLay = ui.createLayout(
@@ -3845,7 +3102,7 @@ function drawSecondaryTabs(listOfTabs, width, height, options, parentLay) {
             options,
             width,
             height - dpToDsUnit(48, "h"),
-            __secondaryLayJacket
+            __secondaryLayJacket,
         );
 
         /* If firstTabActive first layout shows and vice versa */
@@ -3967,34 +3224,15 @@ function SnackBarObject(text, btnAction, width, alignment) {
     this.Show = function () {
         snackContainer = M(
             null,
-            drawSnackBarUi(
-                text,
-                btnAction,
-                width,
-                alignment,
-                this.onTouch,
-                this.timeout,
-                this.top
-            )
+            drawSnackBarUi(text, btnAction, width, alignment, this.onTouch, this.timeout, this.top),
         );
     };
 }
 
-function drawSnackBarUi(
-    text,
-    btnAction,
-    width,
-    alignment,
-    onTouch,
-    timeout,
-    top
-) {
+function drawSnackBarUi(text, btnAction, width, alignment, onTouch, timeout, top) {
     let snackUi;
 
-    snackContainer = app.CreateLayout(
-        "Linear",
-        alignment + ",FillXY,TouchThrough,Center"
-    );
+    snackContainer = app.CreateLayout("Linear", alignment + ",FillXY,TouchThrough,Center");
     snackUi = app.CreateLayout("Card", "");
 
     snackContainer.AddChild(snackUi);
@@ -4010,24 +3248,14 @@ function drawSnackBarUi(
     box.SetSize(width, 0.065);
     snackUi.AddChild(box);
 
-    let snackText = app.CreateText(
-        text,
-        null,
-        null,
-        "Multiline,AutoScale,VCenter"
-    );
+    let snackText = app.CreateText(text, null, null, "Multiline,AutoScale,VCenter");
     snackText.SetTextColor("black");
     snackText.SetMargins(0.055, 0.018, 0.055, 0.01);
     snackText.SetFontFile(defaultFont);
     snackText.SetTextSize(16);
     box.AddChild(snackText);
 
-    let snackButton = app.CreateText(
-        btnAction,
-        null,
-        null,
-        "VCenter,FillXY,AutoScale,Wrap,Right"
-    );
+    let snackButton = app.CreateText(btnAction, null, null, "VCenter,FillXY,AutoScale,Wrap,Right");
     snackButton.SetMargins(null, null, 16, null, "dp");
     snackButton.SetTextSize(16);
     snackButton.SetFontFile(defaultFont);
@@ -4074,9 +3302,7 @@ function progressObject(progressType, width, parentLay) {
     this.SetValue = function (value) {
         this.value = value;
         //
-        _progressIndicator.SetSize(
-            M(progressContainer, parseFloat(value / 100), 0.05)
-        );
+        _progressIndicator.SetSize(M(progressContainer, parseFloat(value / 100), 0.05));
     };
 
     this.HideContainer = function () {
@@ -4104,10 +3330,7 @@ function progressObject(progressType, width, parentLay) {
 function drawProgressBar(progressType, width, parentLay, progressObj) {
     if (progressType === "linear") {
         let trackColor = "#E6E0E9";
-        progressContainer = app.CreateLayout(
-            "Linear",
-            "Horizontal,Left,FillXY"
-        );
+        progressContainer = app.CreateLayout("Linear", "Horizontal,Left,FillXY");
         progressContainer.SetSize(width, 0.005);
         _progressIndicator = app.AddText(progressContainer, "");
 
@@ -4125,19 +3348,10 @@ function drawProgressBar(progressType, width, parentLay, progressObj) {
     }
 
     if (progressType === "linearIntermediate") {
-        progressContainer = app.CreateLayout(
-            "Linear",
-            "Horizontal,Left,FillXY"
-        );
+        progressContainer = app.CreateLayout("Linear", "Horizontal,Left,FillXY");
         progressContainer.SetSize(width, 0.005);
 
-        _progressIndicator = app.AddText(
-            progressContainer,
-            "",
-            null,
-            null,
-            "Left,FillXy"
-        );
+        _progressIndicator = app.AddText(progressContainer, "", null, null, "Left,FillXy");
 
         animation = setInterval(function () {
             _progressIndicator.Animate("SlideToRight", null, null);

@@ -17,5 +17,5 @@ Material Design is a DroidScript plugin for building Material 3 Themed Applicati
 
 > **TLDR:** This plugin @v1.00 is under maintenance mode, check this [Issue No 10](https://github.com/oarabiledev/material-design/issues/10)
 
-> **TLDR:** This plugin has become closed source the available version on github is open-source and under
->  maintenence mode, check this [Issue No 11](https://github.com/oarabilekoore/material-design/issues/11)
+> **TLDR:** There is an active re-write of this plugin, the next version will break everything in version 1.0, there will be no
+> compatability at all, so it is better to adopt this fresh ground up re-write.

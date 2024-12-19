@@ -1,6 +1,15 @@
 // Material Design 3 Library / Plugin For DroidScript
 // @Author: Oarabile Koore
-// @LICENSE: ZLib License
+
+/********************************************************************
+
+                                                            *********
+                                                              /\  /\
+                                                              \ \/ /
+                                                               \  /
+   Under The ZLib License.                                      \/
+   @2024, Built With Love From Botswana.                    *********
+********************************************************************/
 
 
 let pluginFolder = app.GetPrivateFolder("Plugins") + "/material/";
@@ -62,6 +71,9 @@ const MUIScaffoldAppTheme = function (theme = "light", iconFill = "outlined") {
     else globalThis.theme.value = theme || "light";    
 };
 
+/**
+* Set the back color of the app
+*/
 function MUISetBackColor(color){
     app.SetBackColor(color)
 }

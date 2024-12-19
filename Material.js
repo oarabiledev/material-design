@@ -1,20 +1,18 @@
 // Material Design 3 Library / Plugin For DroidScript
 // @Author: Oarabile Koore
-// @LICENSE : MIT
+// @LICENSE: ZLib License
+
 
 let pluginFolder = app.GetPrivateFolder("Plugins") + "/material/";
 let debugFolder = app.GetAppPath().endsWith("/Material");
 let prodFolder = debugFolder ? "" : pluginFolder;
-
-//mdui object contains all the ui functions.
-const mdui = new Object({});
 
 /**
  * ScaffoldAppTheme function lets you predefine variables like theme and icon types to be used.
  * @param {string} theme dark | light | light-high-contrast | dark-high-contrast & more
  * @param {string} iconFill sharp | round | outlined | two-toned
  */
-mdui.ScaffoldAppTheme = function (theme = "light", iconFill = "outlined") {
+const MUIScaffoldAppTheme = function (theme = "light", iconFill = "outlined") {
     if (!app.FileExists("./Src/material-theme.json")) {
         useDefaultTheme();
     } else {
@@ -45,29 +43,35 @@ mdui.ScaffoldAppTheme = function (theme = "light", iconFill = "outlined") {
         default:
             globalThis.iconFill = prodFolder + "./Lib/MaterialIcons-Regular.ttf";
     }
-
+    
+    function applyNavigationalColors(){
+        app.SetStatusBarColor(fileObject?.schemes.dark.surface)
+        app.SetNavBarColor(color.background)
+    }
+    applyNavigationalColors()
+    
     // Update theme and notify subscribers
     globalThis.theme.subscribe(() => {
         const selectedColors = fileObject?.schemes[globalThis.theme.value];
         Object.entries(selectedColors).forEach(([key, value]) => {
             color[key] = value;
         });
+        applyNavigationalColors()
     });
     if (globalThis.usingDefault) globalThis.theme.value = "light";
-    else globalThis.theme.value = theme || "light";
+    else globalThis.theme.value = theme || "light";    
 };
 
+function MUISetBackColor(color){
+    app.SetBackColor(color)
+}
 /**
  * Create a DroidScript Layout
  * @param {string} type
  * @param {string} options
  * @returns mduiLayout
  */
-mdui.CreateLayout = function (type, options) {
-    return new mduiLayout(type, options);
-};
-
-function mduiLayout(type, options) {
+function MUICreateLayout(type, options, properties) {
     let layout = app.CreateLayout(type, options);
 
     layout.SetBackColor(color.background);
@@ -87,11 +91,7 @@ function mduiLayout(type, options) {
  * @param {number} height
  * @param {string} type type of button to add
  */
-mdui.AddButton = function (parent, text, width, height, type) {
-    return new mduiButton(parent, text, width, height, type);
-};
-
-function mduiButton(parent, text, width, height, type) {
+const MUIButton = function (parent,text, width, height, type) {
     let button = app.AddButton(parent, text, width, height, "Custom");
     const radius = 20;
 
@@ -112,13 +112,14 @@ function mduiButton(parent, text, width, height, type) {
                 });
                 break;
 
-            case "outline":
+            case "outlined":
                 button.Batch({
-                    SetStyle: [btnColor, btnColor, radius, color.outline, 1, 0],
+                    SetStyle: [color.background, color.background, radius, color.outline, 1, 0],
                     SetTextColor: [color.primary],
                 });
                 break;
-
+                
+                //default is tonal
             default:
                 button.Batch({
                     SetStyle: [color.secondaryContainer, color.secondaryContainer, radius, null, 0, 0],
@@ -140,14 +141,10 @@ function mduiButton(parent, text, width, height, type) {
  * Add an icon button to your view.
  * @param {Ds-Layout} parent
  * @param {string} icon
- * @param {string} type
- * @param {string} iconFill
+ * @param {string} type filled | tonal | clear
+ * @param {string} iconFill sharp | round | outlined | two-toned
  */
-mdui.AddIconButton = function (parent, icon, type, iconFill) {
-    return new mduiIconButton(parent, icon, type, iconFill);
-};
-
-function mduiIconButton(parent, icon, type, iconFill) {
+const MUIIconButton = function (parent, icon, type, iconFill) {
     let btn = app.AddButton(parent, icon, null, null, "Custom");
     btn.SetSize(48, 48, "dp");
     btn.SetTextSize(24, "dp");
@@ -217,11 +214,7 @@ function mduiIconButton(parent, icon, type, iconFill) {
  * @param {Ds-Layout} parent
  * @param {boolean} isChecked
  */
-mdui.AddRadioButton = function (parent, isChecked) {
-    return new mduiRadioButton(parent, isChecked);
-};
-
-function mduiRadioButton(parent, isChecked = false) {
+const MUIRadioButton = function (parent, isChecked = false) {
     let isCheckedStatus = signal(isChecked);
     let icon;
 
@@ -229,26 +222,28 @@ function mduiRadioButton(parent, isChecked = false) {
         icon = "radio_button_checked";
     } else icon = "radio_button_unchecked";
 
-    let btn = mdui.AddIconButton(parent, icon, "clear", "sharp");
-    btn.data.i = crypto.randomUUID();
-
+    let btn = MUIIconButton(parent, icon, "clear", "sharp");
+    btn.data.i = crypto.randomUUID()
+    
     isCheckedStatus.subscribe((status) => {
         if (btn.data.onCheckHandler) btn.data.onCheckHandler(status);
         if (status) icon = "radio_button_checked";
         else icon = "radio_button_unchecked";
-        I(() => btn.SetText(icon));
+        btn.SetText(icon);
     });
-
-    btn.SetOnTouch(() => {
+    
+    //Added I() To avoid callback optimization done 
+    //by Ds
+    btn.SetOnTouch(I(() => {
         isCheckedStatus.value = !isCheckedStatus.value;
-    });
+    }));
 
     btn.SetOnCheck = function (onCheckHandler) {
         if (typeof onCheckHandler != "function") {
             console.error("onCheckHandler is not a function.");
             return;
         }
-        I(() => (btn.data.onCheckHandler = onCheckHandler));
+        btn.data.onCheckHandler = onCheckHandler;
     };
     return btn;
 }
@@ -258,23 +253,20 @@ function mduiRadioButton(parent, isChecked = false) {
  * @param {Ds-Layout} parent
  * @param {boolean} isChecked
  */
-mdui.AddCheckBox = function (parent, isChecked) {
-    return new mduiCheckBox(parent, isChecked);
-};
-
-function mduiCheckBox(parent, isChecked = false) {
+const MUICheckBox = function (parent, isChecked = false) {
     let isCheckedStatus = signal(isChecked);
     let icon;
 
-    let btn = mdui.AddIconButton(parent, "", "clear", "sharp");
-    btn.data.i = crypto.randomUUID();
+    let btn = MUIIconButton(parent, "", "clear", "sharp");
+    btn.data.i = crypto.randomUUID()
+    
     if (isChecked === "disabled") {
         icon = "indeterminate_check_box";
         btn.SetText(icon);
         btn.SetEnabled(false);
     } else if (isChecked) {
         icon = "check_box";
-        I(() => btn.SetText(icon));
+        btn.SetText(icon);
     } else {
         icon = "check_box_outline_blank";
         btn.SetText(icon);
@@ -287,9 +279,9 @@ function mduiCheckBox(parent, isChecked = false) {
         btn.SetText(icon);
     });
 
-    btn.SetOnTouch(() => {
+    btn.SetOnTouch(I(() => {
         isCheckedStatus.value = !isCheckedStatus.value;
-    });
+    }));
 
     btn.SetOnCheck = function (onCheckHandler) {
         if (typeof onCheckHandler != "function") {
@@ -306,11 +298,7 @@ function mduiCheckBox(parent, isChecked = false) {
  * @param {Ds-Layout} parent
  * @param {boolean} isChecked
  */
-mdui.AddSwitch = function (parent, isChecked) {
-    return new mduiSwitch(parent, isChecked);
-};
-
-function mduiSwitch(parent, isChecked = false) {
+const MUISwitch = function (parent, isChecked = false) {
     let isCheckedStatus = signal(isChecked);
 
     let container = app.AddLayout(parent, "Card");
@@ -325,11 +313,12 @@ function mduiSwitch(parent, isChecked = false) {
 
     function initiateHandleState(bool) {
         if (bool) {
-            handle.SetPosition(0.052, 0);
-            handle.DrawCircle(0.52, 0.42, 0.45);
+            handle.SetPosition(0.06, 0);
+            handle.DrawCircle(0.45, 0.45, 0.45);
         } else {
+            handle.Scale(0.75, 0.75);
             handle.SetPosition(0, 0);
-            handle.DrawCircle(0.52, 0.42, 0.3);
+            handle.DrawCircle(0.45, 0.45, 0.45);
         }
     }
 
@@ -337,14 +326,14 @@ function mduiSwitch(parent, isChecked = false) {
         if (bool) {
             handle.Tween({ x: 0.0, y: 0, sw: 0.75, sh: 0.75 }, 100, "Sinusoidal.Out", 0, false, () => {
                 handle.SetPaintColor(color.outline);
-                handle.DrawCircle(0.52, 0.42, 0.45);
+                handle.DrawCircle(0.45, 0.45, 0.45);
                 handle.Update();
                 isCheckedStatus.value = false;
             });
         } else {
-            handle.Tween({ x: 0.05, y: 0, sw: 1, sh: 1 }, 100, "Back.Out", 0, false, () => {
+            handle.Tween({ x: 0.06, y: 0, sw: 1, sh: 1 }, 100, "Back.Out", 0, false, () => {
                 handle.SetPaintColor(color.primary);
-                handle.DrawCircle(0.52, 0.42, 0.45);
+                handle.DrawCircle(0.45, 0.45, 0.45);
                 handle.Update();
                 isCheckedStatus.value = true;
             });
@@ -356,13 +345,13 @@ function mduiSwitch(parent, isChecked = false) {
     function applyStyling() {
         container.SetBackColor(color.surfaceContainerHighest);
 
-        if (isChecked) {
+        if (isCheckedStatus.value) {
             handle.SetPaintColor(color.primary);
-            handle.DrawCircle(0.52, 0.42, 0.45);
+            handle.DrawCircle(0.45, 0.45, 0.45);
             handle.Update();
         } else {
             handle.SetPaintColor(color.outline);
-            handle.DrawCircle(0.52, 0.42, 0.45);
+            handle.DrawCircle(0.45, 0.45, 0.45);
             handle.Update();
         }
     }
@@ -397,11 +386,7 @@ function mduiSwitch(parent, isChecked = false) {
  * @param {string} icon
  * @param {string} size small | large | medium
  */
-mdui.AddIconFAB = function (parent, icon, size) {
-    return new mduiIconFAB(parent, icon, size);
-};
-
-function mduiIconFAB(parent, icon = "edit", size) {
+const MUIFAB = function (parent, icon = "edit", size) {
     let fab = app.AddButton(parent, icon, null, null, "Custom,Lego");
     fab.SetFontFile(globalThis.iconFill);
 
@@ -459,118 +444,259 @@ function mduiIconFAB(parent, icon = "edit", size) {
     return fab;
 }
 
-mdui.AddProgressBar = function (parent, value, max, type) {
-    return new mduiProgressBar(parent, value, max, type);
-};
+const MUIDialog = function() {
+    
+}
 
-function mduiProgressBar(parent, value = 40, width = 0.8, type = "linear") {
+/**
+ * Add a progress bar to your view
+ * @param {Ds-Layout} parent 
+ * @param {number} value = 40 
+ * @param {number} width = 0.8 
+ * @param {string} type = "linear" | "linearintermediate"
+ */
+const MUIProgressBar = function (parent, value = 40, width = 0.8, type = "linear") {
     let container = app.AddLayout(parent, "Absolute", "Horizontal,Left,FillXY");
     container.SetSize(width, 0.005);
     container.data.value = value;
-
+    
     let bar = app.AddText(container, " ");
     let animationTimeout;
-
+    
     function startAnimation(shouldStartAhead) {
         animationTimeout = setTimeout(function () {
-            shouldStartAhead ? (delay = 500) : (delay = 2000);
-
+            shouldStartAhead ? delay = 500 : delay = 2000
+            
             // DO NOT REMOVE THESE TRY-CATCHES, THEY ARE TO PREVENT A NULL ERROR !!!!!!
             try {
-                bar.Tween({ x: 1.5, y: 0, w: 1, h: -1 }, delay, "Linear.None", 0, false, () => {
-                    try {
-                        bar.Gone();
-                        bar.Tween({ x: -0.1, y: 0, w: 0.1, h: -1 }, 0, "Linear.None", 0, false, () => {
+                bar.Tween({ x: 1.5, y: 0, w: width, h: -1 }, delay, "Sinusoidal.In", 0, false, () => {
+                    try{
+                        //bar.Hide()
+                        bar.Tween({ x: -0.1, y: 0, w: 0.1, h: -1 }, 0, 'Sinusoidal.In', 0, false,
+                        () => {
                             try {
                                 bar.Show(), startAnimation();
-                            } catch (e) {
-                                bar.Release();
-                                container.Release();
+                            }catch(e){
+                                bar.Release()
+                                container.Release()
                             }
                         });
-                    } catch (e) {
-                        bar.Release();
-                        container.Release();
+                    }
+                    catch(e){
+                        bar.Release()
+                        container.Release()
                     }
                 });
-            } catch (e) {
-                bar.Release();
-                container.Release();
+            }
+            catch(e){
+                bar.Release()
+                container.Release()
             }
         }, 0);
+        
     }
-
+    
     function applyStyling() {
         switch (type) {
             case "linearintermediate":
                 container.SetBackColor(color.secondaryContainer);
-                container.data.type = "linearintermediate";
+                container.data.type = 'linearintermediate'
                 bar.SetBackColor(color.primary);
-                bar.SetPosition(-0.1);
+                bar.SetPosition(-0.1)
                 bar.SetSize(0.1, -1);
-                startAnimation(1);
-
+                startAnimation();
+                
                 break;
 
             default:
                 container.SetBackColor(color.secondaryContainer);
-                bar.SetSize(parseFloat(value / 100), -1);
+                bar.SetSize(parseFloat(value / 100) * width, -1);
                 bar.SetBackColor(color.primary);
-                container.data.type = "linear";
+                container.data.type = 'linear'
         }
     }
 
-    applyStyling() ||
-        globalThis.theme.subscribe(() => {
-            container.SetBackColor(color.secondaryContainer);
-            bar.SetBackColor(color.primary);
-        });
-
-    /**
+    applyStyling() || globalThis.theme.subscribe(()=>{
+        container.SetBackColor(color.secondaryContainer);
+        bar.SetBackColor(color.primary);
+    })
+    
+    /**    
      * set the value of the progress-bar
-     * @param {number} value
+     * @param {number} value 
      */
-    container.SetValue = function (value) {
+    container.SetValue = function(value){
         if (value >= 100) {
-            if (container.data.type.includes("intermediate")) {
-                container.DestroyChild(bar);
-                parent.DestroyChild(container);
-            } else {
-                bar.Tween({ x: 0, y: 0, w: parseFloat(value / 100), h: -1 }, 750, "Linear.None", 0, 0, () => {
-                    parent.DestroyChild(container);
-                    container.Release();
-                });
+            if (container.data.type.includes('intermediate')){
+                container.DestroyChild(bar)
+                parent.DestroyChild(container)      
             }
-        } else {
-            bar.Tween({ x: 0, y: 0, w: parseFloat(value / 100), h: -1 }, 750, "Linear.None");
-            container.data.value = value;
+            else {
+                bar.Tween({ x: 0, y: 0, w: parseFloat(value / 100) * width, h: -1 }, 750, 
+                "Linear.None", 0, 0, ()=>{
+                    parent.DestroyChild(container)
+                    container.Release()
+                }) 
+            }
+        } 
+        else {
+            bar.Tween({ x: 0, y: 0, w: parseFloat(value / 100) * width, h: -1 }, 750, 
+            "Linear.None")
+            container.data.value = value
         }
-    };
-
-    /**
+    }
+    
+    /**    
      * get the progress value
      */
-    container.GetValue = function () {
+    container.GetValue = function(){
         return container.data.value;
-    };
+    }
     return container;
+}
+
+/**
+ * Add a snackbar to your view
+ * @param {string} text = '' 
+ * @param {number} width = 0.85 
+ * @param {string} alignment = 'Bottom' Top or Bottom
+ * @param {string} endonmentButtonName = 'Okay' Name of the closing button
+ */
+const MUISnackBar = function(text = '', width = 0.85, alignment = 'Bottom', endonmentButtonName = 'Okay'){
+  
+    let container = app.CreateLayout('Linear', alignment + ',FillXY,TouchThrough,Center');
+    let body = app.CreateLayout('Card');
+    
+    container.AddChild(body);
+    container.data.timeout = 2500;
+    container.data.alignment = alignment;
+    
+    body.SetMargins(0.055, 0.018, 0.055, 0.018);
+    body.SetCornerRadius(4);
+    body.SetElevation(6);
+    body.SetSize(width, 0.065);
+    
+    const box = app.CreateLayout("Linear", "Horizontal");
+    box.SetSize(width, 0.065);
+    body.AddChild(box);
+    
+    let snackText = app.CreateText(text, null, null, 'Multiline,AutoScale,VCenter');
+    snackText.SetTextColor('black');
+    snackText.SetMargins(0.055, 0.018, 0.055, 0.01);
+    snackText.SetTextSize(16);
+    box.AddChild(snackText);
+    
+    let snackButton = app.CreateText(endonmentButtonName, null, null, "VCenter,FillXY,AutoScale,Wrap,Right");
+    snackButton.SetMargins(null, null, 16, null, 'dp');
+    snackButton.SetTextSize(16);
+    snackButton.SetOnTouchDown(callClosingFn)
+
+    box.AddChild(snackButton);
+    
+    function applyStyling(){
+        box.SetBackColor(color.inverseSurface)
+        snackText.SetTextColor(color.inverseOnSurface)
+        snackButton.SetTextColor(color.inversePrimary)
+    }
+    
+    applyStyling()
+    
+    globalThis.theme.subscribe(()=>{
+        applyStyling()
+    })
+    
+    function callClosingFn(){
+        if (container.data.onpress){
+            container.data.onpress()
+        } else {
+            snackBarFunctions.Hide()
+        }
+    }
+    
+    function getProperAnimation(isMovingIn){
+        if (container.data.alignment.toLocaleLowerCase() == 'bottom'){
+            if (isMovingIn){
+                return 'SlideFromBottom'
+            } else {
+                return 'SlideToBottom'
+            }
+        } else {
+            if (isMovingIn){
+                return 'SlideFromTop'
+            } else {
+                return 'SlideToTop'
+            }
+        }
+    }
+    
+    let timeout;
+    
+    const snackBarFunctions = {
+        
+        /**        
+         * Set the timeout for the snackbar to close
+         * @param {number} time 
+         */
+        set Timeout(time){
+            container.data.timeout = time;
+        },
+        
+        /**        
+         * Show the snackbar
+         */
+        Show: function(){
+            container.Animate(getProperAnimation(1), ()=>{
+                timeout = setTimeout(()=>{
+                    snackBarFunctions.Hide()
+                }, 
+                container.data.timeout + 750)
+            }, 750)
+            
+            app.AddLayout(container);
+            
+        },
+        
+        /**        
+         * Hide the snackbar
+         */
+        Hide: function(){
+            container.Animate(getProperAnimation(0), ()=>{
+                 app.DestroyLayout(container);
+                 container.Destroy()
+                 clearTimeout(timeout)
+            }, 750) 
+        },
+        
+        /**        
+         * Call a function when the user touches your endonement
+         * Button
+         * @param {Function} Fn 
+         */
+        SetOnTouch: function(Fn){
+            container.data._nohash = false;
+            container.data.onpress = Fn;
+        }
+    }
+    
+    return snackBarFunctions;
 }
 
 /**
  * Switch between themes dynamically without app restart
  * @param {string} theme
  */
-mdui.SetTheme = function (theme) {
-    // a time-out is used to avoid having a janky like ux
-    setTimeout(() => {
-        if (globalThis.usingDefault) {
-            alert(`SetTheme Is Usable Only, If You Have A Theme Source File.`);
-            return;
-        }
-        globalThis.theme.value = theme;
-    }, 150);
+const MUISetTheme = function (theme) {
+    app.Hide()
+    globalThis.theme.value = theme, 
+    app.Show();
 };
 
+/**
+ * create a reactive value, that responds to a change in its
+ * value by firing the subscribed function to changes.
+ * it sends down the new value into the subscriber function.
+ * @param {any} defaultValue 
+ */
 function signal(defaultValue) {
     let internalValue = defaultValue;
     let subscriptions = [];
@@ -593,7 +719,6 @@ function signal(defaultValue) {
     };
 }
 
-// Default Theme Fallback
 function useDefaultTheme() {
     globalThis.usingDefault = true;
     const fileContent = `{
